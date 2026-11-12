@@ -19,6 +19,7 @@ final class AppCoordinator {
     private enum Screen {
         case home, service(Service), console(ConsoleModel), allConsoles(AllConsolesModel), settings(SettingsModel)
         case bluetooth(SettingsModel)
+        case apps(AppsScreen)
         case update
         case detail(GameDetailModel)
         case plexDetail(ContinueEntry)
@@ -63,6 +64,9 @@ final class AppCoordinator {
     private var playerShownTask: Task<Void, Never>?
     private let streamLog = Logger(subsystem: "local.brad.htpcshell", category: "stream")
     private var confirm = ConfirmGate()
+    private var checkingPackages = false
+    /// Builds a reader for a service that has one (set by main.swift); nil for the rest.
+    var makeStreamSource: ((Service) -> StreamSource?)?
     private let log = Logger(subsystem: "local.brad.htpcshell", category: "coordinator")
 
     init(homeModel: HomeModel, player: WebPlayer, system: SystemActions, settings: SystemSettings,
@@ -357,6 +361,12 @@ final class AppCoordinator {
         case .allConsoles(let model): handleAllConsoles(intent, model: model)
         case .settings(let model): handleSettings(intent, model: model)
         case .bluetooth(let model): handleBluetooth(intent, model: model)
+        case .apps(let apps):
+            switch apps.handle(intent) {
+            case .settings: closeApps()
+            case .home: goHome()
+            case nil: break
+            }
         case .update: AppUpdater.shared.press(intent)
         case .detail(let model): handleDetail(intent, model: model)
         case .plexDetail(let entry): handlePlexDetail(intent, entry: entry)
@@ -941,6 +951,7 @@ final class AppCoordinator {
         let saver = Prefs.screensaverMinutes
         let demo = DemoMode.isOn
         return [
+            SettingRow(id: "apps", title: "Apps", value: "\(AppConfigStore.shared.home.apps.count) on Home", symbol: "square.grid.2x2.fill"),
             SettingRow(id: "audio", title: "Sound Output", value: demo ? DemoMode.SettingsValue.audio : soundOutputText(), symbol: "speaker.wave.2.fill"),
             SettingRow(id: "netflix51", title: "Netflix 5.1 Audio", value: demo ? "Auto (off)" : Prefs.netflix51.summary(channels: settings.currentOutputChannels()),
                        symbol: "hifispeaker.2.fill"),
@@ -999,6 +1010,7 @@ final class AppCoordinator {
                 if let next = Cycle.next(after: settings.currentAudioOutput(), in: settings.audioOutputs()) { settings.setAudioOutput(next) }
             case "netflix51": Prefs.netflix51 = Cycle.next(after: Prefs.netflix51, in: Netflix51.allCases) ?? .auto
             case "bluetooth": openBluetooth(); return
+            case "apps": openApps(); return
             case "remoteapps":
                 if !KeyInjector.requestPermission() { system.openAccessibilitySettings() }
             case "login": settings.setStartsAtLogin(!settings.startsAtLogin)
@@ -1023,6 +1035,61 @@ final class AppCoordinator {
                 }
             }
         }
+    }
+
+    // MARK: Apps
+
+    /// Settings > Apps. Changes save to the config and refresh Home at once.
+    private func openApps() {
+        let apps = AppsScreen(store: AppConfigStore.shared, changed: { [weak self] in self?.refreshHome() },
+                              added: { [weak self] id in self?.registerReader(forServiceID: id) },
+                              runCheck: { [weak self] done in self?.checkPackages(done: done) })
+        show(NSHostingView(rootView: SettingsView(model: apps.model)))
+        screen = .apps(apps)
+    }
+
+    private func closeApps() {
+        let model = SettingsModel(rows: settingRows())
+        model.select(id: "apps")
+        show(NSHostingView(rootView: SettingsView(model: model)))
+        screen = .settings(model)
+    }
+
+    /// Builds the reader for a service (when it has one and none is registered yet) so it needs no restart.
+    private func registerReader(forServiceID id: String, replacing: Bool = false) {
+        guard !DemoMode.isOn, let service = AppServices.all.first(where: { $0.id == id }),
+              replacing || streamSources[id] == nil, let source = makeStreamSource?(service) else { return }
+        registerStreamSource(source)
+    }
+
+    /// Asks GitHub for newer app packages; `done` gets the short result line. Newly installed packages take over at once.
+    func checkPackages(done: ((String) -> Void)? = nil) {
+        guard !checkingPackages else { return }
+        checkingPackages = true
+        let ref = AppConfigStore.shared.packageRef
+        Task { [weak self] in
+            let result = await PackageUpdater.shared.check(ref: ref)
+            guard let self else { return }
+            self.checkingPackages = false
+            if result.report.index == .read || result.report.index == .missing {
+                UserDefaults.standard.set(Date(), forKey: Self.packageCheckKey)
+            }
+            for id in result.installedIDs { self.registerReader(forServiceID: id, replacing: true) }
+            done?(result.report.line)
+        }
+    }
+
+    private static let packageCheckKey = "packageCheckedAt"
+
+    /// The automatic check: at most once a day, started after launch and re-asked hourly while the Mac stays on.
+    func startPackageChecks() {
+        guard !DemoMode.isOn else { return }
+        let ask = { [weak self] in
+            guard let self, UpdateSchedule.isDue(last: UserDefaults.standard.object(forKey: Self.packageCheckKey) as? Date, now: Date()) else { return }
+            self.checkPackages()
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 45) { ask() }
+        Timer.scheduledTimer(withTimeInterval: 3600, repeats: true) { _ in MainActor.assumeIsolated { ask() } }
     }
 
     // MARK: Remotes & Controllers
@@ -1310,6 +1377,7 @@ extension AppCoordinator: DebugControllable {
                     "continueWatching": "\(continueWatching.count)"]
         case .settings(let model):
             return ["screen": "settings", "selected": model.selected?.id ?? ""]
+        case .apps(let apps): return apps.debugState()
         case .update:
             let flow = AppUpdater.shared.flow
             return ["screen": "update", "phase": "\(flow.phase)", "focus": flow.focused?.label ?? ""]

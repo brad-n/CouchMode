@@ -39,7 +39,22 @@ apps/<id>/reader.js       one script: `const reader = ...` with the functions be
 ```
 
 `build-app.sh` copies each `apps/<id>/` into the app (`Resources/apps/<id>/`);
-`PackageStore` loads it (a downloaded copy comes later).
+`LayeredPackageStore` loads it, or a newer verified downloaded copy (see below).
+
+### Publishing a package update
+
+Installed Macs fetch packages from the repo on GitHub, so a fix to a reader reaches them without an app release:
+
+1. Change `apps/<id>/reader.js` and/or `manifest.json`, and **raise `version`** in the manifest (dotted numbers,
+   `1.0.1`). A copy is only downloaded when its version is newer than the one the Mac has.
+2. Run `scripts/package-index.sh` to rewrite `apps/index.json` (versions, reader API and file hashes), and commit it
+   with the package. `check.sh` fails if the index is out of date.
+3. Merge to `main` (or the branch a Mac's `packageRef` names). Macs pick it up within a day, or at once from
+   Settings > Apps > Check for app updates.
+
+A package that needs a newer reader API than an installed app speaks is skipped there. A new service also needs a
+catalog entry (`apps/catalog.json`), which ships with the app. Hashes guard against corruption, not against a
+hostile repo; see [release.md](release.md).
 
 ### What the generic reader does (per user action)
 

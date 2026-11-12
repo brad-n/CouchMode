@@ -14,16 +14,30 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let hidPads = HIDGamepads()
     private let debugServer = DebugServer()
 
-    /// The reader for a service: its script package when the Mac's config says `reader: package` and the package loads,
-    /// else the built-in Swift reader (the default).
+    /// The reader for a service: its script package when the Mac's config says `reader: package` (or says nothing and the
+    /// service has a package) and the package loads, else the built-in Swift reader.
     private static func reader(for service: Service, player: WebPlayer, builtin: () -> StreamSource) -> StreamSource {
         let store = AppConfigStore.shared
-        guard ReaderMode.from(store.setting(ReaderMode.settingKey, for: service.id), catalogDefault: store.catalog.app(id: service.id)?.reader) == .package else { return builtin() }
-        guard let package = BundledPackageStore().package(for: service.id) else {
+        let package = LayeredPackageStore().package(for: service.id)
+        guard ReaderMode.from(store.setting(ReaderMode.settingKey, for: service.id), catalogDefault: store.catalog.app(id: service.id)?.reader,
+                              packagePresent: package != nil) == .package else { return builtin() }
+        guard let package else {
             Logger(subsystem: "local.brad.htpcshell", category: "package").error("\(service.id, privacy: .public): reader is package but none loaded; using the built-in reader")
             return builtin()
         }
         return ScriptReader(service: service, player: player, package: package)
+    }
+
+    /// The reader for a service that has one. nil for the rest.
+    private static func makeSource(for service: Service, player: WebPlayer) -> StreamSource? {
+        switch service.id {
+        case NetflixHome.serviceID: return reader(for: service, player: player, builtin: { NetflixSource(service: service, player: player) })
+        case HuluHome.serviceID: return reader(for: service, player: player, builtin: { HuluSource(service: service, player: player) })
+        case DisneyHome.serviceID: return reader(for: service, player: player, builtin: { DisneySource(service: service, player: player) })
+        case PrimeHome.serviceID: return reader(for: service, player: player, builtin: { PrimeSource(service: service, player: player) })
+        case AppleTVHome.serviceID: return reader(for: service, player: player, builtin: { AppleTVSource(service: service, player: player) })
+        default: return nil
+        }
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -36,21 +50,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let coordinator = AppCoordinator(homeModel: home, player: player, system: SystemActions(), settings: settings, games: games, plex: PlexClient())
         self.coordinator = coordinator
         // Services with the shell's own screens: their reader drives the service's own page (a proxy).
-        if let netflix = AppServices.all.first(where: { $0.id == NetflixHome.serviceID }) {
-            coordinator.registerStreamSource(Self.reader(for: netflix, player: player, builtin: { NetflixSource(service: netflix, player: player) }))
+        for service in AppServices.all {
+            if let source = Self.makeSource(for: service, player: player) { coordinator.registerStreamSource(source) }
         }
-        if let hulu = AppServices.all.first(where: { $0.id == HuluHome.serviceID }) {
-            coordinator.registerStreamSource(Self.reader(for: hulu, player: player, builtin: { HuluSource(service: hulu, player: player) }))
-        }
-        if let disney = AppServices.all.first(where: { $0.id == DisneyHome.serviceID }) {
-            coordinator.registerStreamSource(Self.reader(for: disney, player: player, builtin: { DisneySource(service: disney, player: player) }))
-        }
-        if let prime = AppServices.all.first(where: { $0.id == PrimeHome.serviceID }) {
-            coordinator.registerStreamSource(Self.reader(for: prime, player: player, builtin: { PrimeSource(service: prime, player: player) }))
-        }
-        if let appletv = AppServices.all.first(where: { $0.id == AppleTVHome.serviceID }) {
-            coordinator.registerStreamSource(Self.reader(for: appletv, player: player, builtin: { AppleTVSource(service: appletv, player: player) }))
-        }
+        // Apps added later (Settings > Apps) get their reader without a restart.
+        coordinator.makeStreamSource = { [player] in Self.makeSource(for: $0, player: player) }
         // Demo mode: every web service (not Plex's app) opens the shell's own screens on invented titles.
         if DemoMode.isOn {
             for service in AppServices.all where service.id != "plex" {
@@ -72,6 +76,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         coordinator.refreshContinueWatching()
         ServiceIcons.shared.refreshIfNeeded(AppServices.all)
         coordinator.startIdleWatch()
+        coordinator.startPackageChecks()
         coordinator.watchInputDevices()
         if DebugServer.isEnabled {
             debugServer.start(target: coordinator)

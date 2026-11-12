@@ -50,12 +50,37 @@ Retro consoles require RetroArch; Switch does not.
   `gamesFolder` (`~` allowed), Netflix's `netflix51` (`auto`, `on`, `off`).
   A stream app's `reader` (`builtin`, the default, or `package`) chooses its
   Swift reader or its script package (`apps/<id>/`, see
-  [add-a-streaming-service.md](add-a-streaming-service.md)); a missing setting uses the catalog's `reader` (else `builtin`), and anything else
-  means `builtin`, and a missing or unusable package falls back to it. It is
-  read when the app starts.
+  [add-a-streaming-service.md](add-a-streaming-service.md)). A missing setting uses the catalog's `reader`; with
+  none of those, a service uses its package as soon as one is present (bundled or downloaded), else `builtin`.
+  Anything else means `builtin`, and a missing or unusable package falls back to it. It is read when the app
+  starts, and again for a service when its package is updated or the app is added.
+- `packageRef` (top level, optional): the branch, tag or commit in the GitHub repo that app packages are fetched
+  from; `main` when absent. Letters, digits and `. _ - /` only; anything else is ignored.
 - An id the catalog does not know is ignored but kept when the file is saved.
   An app whose `requires` is not met is hidden (one log line each), not removed.
   A repeated id counts once (the first).
+
+## Settings > Apps
+
+Home's Settings has an **Apps** row. It lists the added apps in order; selecting one offers **Move up**,
+**Move down** and **Remove** (a second press confirms; Settings itself can't be removed). **Add an app...**
+lists the catalog apps not yet added with their requirement status ("Ready" or "needs RetroArch"); adding appends
+to the config with the app's defaults. **Check for app updates** shows the package versions in use and fetches
+newer ones. Every change is saved to `config.json` (atomically) and Home updates at once. Removing a stream app
+keeps its website data and sign-in. An app whose requirement is unmet can be added; it appears on Home once the
+requirement is met. `GET /state` on the debug channel describes the screen (`pane`, `selected`, `order`).
+
+## Package updates
+
+`apps/index.json` lists every package (`apps/<id>/manifest.json` + `reader.js`): id, package `version`, `readerAPI`
+and each file's sha256. `scripts/package-index.sh` regenerates it and `check.sh` fails when it is stale.
+`PackageUpdater` fetches `https://raw.githubusercontent.com/brad-n/CouchMode/<ref>/apps/index.json`, then each
+package whose `readerAPI` this app supports and whose version is newer than the bundled or downloaded copy. It
+checks every file's hash against the index (any mismatch installs nothing) and swaps the package in atomically
+at `~/Library/Application Support/<bundle id>/apps/<id>/`, with a `verified.json` record that is re-checked on
+every load. A verified download is preferred over the bundled copy unless the bundled one is newer. Offline or
+failing, it logs one line and changes nothing. It runs at most once a day on its own, and on demand from
+Settings > Apps > Check for app updates (an index not published yet reads "No app updates are published yet.").
 
 ## Lifecycle (`AppConfigStore`, `ConfigFile`)
 

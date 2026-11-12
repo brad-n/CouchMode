@@ -59,6 +59,29 @@ final class AppConfigStore {
         catch { Self.log.error("config not saved: \(error.localizedDescription, privacy: .public)") }
     }
 
+    /// Where app packages are fetched from (`main` when the config says nothing).
+    var packageRef: String? { config.packageRef }
+
+    /// Applies an edit to the app list (add, remove, move), re-resolves Home and saves atomically. Returns what the
+    /// edit returned; a failed save is logged and the change still applies for this run. Nothing is written when
+    /// the edit changed nothing.
+    @discardableResult
+    func edit<T>(_ change: (inout AppConfig, AppCatalog) -> T?) -> T? {
+        var next = config
+        guard let result = change(&next, catalog), next != config else { return nil }
+        config = next
+        home = Self.resolve(config, catalog: catalog, quiet: true)
+        do { try file?.save(config) }
+        catch { Self.log.error("config not saved: \(error.localizedDescription, privacy: .public)") }
+        return result
+    }
+
+    /// Whether a requirement is met on this Mac.
+    func requirementMet(_ r: AppRequirement) -> Bool {
+        r.isMet(bundleInstalled: { NSWorkspace.shared.urlForApplication(withBundleIdentifier: $0) != nil },
+                fileExists: { FileManager.default.fileExists(atPath: $0) }, home: FileManager.default.homeDirectoryForCurrentUser.path)
+    }
+
     /// Where a console's games are, as written in the config (may start with ~).
     func gamesFolderText(for console: Console) -> String {
         config.setting(AppConfig.gamesFolderKey, for: console.id)?.string.flatMap { $0.isEmpty ? nil : $0 } ?? console.defaultFolder
