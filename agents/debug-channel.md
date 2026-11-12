@@ -31,7 +31,7 @@ All `GET` unless noted. Replies are JSON of strings unless noted.
 
 | Route | Does |
 |---|---|
-| `/state` | Current screen and its facts: `screen` (`home`, `console`, `allConsoles`, `detail`, `plexDetail`, `settings`, `bluetooth`, `streamHome`, `streamDetail`, `streamSearch`, `service`), focus, counts, loading. Poll this to wait for something. |
+| `/state` | Current screen and its facts: `screen` (`home`, `console`, `allConsoles`, `detail`, `plexDetail`, `settings`, `bluetooth`, `streamHome`, `streamDetail`, `streamSearch`, `service`, `setup`), focus, counts, loading. Poll this to wait for something. |
 | `/intent?i=up\|down\|left\|right\|select\|back\|home\|info` | The same as a remote press. Replies with `/state`. |
 | `/homehold?source=remote\|controller\|menu` | Home as the remote or Command-Delete (default), a controller's Home button, or a held Menu button. |
 | `/open?service=<id>` | Open a service as the Home tile would (its stream screens if it has a reader). |

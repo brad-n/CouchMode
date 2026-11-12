@@ -42,7 +42,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 coordinator.registerStreamSource(DemoStreamSource(service: service))
             }
         }
-        keyboard.start(wantsIntents: { coordinator.wantsKeyboardIntents }, interceptsBack: { coordinator.interceptsBackKey }, sink: { coordinator.handle($0) })
+        keyboard.start(wantsIntents: { coordinator.wantsKeyboardIntents }, interceptsBack: { coordinator.interceptsBackKey }, signingIn: { coordinator.isSigningIn }, sink: { coordinator.handle($0) })
         controllers.start(sink: { coordinator.handle($0) }, onHome: { coordinator.homeRequested($0) },
                           passthrough: { KeyInjector.press($0) })
         hotKeys.register(onHome: { coordinator.homeRequested(.remoteOrKeyboard) })

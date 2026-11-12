@@ -22,6 +22,8 @@ final class AppConfigStore {
     /// The apps Home shows, in config order, with unmet and unknown ones left out.
     private(set) var home: HomeApps
     private let file: ConfigFile?
+    /// There was no config.json at launch: first-run setup shows before Home, and writes the file at Done.
+    private(set) var needsSetup = false
 
     /// Streaming sites and native apps on Home, as services (user agents resolved).
     var services: [Service] { ServiceCatalog.make(from: home.apps.map(\.app), safariUserAgent: AppServices.safariUserAgent) }
@@ -34,7 +36,12 @@ final class AppConfigStore {
         file = DemoMode.isOn ? nil : dir.map(ConfigFile.init(directory:))
         let catalog = catalog
         let defaults = { AppConfig.defaults(catalog: catalog, migrated: DemoMode.isOn ? [:] : Self.migratedPrefs()) }
-        if let file {
+        if let file, !FileManager.default.fileExists(atPath: file.url.path) {
+            // First run: the defaults serve this run in memory; the file is written when setup reaches Done.
+            config = defaults()
+            needsSetup = true
+            Self.log.info("no config yet: first-run setup")
+        } else if let file {
             let outcome = file.load(defaults: defaults, now: Date())
             config = outcome.config
             Self.log(outcome, apps: outcome.config.apps.count)
@@ -75,6 +82,20 @@ final class AppConfigStore {
         catch { Self.log.error("config not saved: \(error.localizedDescription, privacy: .public)") }
         return result
     }
+
+    /// First-run setup reached Done: the chosen apps become the config (saved atomically), and Home follows them.
+    /// A failed save is logged and the choices still apply for this run (setup shows again next launch).
+    func applySetup(_ chosen: AppConfig) {
+        config = chosen
+        needsSetup = false
+        home = Self.resolve(config, catalog: catalog, quiet: true)
+        do { try file?.save(config) }
+        catch { Self.log.error("config not saved: \(error.localizedDescription, privacy: .public)") }
+        Self.log.info("setup saved: \(chosen.apps.count) apps")
+    }
+
+    /// Values older versions kept in UserDefaults, for a first config.
+    var migratedPreferences: [String: [String: ConfigValue]] { Self.migratedPrefs() }
 
     /// Whether a requirement is met on this Mac.
     func requirementMet(_ r: AppRequirement) -> Bool {

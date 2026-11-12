@@ -96,7 +96,7 @@ public struct FirstRunSetup: Equatable, Sendable {
         }
         consoles = catalog.apps.compactMap { app in
             guard app.kind == .console, let spec = app.console, app.requires.allSatisfy(requirementMet) else { return nil }
-            let folder = existing?.setting(AppConfig.gamesFolderKey, for: app.id)?.string.flatMap { $0.isEmpty ? nil : $0 } ?? spec.defaultFolder
+            let folder = Self.folderText(for: app, existing: existing) ?? spec.defaultFolder
             return SetupConsole(app: app, folder: folder, gameCount: gameCount(app, folder))
         }
         if let existing {
@@ -106,6 +106,11 @@ public struct FirstRunSetup: Equatable, Sendable {
         } else {
             chosen = Self.defaultChoices(apps: apps, consoles: consoles)
         }
+    }
+
+    /// A console's games folder as the config would hold it (the existing setting, else the catalog default).
+    public static func folderText(for app: CatalogApp, existing: AppConfig?) -> String? {
+        existing?.setting(AppConfig.gamesFolderKey, for: app.id)?.string.flatMap { $0.isEmpty ? nil : $0 } ?? app.console?.defaultFolder
     }
 
     /// Streaming services on, a native app on when installed, a console on only when its folder has games.

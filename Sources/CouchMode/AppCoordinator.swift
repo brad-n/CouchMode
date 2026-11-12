@@ -21,6 +21,7 @@ final class AppCoordinator {
         case bluetooth(SettingsModel)
         case apps(AppsScreen)
         case update
+        case setup(SetupScreen)
         case detail(GameDetailModel)
         case plexDetail(ContinueEntry)
         case streamHome(StreamHomeModel), streamDetail(StreamDetailModel)
@@ -91,7 +92,9 @@ final class AppCoordinator {
         player.onPlayPauseRequested = { [weak self] in self?.player.press(.space) }
         player.onFirstLoad = { [weak self] id in
             MainActor.assumeIsolated {
-                guard let self, case .service(let s) = self.screen, s.id == id else { return }
+                guard let self else { return }
+                if case .setup(let setup) = self.screen, setup.signingIn?.id == id { return self.hideOverlay() }
+                guard case .service(let s) = self.screen, s.id == id else { return }
                 self.hideOverlay()
             }
         }
@@ -130,7 +133,13 @@ final class AppCoordinator {
 
     /// Keyboard keys become shell intents on our own screens (home, game
     /// lists). On a streaming site the real keys go to the site instead.
-    var wantsKeyboardIntents: Bool { if case .service = screen { return false } else { return true } }
+    var wantsKeyboardIntents: Bool {
+        if case .service = screen { return false }
+        return !isSigningIn
+    }
+
+    /// A service's sign-in page is up during setup: the keyboard types into it.
+    var isSigningIn: Bool { if case .setup(let setup) = screen { return setup.signingIn != nil } else { return false } }
 
     /// A handed-off title is on the service's page: Escape/Delete are Back for the shell.
     var interceptsBackKey: Bool { if streamReturn != nil, case .service = screen { return true } else { return false } }
@@ -340,6 +349,7 @@ final class AppCoordinator {
         NSApp.presentationOptions = [.hideDock, .hideMenuBar]
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
+        if AppConfigStore.shared.needsSetup { openSetup(existing: nil) }
         playIntro()
     }
 
@@ -347,7 +357,7 @@ final class AppCoordinator {
         lastInput = Date()
         // Any input while the screensaver shows only wakes the screen.
         if screensaver != nil { hideScreensaver(); return }
-        if case .service = screen {} else {
+        if case .service = screen {} else if isSigningIn {} else {
             switch intent {
             case .move: sounds.play(.move)
             case .select, .info: sounds.play(.select)
@@ -368,6 +378,7 @@ final class AppCoordinator {
             case nil: break
             }
         case .update: AppUpdater.shared.press(intent)
+        case .setup(let setup): handleSetup(intent, setup)
         case .detail(let model): handleDetail(intent, model: model)
         case .plexDetail(let entry): handlePlexDetail(intent, entry: entry)
         case .streamHome(let model): handleStreamHome(intent, model: model)
@@ -973,6 +984,7 @@ final class AppCoordinator {
         let demo = DemoMode.isOn
         return [
             SettingRow(id: "apps", title: "Apps", value: "\(AppConfigStore.shared.home.apps.count) on Home", symbol: "square.grid.2x2.fill"),
+            SettingRow(id: "setup", title: "Run setup again", value: "Apps, games, sign-in", symbol: "wand.and.stars", isAction: true),
             SettingRow(id: "audio", title: "Sound Output", value: demo ? DemoMode.SettingsValue.audio : soundOutputText(), symbol: "speaker.wave.2.fill"),
             SettingRow(id: "netflix51", title: "Netflix 5.1 Audio", value: demo ? "Auto (off)" : Prefs.netflix51.summary(channels: settings.currentOutputChannels()),
                        symbol: "hifispeaker.2.fill"),
@@ -1032,6 +1044,7 @@ final class AppCoordinator {
             case "netflix51": Prefs.netflix51 = Cycle.next(after: Prefs.netflix51, in: Netflix51.allCases) ?? .auto
             case "bluetooth": openBluetooth(); return
             case "apps": openApps(); return
+            case "setup": openSetup(existing: AppConfigStore.shared.config); return
             case "remoteapps":
                 if !KeyInjector.requestPermission() { system.openAccessibilitySettings() }
             case "login": settings.setStartsAtLogin(!settings.startsAtLogin)
@@ -1191,6 +1204,8 @@ final class AppCoordinator {
     }
 
     private func goHome() {
+        // Until first-run setup is saved there is no Home to go to.
+        if AppConfigStore.shared.needsSetup, case .setup = screen { return }
         if case .bluetooth = screen { closeBluetooth() }
         refreshHome()
         refreshContinueWatching()
@@ -1207,6 +1222,114 @@ final class AppCoordinator {
         screen = .home
         window.makeFirstResponder(homeView)
         refreshUpdateNotice()
+    }
+
+    // MARK: First-run setup
+
+    /// First-run setup (`existing` nil) or Settings > Run setup again (the current config, whose choices it shows).
+    /// Counts the games folders first, off the main thread.
+    private func openSetup(existing: AppConfig?) {
+        let store = AppConfigStore.shared
+        let consoleApps = store.catalog.apps.filter { $0.kind == .console }
+        var folders: [String: [String]] = [:]
+        for app in consoleApps {
+            if let folder = FirstRunSetup.folderText(for: app, existing: existing) { folders[folder] = app.console?.extensions ?? [] }
+        }
+        Task { [weak self] in
+            let counts = await SetupScreen.scanFolders(folders)
+            guard let self else { return }
+            let session = FirstRunSetup(
+                catalog: store.catalog, existing: existing, requirementMet: { store.requirementMet($0) },
+                nativeInstalled: { app in
+                    let native = app.native
+                    if let id = native?.bundleId, NSWorkspace.shared.urlForApplication(withBundleIdentifier: id) != nil { return true }
+                    return native?.appPath.map { FileManager.default.fileExists(atPath: $0) } ?? false
+                },
+                gameCount: { _, folder in counts[folder] }, migrated: existing == nil ? store.migratedPreferences : [:])
+            let setup = SetupScreen(session: session, isFirstRun: existing == nil)
+            self.hideOverlay(animated: false)
+            self.show(NSHostingView(rootView: SetupView(screen: setup)))
+            self.screen = .setup(setup)
+            self.log.info("setup opened first=\(existing == nil) apps=\(session.apps.count) consoles=\(session.consoles.count)")
+        }
+    }
+
+    private func handleSetup(_ intent: ShellIntent, _ setup: SetupScreen) {
+        if let service = setup.signingIn {
+            // The service's own site is up: everything goes to it, except Back and Home, which return to the list.
+            switch intent {
+            case .back, .home: closeSignIn(setup, service)
+            default:
+                if case .press(let key) = PlayerInput.command(for: intent, service: service) { player.press(key) }
+            }
+            return
+        }
+        switch setup.handle(intent) {
+        case .none: break
+        case .signIn(let id): openSignIn(setup, id)
+        case .finish: finishSetup(setup)
+        case .leave: closeSetup()
+        }
+    }
+
+    /// The service's website, in the shell's web view, for the person to sign in to. Nothing is typed for them.
+    private func openSignIn(_ setup: SetupScreen, _ id: String) {
+        let store = AppConfigStore.shared
+        guard let app = store.catalog.app(id: id),
+              let service = ServiceCatalog.make(from: [app], safariUserAgent: AppServices.safariUserAgent).first else { return }
+        setup.beginSignIn(service)
+        let page = player.view(for: service)
+        install(page)
+        unquiet(page)
+        if !player.hasLoaded(service) {
+            showOverlay(InterstitialView(title: service.name, subtitle: "Opening\u{2026}", colors: Self.colors(for: service)), timeout: 15)
+        }
+        player.activate(service)
+        window.makeFirstResponder(page)
+        log.info("setup sign-in opened service=\(id, privacy: .public)")
+    }
+
+    /// Back from the site: the list again, and a light read of the page's own signed-in state fills in the status.
+    private func closeSignIn(_ setup: SetupScreen, _ service: Service) {
+        let page = player.view(for: service)
+        hideOverlay(animated: false)
+        setup.leaveSignIn()
+        show(NSHostingView(rootView: SetupView(screen: setup)))
+        Task { [weak self] in
+            let signedIn = await self?.signedInState(of: service, in: page)
+            guard let self else { return }
+            // Quiet only now: the check reads the page where it is.
+            self.quiet(page)
+            self.player.deactivate()
+            setup.endSignIn(signedIn: signedIn, for: service.id)
+            self.log.info("setup sign-in closed service=\(service.id, privacy: .public) state=\(signedIn.map { $0 ? "signed in" : "not yet" } ?? "unknown", privacy: .public)")
+        }
+    }
+
+    /// Whether the service's page shows its signed-in home, by the package's own "home is ready" check on the page
+    /// as it is (nothing is opened or clicked). nil when the service has no package to ask.
+    private func signedInState(of service: Service, in page: WKWebView) async -> Bool? {
+        guard let package = LayeredPackageStore().package(for: service.id), let ready = package.manifest.pages[.home]?.ready else { return nil }
+        let body = "try { \(package.source)\nreturn typeof reader[\(StreamJSON.jsString(ready))] === \"function\" && (await reader[\(StreamJSON.jsString(ready))]()) === true; } catch (e) { return false; }"
+        return await WebPage.waitFor(body, in: page, timeout: .seconds(3))
+    }
+
+    /// Done: the choices become the config (written now, atomically), Home shows them.
+    private func finishSetup(_ setup: SetupScreen) {
+        let store = AppConfigStore.shared
+        let config = setup.session.result()
+        store.applySetup(config)
+        for entry in config.apps { registerReader(forServiceID: entry.id) }
+        log.info("setup done: \(config.apps.map(\.id).joined(separator: ","), privacy: .public)")
+        goHome()
+    }
+
+    /// Run setup again, left without saving: back to Settings.
+    private func closeSetup() {
+        let model = SettingsModel(rows: settingRows())
+        model.select(id: "setup")
+        show(NSHostingView(rootView: SettingsView(model: model)))
+        screen = .settings(model)
     }
 
     // MARK: Software update
@@ -1399,6 +1522,13 @@ extension AppCoordinator: DebugControllable {
         case .settings(let model):
             return ["screen": "settings", "selected": model.selected?.id ?? ""]
         case .apps(let apps): return apps.debugState()
+        case .setup(let setup):
+            var state = setup.debugState()
+            if setup.signingIn != nil, let v = player.activeView {
+                state["url"] = v.url?.absoluteString ?? ""
+                state["loading"] = "\(v.isLoading)"
+            }
+            return state
         case .update:
             let flow = AppUpdater.shared.flow
             return ["screen": "update", "phase": "\(flow.phase)", "focus": flow.focused?.label ?? ""]

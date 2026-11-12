@@ -68,6 +68,19 @@ newer ones. Every change is saved to `config.json` (atomically) and Home updates
 keeps its website data and sign-in. An app whose requirement is unmet can be added; it appears on Home once the
 requirement is met. `GET /state` on the debug channel describes the screen (`pane`, `selected`, `order`).
 
+## First-run setup
+
+Shown when there is no `config.json`, and from Settings > **Run setup again** (which starts from the current
+choices). Pure logic is `FirstRunSetup` in Core (steps, defaults, the written order); `SetupScreen` draws it.
+Steps: Welcome; Choose your apps (streaming services and native apps, check marks; an app with an unmet
+requirement is shown off with the reason); Games (consoles whose emulator is installed, each with its folder and
+whether it was found; on only if the folder has games); Sign in (opens the service's own site in the shell's web
+view for the person to sign in, once; Back returns, and the package's own `home` ready check fills in "Signed in",
+"Not yet", or "Opened" when the service has no package); Done. Steps with nothing to show are skipped. Back goes to
+the previous step. Defaults: streaming services on, Plex on when Plex HTPC is installed. The config is written at
+Done in this order: streaming services, native apps, games, Settings (a second run keeps the existing order and
+settings, and leaves alone anything it did not offer).
+
 ## Package updates
 
 `apps/index.json` lists every package (`apps/<id>/manifest.json` + `reader.js`): id, package `version`, `readerAPI`
@@ -82,9 +95,10 @@ Settings > Apps > Check for app updates (an index not published yet reads "No ap
 
 ## Lifecycle (`AppConfigStore`, `ConfigFile`)
 
-1. No file: written from the catalog defaults (every default app, catalog
-   order, each console's default folder), plus values migrated from older
-   preferences (the `netflix51` default).
+1. No file: **first-run setup** shows instead of Home (below). Until it
+   reaches Done nothing is written; the catalog defaults (plus values
+   migrated from older preferences, the `netflix51` default) serve that run
+   in memory. Demo mode skips setup.
 2. A file that cannot be read as a config (bad JSON, unsupported value types,
    over 256 KB) is renamed to `config.json.bad-<UTC timestamp>`, a fresh default
    is written, and one error line is logged. Nothing is deleted.

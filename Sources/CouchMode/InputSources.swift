@@ -14,7 +14,7 @@ final class KeyboardInput {
     private var monitor: Any?
 
     func start(wantsIntents: @escaping @MainActor () -> Bool, interceptsBack: @escaping @MainActor () -> Bool,
-               sink: @escaping IntentSink) {
+               signingIn: @escaping @MainActor () -> Bool, sink: @escaping IntentSink) {
         monitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
             let deleteKey: UInt16 = 51
             if event.modifierFlags.contains(.command) && event.keyCode == deleteKey {
@@ -22,6 +22,10 @@ final class KeyboardInput {
             }
             // A handed-off title: Escape and Delete are Back for the shell; other keys stay the player's.
             if PlayerBackKey.isBack(keyCode: event.keyCode, handedOffTitleShowing: interceptsBack()) {
+                sink(.back); return nil
+            }
+            // A sign-in page during setup: only Escape is Back; every other key is typed into the page.
+            if PlayerBackKey.isSignInBack(keyCode: event.keyCode, signInShowing: signingIn()) {
                 sink(.back); return nil
             }
             guard wantsIntents(), let intent = Self.shellIntent(event.keyCode) else { return event }

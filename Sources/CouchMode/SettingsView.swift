@@ -13,11 +13,13 @@ struct SettingRow: Identifiable, Equatable {
     let symbol: String
     /// Rows that act on press (Sleep, Restart) rather than change a value.
     var isAction = false
+    /// The big icon while this row is focused, where it differs from the row's own (a check mark row shows its app).
+    var heroSymbol: String? = nil
 }
 
 @MainActor
 final class SettingsModel: ObservableObject {
-    let title: String
+    @Published var title: String
     /// The big icon when no row has its own.
     let icon: String
     @Published private(set) var rows: [SettingRow]
@@ -41,6 +43,14 @@ final class SettingsModel: ObservableObject {
 
     private func refreshWindow() {
         window = ListWindow.following(window, focused: index, count: rows.count, capacity: capacity)
+    }
+
+    /// A different list: the first row is focused.
+    func reset(rows newRows: [SettingRow]) {
+        rows = newRows
+        index = 0
+        window = ListWindow(first: 0, count: newRows.count, capacity: capacity)
+        refreshWindow()
     }
 
     /// New rows; the focused row stays focused if it's still there.
@@ -89,7 +99,7 @@ struct SettingsView: View {
                             Circle().fill(LinearGradient(colors: [Color(white: 0.38), Color(white: 0.16)],
                                                          startPoint: .topLeading, endPoint: .bottomTrailing))
                             Circle().strokeBorder(.white.opacity(0.18), lineWidth: 2 * s)
-                            Image(systemName: model.selected?.symbol ?? model.icon)
+                            Image(systemName: model.selected?.heroSymbol ?? model.selected?.symbol ?? model.icon)
                                 .font(.system(size: 150 * s, weight: .semibold))
                                 .foregroundStyle(.white)
                                 .contentTransition(.symbolEffect(.replace))
