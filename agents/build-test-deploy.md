@@ -2,8 +2,8 @@
 
 ## Requirements
 
-macOS 14+ on Apple Silicon, with Xcode or a Swift 5.9+ toolchain. There are
-no dependencies beyond the system frameworks.
+macOS 14+ on Apple Silicon, with Xcode or a Swift 5.9+ toolchain. The only
+dependency is Sparkle (SwiftPM, fetched on first build).
 
 ## The check
 
@@ -23,8 +23,11 @@ scripts/build-app.sh
 
 Builds `dist/CouchMode.app` (arm64) from the current commit:
 
-- copies the release binary and `packaging/Info.plist` (the short commit hash
-  becomes the build number shown in Settings > Version),
+- copies the release binary and `packaging/Info.plist` (the version comes from
+  `packaging/VERSION` or `$COUCHMODE_VERSION`, the build number is the commit
+  count, and the short commit hash is stored as `CouchModeGitSHA`; Settings >
+  Version shows `0.2.0 (123, abc1234)`),
+- embeds and signs `Sparkle.framework` (the self-updater),
 - copies the card artwork in `packaging/art` into the app's Resources,
 - signs with `HTPC_SIGN_IDENTITY`, or ad hoc if that is unset.
 
@@ -38,6 +41,9 @@ Copy `scripts/local.env.example` to `scripts/local.env`. It is ignored by git
 | `HTPC_HOST` | `deploy.sh` | ssh destination of the Mac that runs CouchMode (`user@mac-mini.local`). Key-based ssh must work. |
 | `HTPC_SIGN_IDENTITY` | `build-app.sh` | A code-signing identity name from `security find-identity -v -p codesigning`. A stable identity keeps macOS permission grants (Accessibility, Screen Recording) and Keychain access across rebuilds; ad hoc signing makes macOS ask again after every build. |
 
+Releases (signed, notarized DMG, GitHub draft) are a separate script: see
+[release.md](release.md).
+
 ## Deploy
 
 ```
@@ -46,7 +52,7 @@ scripts/deploy.sh
 
 Zips `dist/CouchMode.app`, copies it to the host, stops the old CouchMode,
 installs into `~/Applications`, and relaunches (retrying a failed launch a
-few times). It stops with a usage message if `HTPC_HOST` is not set. Run
+few times) and prints the `CouchModeGitSHA` of the installed app, so you can confirm the deploy. It stops with a usage message if `HTPC_HOST` is not set. Run
 `build-app.sh` first.
 
 The usual loop on a device:

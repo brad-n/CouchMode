@@ -23,6 +23,9 @@ ssh "$host" 'set -e; pkill -x HTPCShell || true; pkill -x CouchMode || true; mkd
 for attempt in 1 2 3; do
   open ~/Applications/CouchMode.app || true
   sleep 3
-  if pgrep -x CouchMode >/dev/null; then echo "running on $(hostname)"; exit 0; fi
+  if pgrep -x CouchMode >/dev/null; then
+    got=$(/usr/libexec/PlistBuddy -c "Print :CouchModeGitSHA" ~/Applications/CouchMode.app/Contents/Info.plist 2>/dev/null || echo unknown)
+    echo "running on $(hostname), commit $got"; exit 0
+  fi
 done
 echo "CouchMode did not start on $(hostname)" >&2; exit 1'

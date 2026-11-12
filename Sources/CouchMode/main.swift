@@ -14,6 +14,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let debugServer = DebugServer()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        AppUpdater.shared.start()
         let settings = SystemSettings()
         settings.migrateLoginItemAfterRename()
         let games = GameLauncher()

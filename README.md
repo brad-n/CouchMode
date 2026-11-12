@@ -107,12 +107,19 @@ paused and shown first under Jump Back In.
 ## Requirements
 
 - A Mac with **Apple Silicon**, macOS 14 or later.
-- Xcode (or the Swift 5.9+ toolchain) to build it. There is no download.
+- To install: nothing else. To build it yourself: Xcode (or the Swift 5.9+ toolchain).
 - Optional: Plex HTPC, RetroArch with cores, NX2Apple game builds, and your
   own accounts for the streaming services.
 - Permissions macOS will ask for: Accessibility (so Home works from other
   apps and the remote can drive them); Screen Recording only if you enable
   the debug channel's screenshot route.
+
+## Install
+
+Download the DMG from [Releases](https://github.com/brad-n/CouchMode/releases),
+open it and drag CouchMode to Applications. The app is signed and notarized by
+Apple. Installed copies check for new releases themselves (Settings > Check for
+Updates, or Automatically Check).
 
 ## Build, test, deploy
 
