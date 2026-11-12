@@ -64,6 +64,10 @@ public struct CatalogApp: Codable, Equatable, Sendable, Identifiable {
     /// Added to a fresh config. Apps that are not default are only added by the user.
     public var defaultEnabled: Bool = true
     public var note: String? = nil
+    /// The app's id in Apple's public catalog (a number, not artwork): its tvOS icon is fetched from there at runtime.
+    public var appStoreId: Int? = nil
+    /// "#RRGGBB" behind the app's logo when no tvOS art can be had.
+    public var brandColor: String? = nil
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: Keys.self)
@@ -76,8 +80,12 @@ public struct CatalogApp: Codable, Equatable, Sendable, Identifiable {
         requires = try c.decodeIfPresent([AppRequirement].self, forKey: .requires) ?? []
         defaultEnabled = try c.decodeIfPresent(Bool.self, forKey: .defaultEnabled) ?? true
         note = try c.decodeIfPresent(String.self, forKey: .note)
+        appStoreId = try c.decodeIfPresent(Int.self, forKey: .appStoreId)
+        brandColor = try c.decodeIfPresent(String.self, forKey: .brandColor)
     }
-    private enum Keys: String, CodingKey { case id, name, kind, site, native, console, requires, defaultEnabled, note }
+    private enum Keys: String, CodingKey {
+        case id, name, kind, site, native, console, requires, defaultEnabled, note, appStoreId, brandColor
+    }
 }
 
 public enum AppCatalogError: Error, Equatable, CustomStringConvertible {
@@ -122,6 +130,8 @@ public struct AppCatalog: Equatable, Sendable {
     }
 
     private static func problem(with app: CatalogApp) -> String? {
+        if let id = app.appStoreId, id <= 0 { return "appStoreId must be positive" }
+        if let color = app.brandColor, RGB(hex: color) == nil { return "brandColor must be #RRGGBB" }
         switch app.kind {
         case .stream:
             guard let site = app.site else { return "stream needs a site" }

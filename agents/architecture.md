@@ -26,6 +26,7 @@ If something can be written as "input in, value out", it belongs in Core.
 | Player handoff | `PlayerExit`, `PlayNudge`, `ImageRetry` |
 | Plex | `Plex` (JSON parsing, URLs), `PlexInspector`, `PlexHTPCLog` |
 | Debug channel | `HTTPRequest` (bounded parser) |
+| App tiles | `TVArt` (tvOS app art from Apple's public catalog: lookup, host and landscape checks), `SiteIcons` (a site's own icon, the fallback), `EdgeColor`, `TileLayout` (tile size, corner, logo fit, tilt) |
 | Demo mode | `DemoArtSpec`, `DemoCatalog` (see [demo-mode.md](demo-mode.md)) |
 
 **App (wiring):**
@@ -34,7 +35,7 @@ If something can be written as "input in, value out", it belongs in Core.
 |---|---|
 | Composition root | `main.swift` builds everything once |
 | Which screen shows, what each input does | `AppCoordinator` (the single entry point for all input) |
-| Home and games screens | `HomeView`, `ConsoleView`, `AllConsolesView`, `GameDetailView`, `PlexDetailView`, `SettingsView`, `ScreensaverView`, `IntroView`, `Overlays`, `DesignSystem` |
+| Home and games screens | `HomeView`, `AppTileView` (the Apps row tile), `ConsoleView`, `AllConsolesView`, `GameDetailView`, `PlexDetailView`, `SettingsView`, `ScreensaverView`, `IntroView`, `Overlays`, `DesignSystem` |
 | Shared streaming screens | `StreamHomeView/Model`, `StreamDetailView/Model`, `StreamSearchView`, `StreamParts` |
 | Readers | `StreamSource` (the protocol), `PageDriver`, `PageScripts` |
 | Script packages | `ScriptReader` (the generic reader that runs `apps/<id>/reader.js`; the only reader), `PackageStore` / `PackageUpdater` (find and update packages) |
@@ -92,6 +93,10 @@ keeps in the Keychain. `Plex.swift` (Core) parses the JSON.
 through the app's inspector, see `PlexInspector`).
 
 ## Games and Home
+
+App tiles show each service's own art, fetched at runtime and never committed: first its tvOS icon
+(`appStoreId` in the catalog, looked up on Apple's public catalog), else its site's icon as a logo on a
+full-bleed background, else a system-style tile. `ServiceIcons` caches each for a week.
 
 `GameLauncher` is the only code that knows the games folder, RetroArch's
 install and command line, and the NX2Apple front-end contract. `HomeRouting`

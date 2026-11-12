@@ -47,6 +47,8 @@ struct HomeItem: Identifiable {
     /// Local art already loaded (Switch catalog card / banner).
     var cardImage: NSImage? = nil
     var heroImage: NSImage? = nil
+    /// The service's brand color (catalog), behind its logo when it has no tvOS art.
+    var brand: RGB? = nil
 }
 
 extension HomeItem {
@@ -228,7 +230,8 @@ enum HomeLayout {
                 guard let s = services.first(where: { $0.id == app.id }) else { return nil }
                 return HomeItem(id: s.id, title: s.name, subtitle: "",
                                 symbol: ServiceLook.symbol(s.id), colors: ServiceLook.colors(s.id),
-                                style: .app, action: .stream(s), tagline: ServiceLook.tagline(s.id))
+                                style: .app, action: .stream(s), tagline: ServiceLook.tagline(s.id),
+                                brand: app.brandColor.flatMap(RGB.init(hex:)))
             case .system where app.id == "settings":
                 return HomeItem(id: "settings", title: "Settings", subtitle: "",
                                 symbol: "gearshape.fill", colors: [Color(white: 0.34), Color(white: 0.16)],
@@ -290,7 +293,7 @@ private enum HomeMetrics {
     static let rowTitle: CGFloat = 38
     static let landscape = CGSize(width: 384, height: 216)
     static let landscapeCaption: CGFloat = 70
-    static let app = CGSize(width: 300, height: 180)
+    static let app = CGSize(width: TileLayout.width, height: TileLayout.height)
     static let gap: CGFloat = 40               // between cards
     static let rowGap: CGFloat = 54            // between rows
 
@@ -298,7 +301,7 @@ private enum HomeMetrics {
 
     static func rowHeight(_ row: HomeRow) -> CGFloat {
         let style = row.items.first?.style ?? .landscape
-        return rowTitle + cardSize(style).height + (style == .app ? 24 : landscapeCaption)
+        return rowTitle + cardSize(style).height + (style == .app ? TileLayout.labelHeight : landscapeCaption)
     }
 }
 
@@ -450,27 +453,18 @@ private struct HeroBackdrop: View {
     }
 }
 
-/// The app tile drawn large for the hero's product shot.
+/// The app tile's art drawn large for the hero's product shot (no name: the hero text carries it).
 private struct HeroTile: View {
     let item: HomeItem
     let s: CGFloat
 
     var body: some View {
-        let shape = RoundedRectangle(cornerRadius: 46 * s, style: .continuous)
-        ZStack {
-            LinearGradient(colors: item.colors, startPoint: .topLeading, endPoint: .bottomTrailing)
-            LinearGradient(colors: [.white.opacity(0.25), .clear], startPoint: .top, endPoint: .center)
-            VStack(spacing: 22 * s) {
-                Image(systemName: item.symbol).font(.system(size: 110 * s, weight: .semibold))
-                Text(item.title).font(DS.ui(56, s, .heavy)).lineLimit(1).minimumScaleFactor(0.5)
-            }
-            .foregroundStyle(.white)
-            .shadow(color: .black.opacity(0.3), radius: 10 * s, y: 5 * s)
-        }
-        .frame(width: 620 * s, height: 372 * s)
-        .clipShape(shape)
-        .overlay(shape.strokeBorder(.white.opacity(0.2), lineWidth: 2 * s))
-        .shadow(color: (item.colors.first ?? .black).opacity(0.55), radius: 60 * s, y: 30 * s)
+        let (w, h) = (620 * s, 372 * s)
+        let shape = RoundedRectangle(cornerRadius: TileLayout.cornerRadius(tileWidth: w), style: .continuous)
+        TileArt(item: item, size: CGSize(width: w, height: h))
+            .clipShape(shape)
+            .overlay(shape.strokeBorder(.white.opacity(0.2), lineWidth: 2 * s))
+            .shadow(color: (item.colors.first ?? .black).opacity(0.55), radius: 60 * s, y: 30 * s)
     }
 }
 
@@ -597,53 +591,6 @@ struct LandscapeCard: View {
             .offset(y: focused ? 14 * s : 0)
             .animation(DS.focusSpring, value: focused)
         }
-    }
-}
-
-/// A glass app tile: color wash, big glyph and the app's name.
-private struct AppTile: View {
-    @ObservedObject private var icons = ServiceIcons.shared
-    let item: HomeItem
-    let focused: Bool
-    let size: CGSize
-    let s: CGFloat
-
-    private var serviceIcon: NSImage? {
-        if case .stream = item.action { return icons.image(for: item.id) }
-        return nil
-    }
-
-    var body: some View {
-        let w = size.width * s, h = size.height * s
-        let shape = RoundedRectangle(cornerRadius: DS.tileRadius * s, style: .continuous)
-        ZStack {
-            LinearGradient(colors: item.colors, startPoint: .topLeading, endPoint: .bottomTrailing)
-            // Glass: a soft top highlight.
-            LinearGradient(colors: [.white.opacity(0.22), .clear], startPoint: .top, endPoint: .center)
-            VStack(spacing: 10 * s) {
-                if let icon = serviceIcon {
-                    // The service's own icon, drawn no larger than ~110 pt so a 180 px
-                    // icon stays sharp (it is downsampled, never magnified).
-                    Image(nsImage: icon).resizable().interpolation(.high)
-                        .frame(width: 104 * s, height: 104 * s)
-                        .clipShape(RoundedRectangle(cornerRadius: 24 * s, style: .continuous))
-                        .shadow(color: .black.opacity(0.4), radius: 10 * s, y: 5 * s)
-                } else {
-                    Image(systemName: item.symbol)
-                        .font(.system(size: 50 * s, weight: .semibold))
-                        .foregroundStyle(.white)
-                        .shadow(color: .black.opacity(0.3), radius: 6 * s, y: 3 * s)
-                }
-                Text(item.title)
-                    .font(DS.ui(26, s, .heavy))
-                    .foregroundStyle(.white)
-                    .lineLimit(1).minimumScaleFactor(0.6)
-            }
-        }
-        .frame(width: w, height: h)
-        .clipShape(shape)
-        .focusLift(focused, radius: DS.tileRadius * s, s: s, amount: 1.12)
-        .saturation(focused ? 1 : 0.85)
     }
 }
 
