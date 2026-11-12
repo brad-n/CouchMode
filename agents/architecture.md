@@ -19,7 +19,7 @@ If something can be written as "input in, value out", it belongs in Core.
 |---|---|
 | Input vocabulary and routing | `Intent`, `PlayerInput`, `PlayerBackKey`, `HomeRouting`, `RemotePassthrough`, `HIDPadLayout`, `ConfirmGate` |
 | Focus and layout rules | `FocusGrid`, `RowSlide`, `DetailFocus`, `StreamFocus`, `StreamKeyboard`, `Cycle` |
-| Catalogs | `Service` (the service list), `Consoles` (consoles, games), `SwitchCatalog`, `BluetoothPane` |
+| Catalogs and config | `AppCatalog` (parses `apps/catalog.json`), `AppConfig` + `ConfigFile` (a Mac's `config.json`), `Service` and `Consoles` (made from the catalog), `SwitchCatalog`, `BluetoothPane` |
 | Shared streaming vocabulary | `StreamCatalog` (`StreamHome`, `StreamRow`, `StreamTitle`, `StreamTitleDetails`, ..., `StreamLimits`), `StreamJSON` (careful JSON readers, script quoting) |
 | Per-service parsers | `NetflixHome/Details/Search`, `HuluHome/Details/Search`: page data in, shared vocabulary out; also the scripts to run in the page |
 | Player handoff | `PlayerExit`, `PlayNudge`, `ImageRetry` |
@@ -38,6 +38,7 @@ If something can be written as "input in, value out", it belongs in Core.
 | Readers | `StreamSource` (protocol and a sample reader), `NetflixSource`, `HuluSource`, `PageDriver`, `PageScripts` |
 | Web | `WebPlayer` (one WKWebView per service), `WebPage` |
 | Other apps and games | `GameLauncher` (RetroArch and Switch apps), `AppLauncher`, `PlexHTPC`, `PlexClient`, `PlexInspectorClient` |
+| Apps and config | `AppConfigStore` (loads the catalog and config, hides unmet requirements, saves per-app settings), `AppServices` |
 | System | `SystemSettings` (audio, login item), `SystemActions`, `SystemInput`, `BluetoothSettings`, `AccessibilityTree`, `ScreenCapture`, `UISound`, `InputSources`, `HIDGamepads` |
 | Debug | `DebugServer` |
 | Demo mode | `DemoMode`, `DemoArtRenderer`, `DemoStreamSource` |
@@ -107,4 +108,4 @@ debug server uses `Network.framework` on the main queue and never blocks.
 - A new screen: a model + a view + a case in `AppCoordinator.Screen`, with the
   focus rules in Core.
 - A new service reader: [add-a-streaming-service.md](add-a-streaming-service.md).
-- A new console: one row in `ConsoleCatalog` (`Consoles.swift`) and a test.
+- A new console: one entry in `apps/catalog.json` (see [config.md](config.md)) and a test.

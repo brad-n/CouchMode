@@ -258,7 +258,7 @@ final class AppCoordinator {
         }
         // Switch games' banners first (the richest art), then the console scenes.
         var consoles: [ScreensaverSlide] = []
-        if let sw = ConsoleCatalog.all.first(where: { $0.gamesAreApps }) {
+        if let sw = AppConfigStore.shared.consoles.first(where: { $0.gamesAreApps }) {
             for g in games.games(for: sw) {
                 let url = games.folder(for: sw).appendingPathComponent(g.fileName)
                 guard let banner = GameArt.banner(url) else { continue }
@@ -266,7 +266,7 @@ final class AppCoordinator {
                                                  subtitle: sw.name, image: banner))
             }
         }
-        consoles += ConsoleCatalog.all.compactMap { c -> ScreensaverSlide? in
+        consoles += AppConfigStore.shared.consoles.compactMap { c -> ScreensaverSlide? in
             guard let art = Artwork.image(c.id) else { return nil }
             return ScreensaverSlide(id: "console-" + c.id, title: c.name, subtitle: "Play", image: art)
         }
@@ -741,7 +741,7 @@ final class AppCoordinator {
 
     private func consoleModel(_ c: Console) -> ConsoleModel {
         let list = games.games(for: c)
-        return ConsoleModel(console: c, games: list, folderPath: "~/Games/" + c.folder,
+        return ConsoleModel(console: c, games: list, folderPath: AppConfigStore.shared.gamesFolderText(for: c),
                             folderURL: games.folder(for: c), colors: HomeLayout.consoleColors(c),
                             lastPlayed: games.lastPlayed(for: c),
                             pausedGame: list.first { games.isOpen($0, on: c) }?.fileName)
@@ -839,7 +839,7 @@ final class AppCoordinator {
             show(NSHostingView(rootView: ConsoleView(model: model)))
             screen = .console(model)
         case .allConsoles:
-            let items = ConsoleCatalog.all.map { HomeLayout.consoleItem($0, count: games.games(for: $0).count) }
+            let items = AppConfigStore.shared.consoles.map { HomeLayout.consoleItem($0, count: games.games(for: $0).count) }
             let model = AllConsolesModel(items: items)
             show(NSHostingView(rootView: AllConsolesView(model: model)))
             screen = .allConsoles(model)
@@ -894,8 +894,9 @@ final class AppCoordinator {
     }
 
     static func homeRows(games: GameLauncher, continueWatching: [ContinueEntry] = []) -> [HomeRow] {
-        HomeLayout.rows(services: AppServices.all,
-                        consoles: ConsoleCatalog.all.map { ($0, games.games(for: $0).count) },
+        let store = AppConfigStore.shared
+        return HomeLayout.rows(apps: store.home.apps.map(\.app), services: store.services,
+                        consoles: store.consoles.map { ($0, games.games(for: $0).count) },
                         continueWatching: continueWatching,
                         recentGames: recentGames(games))
     }
@@ -904,7 +905,7 @@ final class AppCoordinator {
     /// consoles; a paused game first, as a Switch keeps the open software first.
     static func recentGames(_ games: GameLauncher) -> [RecentGame] {
         var out: [RecentGame] = []
-        for c in ConsoleCatalog.all {
+        for c in AppConfigStore.shared.consoles {
             let played = games.lastPlayed(for: c)
             guard !played.isEmpty else { continue }
             for g in games.games(for: c) {
@@ -1253,7 +1254,7 @@ extension AppCoordinator: DebugControllable {
     }
 
     func debugPlay(consoleId: String, fileName: String) -> Bool {
-        guard let c = ConsoleCatalog.all.first(where: { $0.id == consoleId }),
+        guard let c = AppConfigStore.shared.consoles.first(where: { $0.id == consoleId }),
               let g = games.games(for: c).first(where: { $0.fileName == fileName }) else { return false }
         if !isHomeShowing { goHome() }
         open(.game(c, g))

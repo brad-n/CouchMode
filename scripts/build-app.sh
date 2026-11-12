@@ -19,6 +19,8 @@ cp "$bin/CouchMode" "$app/Contents/MacOS/"
 sed -e "s/__VERSION__/$version/" -e "s/__BUILD__/$count/" -e "s/__SHA__/$sha/" packaging/Info.plist > "$app/Contents/Info.plist"
 mkdir -p "$app/Contents/Resources/art"
 cp packaging/art/*.png "$app/Contents/Resources/art/" 2>/dev/null || true
+# The app catalog (every app CouchMode knows); the machine's config.json says which are added.
+cp apps/catalog.json "$app/Contents/Resources/catalog.json"
 # Sparkle.framework (from SwiftPM's binary artifact) goes in Contents/Frameworks, found through an rpath.
 fw=$(find .build/artifacts -type d -path '*macos-arm64*/Sparkle.framework' -maxdepth 6 | head -1)
 test -d "$fw" || { echo "Sparkle.framework not found; run swift package resolve" >&2; exit 1; }

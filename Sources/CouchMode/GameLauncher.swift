@@ -56,7 +56,6 @@ final class GameLauncher {
 
     static let retroArchBundleID = "com.libretro.dist.RetroArch"
 
-    var gamesDirectory: URL { home.appendingPathComponent("Games") }
     private var coresDirectory: URL { home.appendingPathComponent("Library/Application Support/RetroArch/cores") }
     private var shellConfig: URL { home.appendingPathComponent("Library/Application Support/HTPCShell/retroarch-shell.cfg") }
 
@@ -75,7 +74,8 @@ final class GameLauncher {
         }
     }
 
-    func folder(for console: Console) -> URL { gamesDirectory.appendingPathComponent(console.folder) }
+    /// The console's games folder from this Mac's config (default ~/Games/<console>).
+    func folder(for console: Console) -> URL { AppConfigStore.shared.gamesFolder(for: console) }
 
     func games(for console: Console) -> [Game] {
         if DemoMode.isOn { return DemoMode.games(for: console) }
@@ -116,7 +116,7 @@ final class GameLauncher {
     /// A Switch game: an app inside one of the app-games folders.
     func isAppGame(_ app: NSRunningApplication) -> Bool {
         guard let parent = app.bundleURL?.deletingLastPathComponent().standardizedFileURL.path else { return false }
-        return ConsoleCatalog.all.contains { $0.gamesAreApps && folder(for: $0).standardizedFileURL.path == parent }
+        return AppConfigStore.shared.consoles.contains { $0.gamesAreApps && folder(for: $0).standardizedFileURL.path == parent }
     }
 
     // MARK: Recently played (UserDefaults: console id -> file name -> date)
