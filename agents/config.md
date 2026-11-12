@@ -23,6 +23,7 @@ preferences (interface sounds, screensaver minutes) stay in `Prefs`
 | `console` | `emulator` (`retroarch` with a `core`, or `app` when each game is its own Mac app), `extensions`, `defaultFolder`. |
 | `requires` | Conditions to show the app: `{label, bundleId?, appPaths?}`. Met when the bundle id is installed or any path exists. |
 | `defaultEnabled` | Added to a fresh config (default true). |
+| `reader` | A stream's default reader, `builtin` or `package`, used when the Mac's config has no `reader` setting (Prime: `package`). |
 
 Plex has no `requires`: it opens its website when Plex HTPC is not installed.
 Retro consoles require RetroArch; Switch does not.
@@ -49,7 +50,7 @@ Retro consoles require RetroArch; Switch does not.
   `gamesFolder` (`~` allowed), Netflix's `netflix51` (`auto`, `on`, `off`).
   A stream app's `reader` (`builtin`, the default, or `package`) chooses its
   Swift reader or its script package (`apps/<id>/`, see
-  [add-a-streaming-service.md](add-a-streaming-service.md)); anything else
+  [add-a-streaming-service.md](add-a-streaming-service.md)); a missing setting uses the catalog's `reader` (else `builtin`), and anything else
   means `builtin`, and a missing or unusable package falls back to it. It is
   read when the app starts.
 - An id the catalog does not know is ignored but kept when the file is saved.

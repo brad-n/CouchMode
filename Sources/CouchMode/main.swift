@@ -17,7 +17,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// The reader for a service: its script package when the Mac's config says `reader: package` and the package loads,
     /// else the built-in Swift reader (the default).
     private static func reader(for service: Service, player: WebPlayer, builtin: () -> StreamSource) -> StreamSource {
-        guard ReaderMode.from(AppConfigStore.shared.setting(ReaderMode.settingKey, for: service.id)) == .package else { return builtin() }
+        let store = AppConfigStore.shared
+        guard ReaderMode.from(store.setting(ReaderMode.settingKey, for: service.id), catalogDefault: store.catalog.app(id: service.id)?.reader) == .package else { return builtin() }
         guard let package = BundledPackageStore().package(for: service.id) else {
             Logger(subsystem: "local.brad.htpcshell", category: "package").error("\(service.id, privacy: .public): reader is package but none loaded; using the built-in reader")
             return builtin()

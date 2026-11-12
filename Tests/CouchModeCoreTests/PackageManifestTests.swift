@@ -55,4 +55,11 @@ final class PackageManifestTests: XCTestCase {
         XCTAssertEqual(ReaderMode.from(.string("nonsense")), .builtin)
         XCTAssertEqual(ReaderMode.from(.bool(true)), .builtin)
     }
+
+    func testCatalogDefaultAppliesOnlyWithoutASetting() {
+        XCTAssertEqual(ReaderMode.from(nil, catalogDefault: "package"), .package)
+        XCTAssertEqual(ReaderMode.from(.string("builtin"), catalogDefault: "package"), .builtin)
+        XCTAssertEqual(ReaderMode.from(.string("junk"), catalogDefault: "package"), .builtin)
+        XCTAssertEqual(ReaderMode.from(nil, catalogDefault: "junk"), .builtin)
+    }
 }
