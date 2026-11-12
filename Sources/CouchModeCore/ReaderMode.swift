@@ -11,13 +11,14 @@ public enum ReaderMode: String, Equatable, Sendable {
     /// The per-app setting that chooses the reader.
     public static let settingKey = "reader"
 
-    /// The Mac's setting wins (so `builtin` stays builtin); with none, the catalog's default for the app; else built-in.
-    public static func from(_ value: ConfigValue?, catalogDefault: String? = nil) -> ReaderMode {
+    /// The Mac's setting wins (so `builtin` stays builtin); with none, the catalog's default for the app; with none of
+    /// those, the package once the service has one; else built-in.
+    public static func from(_ value: ConfigValue?, catalogDefault: String? = nil, packagePresent: Bool = false) -> ReaderMode {
         func mode(_ text: String) -> ReaderMode? { ReaderMode(rawValue: text.trimmingCharacters(in: .whitespaces).lowercased()) }
         if let value {
             guard case .string(let text) = value else { return .builtin }
             return mode(text) ?? .builtin
         }
-        return catalogDefault.flatMap(mode) ?? .builtin
+        return catalogDefault.flatMap(mode) ?? (packagePresent ? .package : .builtin)
     }
 }

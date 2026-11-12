@@ -1,0 +1,41 @@
+{
+  "packages" : [
+    {
+      "files" : [
+        { "name" : "manifest.json", "sha256" : "d572e29577a1e92d9599816493c89e477b29b0e7a4c8d60e63caba0c7ea6b017" },
+        { "name" : "reader.js", "sha256" : "550289a7c951d32a4c21337881093b21934b0785892c87471c401b7213f41feb" }
+      ],
+      "id" : "appletv",
+      "readerAPI" : 1,
+      "version" : "1.0.0"
+    },
+    {
+      "files" : [
+        { "name" : "manifest.json", "sha256" : "02d4c5487ddbb4d5f54efecc0b0934e23473578802bd5cf3840329339a9fb432" },
+        { "name" : "reader.js", "sha256" : "0e15bbcdc098e0fd0a2bc573f34ce0272763fd48a6ba401c2a64a776584f8bca" }
+      ],
+      "id" : "disney",
+      "readerAPI" : 1,
+      "version" : "1.0.0"
+    },
+    {
+      "files" : [
+        { "name" : "manifest.json", "sha256" : "09e579f30e222b8d5520f547103f5778478ed147a13df607903408273b753e3a" },
+        { "name" : "reader.js", "sha256" : "1d079ed621ffd3b69e3a64885d43627afd99c27968ffd1f77738e615495b7bd9" }
+      ],
+      "id" : "hulu",
+      "readerAPI" : 1,
+      "version" : "1.0.0"
+    },
+    {
+      "files" : [
+        { "name" : "manifest.json", "sha256" : "591fb0118d46218af64107c05f34e4916cd679d2cd746f4ad5f92ca5dc7364bd" },
+        { "name" : "reader.js", "sha256" : "70b5472f021156c508f928fcd036ead7f7ec73fcd8e85d094a84f6895969f92f" }
+      ],
+      "id" : "prime",
+      "readerAPI" : 1,
+      "version" : "1.0.0"
+    }
+  ],
+  "version" : 1
+}
