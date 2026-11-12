@@ -23,6 +23,8 @@ preferences (interface sounds, screensaver minutes) stay in `Prefs`
 | `console` | `emulator` (`retroarch` with a `core`, or `app` when each game is its own Mac app), `extensions`, `defaultFolder`. |
 | `requires` | Conditions to show the app: `{label, bundleId?, appPaths?}`. Met when the bundle id is installed or any path exists. |
 | `defaultEnabled` | Added to a fresh config (default true). |
+| `appStoreId` | The app's id in Apple's public catalog (a number). Its tvOS icon is fetched at runtime for the tile; never commit the image. |
+| `brandColor` | `#RRGGBB` behind the app's logo when no tvOS icon is available. |
 
 Plex has no `requires`: it opens its website when Plex HTPC is not installed.
 Retro consoles require RetroArch; Switch does not.
