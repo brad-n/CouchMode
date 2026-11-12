@@ -2,6 +2,7 @@
 // Nothing else constructs windows, players or input sources.
 
 import AppKit
+import os
 import CouchModeCore
 
 @MainActor
@@ -12,6 +13,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let hotKeys = GlobalHotKeys()
     private let hidPads = HIDGamepads()
     private let debugServer = DebugServer()
+
+    /// The reader for a service: its script package when the Mac's config says `reader: package` and the package loads,
+    /// else the built-in Swift reader (the default).
+    private static func reader(for service: Service, player: WebPlayer, builtin: () -> StreamSource) -> StreamSource {
+        guard ReaderMode.from(AppConfigStore.shared.setting(ReaderMode.settingKey, for: service.id)) == .package else { return builtin() }
+        guard let package = BundledPackageStore().package(for: service.id) else {
+            Logger(subsystem: "local.brad.htpcshell", category: "package").error("\(service.id, privacy: .public): reader is package but none loaded; using the built-in reader")
+            return builtin()
+        }
+        return ScriptReader(service: service, player: player, package: package)
+    }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         AppUpdater.shared.start()
@@ -33,7 +45,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             coordinator.registerStreamSource(DisneySource(service: disney, player: player))
         }
         if let prime = AppServices.all.first(where: { $0.id == PrimeHome.serviceID }) {
-            coordinator.registerStreamSource(PrimeSource(service: prime, player: player))
+            coordinator.registerStreamSource(Self.reader(for: prime, player: player, builtin: { PrimeSource(service: prime, player: player) }))
         }
         if let appletv = AppServices.all.first(where: { $0.id == AppleTVHome.serviceID }) {
             coordinator.registerStreamSource(AppleTVSource(service: appletv, player: player))

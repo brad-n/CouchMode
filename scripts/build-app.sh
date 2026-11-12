@@ -21,6 +21,13 @@ mkdir -p "$app/Contents/Resources/art"
 cp packaging/art/*.png "$app/Contents/Resources/art/" 2>/dev/null || true
 # The app catalog (every app CouchMode knows); the machine's config.json says which are added.
 cp apps/catalog.json "$app/Contents/Resources/catalog.json"
+# Reader packages (apps/<id>/manifest.json + reader.js): run by the generic script reader.
+for pkg in apps/*/manifest.json; do
+  [ -e "$pkg" ] || continue
+  dir=$(dirname "$pkg"); id=$(basename "$dir")
+  mkdir -p "$app/Contents/Resources/apps/$id"
+  cp "$dir/manifest.json" "$dir/reader.js" "$app/Contents/Resources/apps/$id/"
+done
 # Sparkle.framework (from SwiftPM's binary artifact) goes in Contents/Frameworks, found through an rpath.
 fw=$(find .build/artifacts -type d -path '*macos-arm64*/Sparkle.framework' -maxdepth 6 | head -1)
 test -d "$fw" || { echo "Sparkle.framework not found; run swift package resolve" >&2; exit 1; }
