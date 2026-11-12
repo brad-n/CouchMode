@@ -13,6 +13,8 @@
 //   GET  /stream?service=<id>&sample=1 -> the shell's own stream screens on built-in sample data
 //   GET  /snapshot                 -> PNG of what the shell is drawing
 //   GET  /screen                    -> PNG of the real screen (needs Screen Recording permission)
+//   GET  /media-formats?service=<id> -> media probe record (codecs, audio channels, video size)
+//   GET  /debug-flag?name=netflix51&on=1 -> debug-only experiment flag (off at launch)
 //   POST /eval  (body = JS function body; use `return`) -> JSON result
 //   POST /peek?service=<id> (body = JS function body) -> JSON result, in that
 //        service's own page even behind a stream screen (for building readers)
@@ -40,6 +42,8 @@ protocol DebugControllable: AnyObject {
     func debugEval(_ js: String, _ done: @escaping @MainActor (String) -> Void)
     func debugPeek(serviceId: String, _ js: String, _ done: @escaping @MainActor (String) -> Void)
     func debugMedia(serviceId: String, suspend: Bool?, _ done: @escaping @MainActor (String) -> Void)
+    func debugMediaFormats(serviceId: String, _ done: @escaping @MainActor (String) -> Void)
+    func debugFlag(name: String, on: Bool) -> Bool
 }
 
 @MainActor
@@ -210,6 +214,19 @@ final class DebugServer {
             target.debugMedia(serviceId: req.query["service"] ?? "", suspend: suspend) { [weak self] state in
                 self?.replyJSON(conn, ["media": state])
             }
+        case ("GET", "/media-formats"):
+            // The media probe's record for a service: codec strings and the
+            // first init segment's audio channels / video size. Nothing else.
+            target.debugMediaFormats(serviceId: req.query["service"] ?? "") { [weak self] json in
+                self?.send(conn, 200, "application/json", Data(json.utf8))
+            }
+        case ("GET", "/debug-flag"):
+            // Debug-only experiment flags, off at every launch: /debug-flag?name=netflix51&on=1
+            guard let name = req.query["name"], let on = req.query["on"], on == "0" || on == "1" else {
+                return reply(conn, 400, "name=<flag>&on=0|1")
+            }
+            guard target.debugFlag(name: name, on: on == "1") else { return reply(conn, 404, "unknown flag") }
+            replyJSON(conn, ["flag": name, "on": on])
         case ("POST", "/peek"):
             // A service's own page even while a stream screen covers it (its reader's view).
             target.debugPeek(serviceId: req.query["service"] ?? "", String(decoding: req.body, as: UTF8.self)) { [weak self] result in

@@ -22,21 +22,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let coordinator = AppCoordinator(homeModel: home, player: player, system: SystemActions(), settings: settings, games: games, plex: PlexClient())
         self.coordinator = coordinator
         // Services with the shell's own screens: their reader drives the service's own page (a proxy).
-        if let netflix = ServiceCatalog.all.first(where: { $0.id == NetflixHome.serviceID }) {
+        if let netflix = AppServices.all.first(where: { $0.id == NetflixHome.serviceID }) {
             coordinator.registerStreamSource(NetflixSource(service: netflix, player: player))
         }
-        if let hulu = ServiceCatalog.all.first(where: { $0.id == HuluHome.serviceID }) {
+        if let hulu = AppServices.all.first(where: { $0.id == HuluHome.serviceID }) {
             coordinator.registerStreamSource(HuluSource(service: hulu, player: player))
         }
-        if let disney = ServiceCatalog.all.first(where: { $0.id == DisneyHome.serviceID }) {
+        if let disney = AppServices.all.first(where: { $0.id == DisneyHome.serviceID }) {
             coordinator.registerStreamSource(DisneySource(service: disney, player: player))
         }
-        if let prime = ServiceCatalog.all.first(where: { $0.id == PrimeHome.serviceID }) {
+        if let prime = AppServices.all.first(where: { $0.id == PrimeHome.serviceID }) {
             coordinator.registerStreamSource(PrimeSource(service: prime, player: player))
         }
         // Demo mode: every web service (not Plex's app) opens the shell's own screens on invented titles.
         if DemoMode.isOn {
-            for service in ServiceCatalog.all where service.id != "plex" {
+            for service in AppServices.all where service.id != "plex" {
                 coordinator.registerStreamSource(DemoStreamSource(service: service))
             }
         }

@@ -30,14 +30,7 @@ final class WebPlayer: NSObject, WKScriptMessageHandler, WKNavigationDelegate, W
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
         let content = config.userContentController
         content.add(WeakHandler(self), name: PageScripts.messageHandler)
-        content.addUserScript(WKUserScript(source: PageScripts.hideGamepads, injectionTime: .atDocumentStart, forMainFrameOnly: false))
-        if !service.hasTVInterface {
-            content.addUserScript(WKUserScript(source: PageScripts.spatialNavigation(skip: service.navigationSkip),
-                                                 injectionTime: .atDocumentEnd, forMainFrameOnly: true))
-        }
-        if service.id == "plex" {
-            content.addUserScript(WKUserScript(source: PageScripts.plexHelper, injectionTime: .atDocumentEnd, forMainFrameOnly: true))
-        }
+        installScripts(for: service, in: content)
         let v = WKWebView(frame: .zero, configuration: config)
         v.customUserAgent = service.userAgent
         v.navigationDelegate = self
@@ -46,6 +39,33 @@ final class WebPlayer: NSObject, WKScriptMessageHandler, WKNavigationDelegate, W
         views[service.id] = v
         log.info("created view service=\(service.id, privacy: .public)")
         return v
+    }
+
+    /// The scripts every page of a service gets. The media probe and the
+    /// debug experiments are added only while the debug channel is on.
+    private func installScripts(for service: Service, in content: WKUserContentController) {
+        content.addUserScript(WKUserScript(source: PageScripts.hideGamepads, injectionTime: .atDocumentStart, forMainFrameOnly: false))
+        if DebugServer.isEnabled {
+            content.addUserScript(WKUserScript(source: MediaProbeScript.source, injectionTime: .atDocumentStart, forMainFrameOnly: false))
+            if service.id == "netflix", DebugFlags.isOn(.netflix51) {
+                content.addUserScript(WKUserScript(source: MediaProbeScript.netflix51, injectionTime: .atDocumentStart, forMainFrameOnly: true))
+            }
+        }
+        if !service.hasTVInterface {
+            content.addUserScript(WKUserScript(source: PageScripts.spatialNavigation(skip: service.navigationSkip),
+                                                 injectionTime: .atDocumentEnd, forMainFrameOnly: true))
+        }
+        if service.id == "plex" {
+            content.addUserScript(WKUserScript(source: PageScripts.plexHelper, injectionTime: .atDocumentEnd, forMainFrameOnly: true))
+        }
+    }
+
+    /// Debug only: re-installs a service's scripts after a debug flag changed, then reloads it.
+    func reinstallDebugScripts(for service: Service) {
+        guard let v = views[service.id] else { return }
+        v.configuration.userContentController.removeAllUserScripts()
+        installScripts(for: service, in: v.configuration.userContentController)
+        v.reload()
     }
 
     func activate(_ service: Service) { activeService = service }

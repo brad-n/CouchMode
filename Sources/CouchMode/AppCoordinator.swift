@@ -106,7 +106,7 @@ final class AppCoordinator {
         NotificationCenter.default.addObserver(forName: NSApplication.didResignActiveNotification, object: nil, queue: .main) { [weak self] _ in
             MainActor.assumeIsolated { self?.hideOverlay(animated: false) }
         }
-        if let plexService = ServiceCatalog.all.first(where: { $0.id == "plex" }) {
+        if let plexService = AppServices.all.first(where: { $0.id == "plex" }) {
             plex.tokenFromPlexWeb = { [weak player] done in
                 guard let player else { return done(nil) }
                 // Every token Plex Web holds: the signed-in account plus each Plex Home user.
@@ -161,7 +161,7 @@ final class AppCoordinator {
     private func frontApp() -> (FrontApp, NSRunningApplication?) {
         guard !NSApp.isActive, let app = NSWorkspace.shared.frontmostApplication,
               app.processIdentifier != ProcessInfo.processInfo.processIdentifier else { return (.shell, nil) }
-        if let id = app.bundleIdentifier, ServiceCatalog.all.contains(where: { $0.nativeAppBundleID == id }) {
+        if let id = app.bundleIdentifier, AppServices.all.contains(where: { $0.nativeAppBundleID == id }) {
             return (.streamingApp, app)
         }
         if games.isRetroArch(app) { return (.retroArch, app) }
@@ -297,7 +297,7 @@ final class AppCoordinator {
     /// reaches the servers. The token stays inside that page's own storage.
     private func rememberPlexProfile() {
         guard let token = plex.workingToken,
-              let s = ServiceCatalog.all.first(where: { $0.id == "plex" }),
+              let s = AppServices.all.first(where: { $0.id == "plex" }),
               let tokenJSON = try? JSONSerialization.data(withJSONObject: [token]),
               let tokenLiteral = String(data: tokenJSON, encoding: .utf8) else { return }
         let js = """
@@ -845,7 +845,7 @@ final class AppCoordinator {
         case .stream(let s):
             showWeb(s)
         case .resume(let url):
-            guard let s = ServiceCatalog.all.first(where: { $0.id == "plex" }) else { return }
+            guard let s = AppServices.all.first(where: { $0.id == "plex" }) else { return }
             // Plex HTPC, which the remote drives, opened on the title's own
             // page in the library (PlexHTPC explains how, and its fallbacks).
             if s.nativeAppBundleID == PlexHTPC.bundleID, plexApp.isInstalled {
@@ -886,7 +886,7 @@ final class AppCoordinator {
     }
 
     static func homeRows(games: GameLauncher, continueWatching: [ContinueEntry] = []) -> [HomeRow] {
-        HomeLayout.rows(services: ServiceCatalog.all,
+        HomeLayout.rows(services: AppServices.all,
                         consoles: ConsoleCatalog.all.map { ($0, games.games(for: $0).count) },
                         continueWatching: continueWatching,
                         recentGames: recentGames(games))
@@ -1277,14 +1277,14 @@ extension AppCoordinator: DebugControllable {
     }
 
     func debugOpen(serviceId: String) -> Bool {
-        guard let s = ServiceCatalog.all.first(where: { $0.id == serviceId }) else { return false }
+        guard let s = AppServices.all.first(where: { $0.id == serviceId }) else { return false }
         if !isHomeShowing { goHome() }
         open(.stream(s))
         return true
     }
 
     func debugStream(serviceId: String) -> Bool {
-        guard let s = ServiceCatalog.all.first(where: { $0.id == serviceId }) else { return false }
+        guard let s = AppServices.all.first(where: { $0.id == serviceId }) else { return false }
         registerStreamSource(SampleStreamSource(service: s))
         if !isHomeShowing { goHome() }
         showStreamHome(s)
@@ -1312,12 +1312,32 @@ extension AppCoordinator: DebugControllable {
     /// For building readers: a script in a service's own page, even while a
     /// stream screen covers it.
     func debugPeek(serviceId: String, _ js: String, _ done: @escaping @MainActor (String) -> Void) {
-        guard let s = ServiceCatalog.all.first(where: { $0.id == serviceId }) else { return done(#"{"error":"unknown service"}"#) }
+        guard let s = AppServices.all.first(where: { $0.id == serviceId }) else { return done(#"{"error":"unknown service"}"#) }
         Self.evaluate(js, in: player.view(for: s), done)
     }
 
+    /// What the media probe recorded in a service's page (JSON text).
+    func debugMediaFormats(serviceId: String, _ done: @escaping @MainActor (String) -> Void) {
+        guard let s = AppServices.all.first(where: { $0.id == serviceId }) else { return done(#"{"error":"unknown service"}"#) }
+        guard DebugServer.isEnabled else { return done(#"{"error":"debug channel off"}"#) }
+        player.view(for: s).evaluateJavaScript(MediaProbeScript.readExpression) { value, _ in
+            MainActor.assumeIsolated { done((value as? String) ?? #"{"error":"probe not present"}"#) }
+        }
+    }
+
+    /// Switches a debug-only flag; a flag that changes a service's scripts reloads that service.
+    func debugFlag(name: String, on: Bool) -> Bool {
+        guard let flag = DebugFlag(name: name) else { return false }
+        DebugFlags.set(flag, on)
+        switch flag {
+        case .netflix51:
+            if let s = AppServices.all.first(where: { $0.id == "netflix" }) { player.reinstallDebugScripts(for: s) }
+        }
+        return true
+    }
+
     func debugMedia(serviceId: String, suspend: Bool?, _ done: @escaping @MainActor (String) -> Void) {
-        guard let s = ServiceCatalog.all.first(where: { $0.id == serviceId }) else { return done("unknown service") }
+        guard let s = AppServices.all.first(where: { $0.id == serviceId }) else { return done("unknown service") }
         let page = player.view(for: s)
         let report = {
             page.requestMediaPlaybackState { state in
