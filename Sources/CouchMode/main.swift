@@ -28,6 +28,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if let hulu = ServiceCatalog.all.first(where: { $0.id == HuluHome.serviceID }) {
             coordinator.registerStreamSource(HuluSource(service: hulu, player: player))
         }
+        if let disney = ServiceCatalog.all.first(where: { $0.id == DisneyHome.serviceID }) {
+            coordinator.registerStreamSource(DisneySource(service: disney, player: player))
+        }
         // Demo mode: every web service (not Plex's app) opens the shell's own screens on invented titles.
         if DemoMode.isOn {
             for service in ServiceCatalog.all where service.id != "plex" {

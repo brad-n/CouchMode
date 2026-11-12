@@ -1,0 +1,7 @@
+{
+ "id": "00000000-0000-4000-8000-000000000101", "name": "Movie A", "desc": "Placeholder synopsis for Movie A.",
+ "year": "2021", "rating": "PG", "series": false, "runtimeMs": 6000000, "pct": 25,
+ "playId": "00000000-0000-4000-8000-000000000101", "resumes": true,
+ "tile": "00000000-0000-4000-8000-0000000001a1", "wide": "00000000-0000-4000-8000-0000000001b1",
+ "seasons": []
+}

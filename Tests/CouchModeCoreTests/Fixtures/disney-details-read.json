@@ -1,0 +1,11 @@
+{
+ "id": "00000000-0000-4000-8000-000000000102", "name": "Show B", "desc": "Placeholder synopsis for Show B, the longer one.",
+ "year": "2023", "rating": "TV-PG", "series": true, "seasonsLabel": "2 Seasons",
+ "playId": "00000000-0000-4000-8000-000000000201", "resumes": true,
+ "tile": "00000000-0000-4000-8000-0000000001a2", "wide": "00000000-0000-4000-8000-0000000001b2",
+ "currentSeasonId": "00000000-0000-4000-8000-000000000302",
+ "seasons": [
+  {"id": "00000000-0000-4000-8000-000000000301", "name": "Season 1", "count": "8 Episodes"},
+  {"id": "00000000-0000-4000-8000-000000000302", "name": "Season 2", "count": "6 Episodes"}
+ ]
+}

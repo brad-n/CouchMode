@@ -1,0 +1,45 @@
+{
+ "rows": [
+  {
+   "id": "00000000-0000-4000-8000-0000000000a1", "name": "Home", "style": "hero_immersive",
+   "items": [
+    {"id": "00000000-0000-4000-8000-000000000101", "name": "Movie A", "desc": "Placeholder synopsis for Movie A.", "year": "2021", "rating": "PG",
+     "runtimeMs": 6000000, "tile": "00000000-0000-4000-8000-0000000001a1", "wide": "00000000-0000-4000-8000-0000000001b1"},
+    {"id": "00000000-0000-4000-8000-000000000102", "name": "Show B", "desc": "Placeholder synopsis for Show B.", "year": "2023", "rating": "TV-PG",
+     "tile": "00000000-0000-4000-8000-0000000001a2", "wide": "00000000-0000-4000-8000-0000000001b2"}
+   ]
+  },
+  {
+   "id": "00000000-0000-4000-8000-0000000000a2", "name": "Recommended For You", "style": "poster_vertical",
+   "items": [
+    {"id": "00000000-0000-4000-8000-000000000103", "name": "Movie C", "desc": "Placeholder.", "year": "2019", "rating": "PG-13", "runtimeMs": 7200000,
+     "tile": "00000000-0000-4000-8000-0000000001a3"},
+    {"id": "00000000-0000-4000-8000-000000000104", "name": "Show D", "year": "2020", "rating": "TV-14", "tile": "00000000-0000-4000-8000-0000000001a4"},
+    {"id": "00000000-0000-4000-8000-000000000105", "name": "Show E without art"}
+   ]
+  },
+  {
+   "id": "00000000-0000-4000-8000-0000000000a3", "name": "Continue Watching", "style": "continue_watching",
+   "items": [
+    {"id": "00000000-0000-4000-8000-000000000102", "name": "Show B", "desc": "Placeholder episode synopsis.", "rating": "TV-PG", "runtimeMs": 2700000,
+     "season": "2", "episode": "5", "pct": 40, "left": 1620, "playId": "00000000-0000-4000-8000-000000000201",
+     "tile": "00000000-0000-4000-8000-0000000001a5"},
+    {"id": "00000000-0000-4000-8000-000000000101", "name": "Movie A", "year": "2021", "rating": "PG", "runtimeMs": 6000000, "pct": 0, "left": 600,
+     "playId": "00000000-0000-4000-8000-000000000101", "tile": "00000000-0000-4000-8000-0000000001a1"}
+   ]
+  },
+  {
+   "id": "00000000-0000-4000-8000-0000000000a4", "name": "Top 10", "style": "top_ranked",
+   "items": [
+    {"id": "00000000-0000-4000-8000-000000000106", "name": "Show F", "year": "2024", "tile": "00000000-0000-4000-8000-0000000001a6"},
+    {"id": "00000000-0000-4000-8000-000000000107", "name": "Movie G", "year": "2018", "runtimeMs": 5400000, "tile": "00000000-0000-4000-8000-0000000001a7"}
+   ]
+  },
+  {"id": "00000000-0000-4000-8000-0000000000a5", "name": "Empty row", "style": "standard_art_vertical", "items": []}
+ ],
+ "profiles": [
+  {"name": "Profile 1", "avatar": "https://example.invalid/avatar/1", "current": true},
+  {"name": "Profile 2", "avatar": "https://example.invalid/avatar/2", "current": false},
+  {"name": "Profile 3", "avatar": null, "current": false}
+ ]
+}
