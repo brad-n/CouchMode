@@ -1,6 +1,7 @@
 // Owns: a game's details screen (SwitchTV's DetailView design): the banner
 // behind the split gradient, title, publisher / date / players, genre
-// badges, the description, a Play button and a row of screenshots. A paused
+// badges, the description, a Play button and a row of screenshots (only
+// those that loaded; with none, there is no pane). A paused
 // game's Play reads Resume, with Close Game beside it (as a Switch closes
 // software). Focus is a button or one of the screenshots below them.
 // Launching and closing are the coordinator's job.
@@ -19,15 +20,30 @@ final class GameDetailModel: ObservableObject {
     @Published private(set) var focus: DetailFocus = .play
     /// e.g. "Press again to close…".
     @Published var message: String?
+    /// Screenshots that have arrived; only these are drawn.
+    @Published private(set) var loadedImages: [URL: NSImage] = [:]
+    private let candidates: [URL]
 
     init(console: ConsoleModel, game: Game, paused: Bool = false) {
         self.console = console
         self.game = game
         self.info = console.info(game)
         self.paused = paused
+        self.candidates = GameScreenshots.usable(info?.screenshots ?? [])
     }
 
-    var screenshots: [URL] { (info?.screenshots ?? []).compactMap(URL.init(string:)).prefix(8).map { $0 } }
+    /// Fetches the page's screenshots (one fetch each, retried by ImageRetry
+    /// through the shared cache). A failed one is simply never shown.
+    func loadScreenshots() {
+        for url in candidates where loadedImages[url] == nil {
+            RemoteImageCache.shared.load(url) { [weak self] image in
+                guard let self, let image else { return }
+                withAnimation(.easeInOut(duration: 0.35)) { self.loadedImages[url] = image }
+            }
+        }
+    }
+
+    var screenshots: [URL] { GameScreenshots.shown(candidates, loaded: Set(loadedImages.keys)) }
 
     var focusedScreenshot: Int? { if case .screenshot(let i) = focus { return i } else { return nil } }
 
@@ -114,12 +130,11 @@ struct GameDetailView: View {
         return VStack(alignment: .leading, spacing: 12 * s) {
             Text("Screenshots").font(DS.ui(22, s, .bold)).foregroundStyle(.white.opacity(model.focusedScreenshot != nil ? 1 : 0.6))
             HStack(spacing: 28 * s) {
-                ForEach(Array(model.screenshots.enumerated()), id: \.offset) { i, url in
+                ForEach(Array(model.screenshots.enumerated()), id: \.element) { i, url in
                     let focused = model.focus == .screenshot(i)
                     ZStack {
                         GameTheme.surface
-                        Image(systemName: "photo").font(.system(size: 40 * s)).foregroundStyle(.white.opacity(0.25))
-                        RemoteImage(url: url, cover: CGSize(width: w * s, height: h * s))
+                        if let image = model.loadedImages[url] { CoverImage(image: image, size: CGSize(width: w * s, height: h * s)) }
                     }
                     .frame(width: w * s, height: h * s)
                     .clipShape(RoundedRectangle(cornerRadius: 14 * s, style: .continuous))

@@ -509,3 +509,33 @@ final class PlexAppLinkTests: XCTestCase {
         XCTAssertNil(items[3].appLink, "a movie's Plex ID opens the catalog page, not the library copy")
     }
 }
+
+final class GameScreenshotsTests: XCTestCase {
+    func testUsableKeepsSecureAddressesInOrderWithoutRepeats() {
+        let urls = GameScreenshots.usable(["https://example.test/a.jpg", "http://example.test/b.jpg", "",
+                                           "not a url", "https://example.test/a.jpg", " https://example.test/c.jpg "])
+        XCTAssertEqual(urls.map(\.absoluteString), ["https://example.test/a.jpg", "https://example.test/c.jpg"])
+    }
+
+    func testUsableIsBounded() {
+        let raw = (0..<20).map { "https://example.test/\($0).jpg" }
+        XCTAssertEqual(GameScreenshots.usable(raw).count, GameScreenshots.limit)
+        XCTAssertEqual(GameScreenshots.usable(raw, limit: 3).count, 3)
+    }
+
+    func testUsableOfNothingIsEmpty() {
+        XCTAssertTrue(GameScreenshots.usable([]).isEmpty)
+        XCTAssertTrue(GameScreenshots.usable(["https://", "ftp://example.test/a.jpg"]).isEmpty)
+    }
+
+    func testShownIsOnlyWhatLoadedKeepingCatalogOrder() {
+        let urls = GameScreenshots.usable(["https://example.test/a.jpg", "https://example.test/b.jpg", "https://example.test/c.jpg"])
+        let loaded: Set<URL> = [urls[2], urls[0]]
+        XCTAssertEqual(GameScreenshots.shown(urls, loaded: loaded), [urls[0], urls[2]])
+    }
+
+    func testNothingLoadedMeansNoPane() {
+        let urls = GameScreenshots.usable(["https://example.test/a.jpg"])
+        XCTAssertTrue(GameScreenshots.shown(urls, loaded: []).isEmpty)
+    }
+}

@@ -764,6 +764,7 @@ final class AppCoordinator {
 
     private func showDetail(_ game: Game, in model: ConsoleModel) {
         let detail = GameDetailModel(console: model, game: game, paused: games.isOpen(game, on: model.console))
+        detail.loadScreenshots()
         show(NSHostingView(rootView: GameDetailView(model: detail)))
         screen = .detail(detail)
     }
