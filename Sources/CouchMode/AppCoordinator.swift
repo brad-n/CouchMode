@@ -1330,6 +1330,8 @@ extension AppCoordinator: DebugControllable {
         guard let flag = DebugFlag(name: name) else { return false }
         DebugFlags.set(flag, on)
         switch flag {
+        case .mediaprobe:
+            for s in AppServices.all { player.reinstallDebugScripts(for: s) }
         case .netflix51:
             if let s = AppServices.all.first(where: { $0.id == "netflix" }) { player.reinstallDebugScripts(for: s) }
         }

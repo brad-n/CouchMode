@@ -45,8 +45,10 @@ final class WebPlayer: NSObject, WKScriptMessageHandler, WKNavigationDelegate, W
     /// debug experiments are added only while the debug channel is on.
     private func installScripts(for service: Service, in content: WKUserContentController) {
         content.addUserScript(WKUserScript(source: PageScripts.hideGamepads, injectionTime: .atDocumentStart, forMainFrameOnly: false))
-        if DebugServer.isEnabled {
+        if DebugFlags.isOn(.mediaprobe) {
             content.addUserScript(WKUserScript(source: MediaProbeScript.source, injectionTime: .atDocumentStart, forMainFrameOnly: false))
+        }
+        if DebugServer.isEnabled {
             if service.id == "netflix", DebugFlags.isOn(.netflix51) {
                 content.addUserScript(WKUserScript(source: MediaProbeScript.netflix51, injectionTime: .atDocumentStart, forMainFrameOnly: true))
             }

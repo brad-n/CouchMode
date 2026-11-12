@@ -188,28 +188,36 @@ public enum MediaProbeScript {
         report: function () { return { buffers: buffers, videoSizes: sizes }; }
       };
 
-      function hook(proto) {
-        if (!proto || proto.__cmHooked) return;
-        proto.__cmHooked = true;
-        var origAdd = proto.addSourceBuffer;
-        proto.addSourceBuffer = function (mime) {
+      // A prototype is wrapped only if it defines the method itself: an
+      // inherited one (ManagedMediaSource from MediaSource) is already wrapped,
+      // and a second wrapper would record twice.
+      function ownFn(proto, name) {
+        return proto && Object.prototype.hasOwnProperty.call(proto, name) && typeof proto[name] === 'function' ? proto[name] : null;
+      }
+
+      function hookAdd(proto) {
+        var origAdd = ownFn(proto, 'addSourceBuffer');
+        if (!origAdd || origAdd.__cmWrapped) return;
+        var wrapped = function (mime) {
           var sb = origAdd.apply(this, arguments);
           try {
-            if (buffers.length < MAX_BUFFERS) {
+            if (buffers.length < MAX_BUFFERS && !sb.__cm) {
               var rec = { mime: safeText(mime), parsed: [] };
               buffers.push(rec);
               Object.defineProperty(sb, '__cm', { value: { rec: rec, tries: 0, done: false }, enumerable: false });
+              share();
             }
           } catch (e) {}
           return sb;
         };
+        wrapped.__cmWrapped = true;
+        proto.addSourceBuffer = wrapped;
       }
-      hook(globalThis.MediaSource && MediaSource.prototype);
-      hook(globalThis.ManagedMediaSource && ManagedMediaSource.prototype);
 
-      if (globalThis.SourceBuffer) {
-        var origAppend = SourceBuffer.prototype.appendBuffer;
-        SourceBuffer.prototype.appendBuffer = function (data) {
+      function hookAppend(proto) {
+        var origAppend = ownFn(proto, 'appendBuffer');
+        if (!origAppend || origAppend.__cmWrapped) return;
+        var wrapped = function (data) {
           try {
             var st = this.__cm;
             if (st && !st.done && st.tries < MAX_TRIES) {
@@ -217,21 +225,54 @@ public enum MediaProbeScript {
               var u8 = toBytes(data);
               if (u8) {
                 var recs = parseInit(u8);
-                if (recs.length) { st.rec.parsed = recs.slice(0, 4); st.done = true; }
+                if (recs.length) { st.rec.parsed = recs.slice(0, 4); st.done = true; share(); }
                 else if (st.tries >= MAX_TRIES) st.done = true;
               }
             }
           } catch (e) {}
           return origAppend.apply(this, arguments);
         };
+        wrapped.__cmWrapped = true;
+        proto.appendBuffer = wrapped;
       }
+
+      // Frames other than the top one hand their record to the top frame
+      // (the debug route reads only the top frame). Records hold codec
+      // strings and numbers only.
+      var isTop = true;
+      try { isTop = globalThis.top === globalThis; } catch (e) { isTop = false; }
+      var frames = [];
+      function share() {
+        if (isTop) return;
+        try { globalThis.top.postMessage({ __cmProbeFrame: { buffers: buffers, videoSizes: sizes } }, '*'); } catch (e) {}
+      }
+      if (isTop && globalThis.addEventListener) {
+        globalThis.addEventListener('message', function (ev) {
+          try {
+            var d = ev.data && ev.data.__cmProbeFrame;
+            if (!d || !Array.isArray(d.buffers) || !Array.isArray(d.videoSizes)) return;
+            var rec = { buffers: d.buffers.slice(0, MAX_BUFFERS), videoSizes: d.videoSizes.slice(0, MAX_SIZES) };
+            var i = frames.findIndex(function (f) { return f.src === ev.source; });
+            if (i >= 0) frames[i].rec = rec;
+            else if (frames.length < 4) frames.push({ src: ev.source, rec: rec });
+          } catch (e) {}
+        });
+      }
+      probe.report = function () {
+        return { buffers: buffers, videoSizes: sizes, frames: frames.map(function (f) { return f.rec; }) };
+      };
+
+      hookAdd(globalThis.MediaSource && MediaSource.prototype);
+      hookAdd(globalThis.ManagedMediaSource && ManagedMediaSource.prototype);
+      hookAppend(globalThis.SourceBuffer && SourceBuffer.prototype);
+      hookAppend(globalThis.ManagedSourceBuffer && ManagedSourceBuffer.prototype);
 
       function noteSize(ev) {
         try {
           var v = ev.target;
           if (!v || v.tagName !== 'VIDEO' || !v.videoWidth) return;
           var key = v.videoWidth + 'x' + v.videoHeight;
-          if (sizes.indexOf(key) < 0 && sizes.length < MAX_SIZES) sizes.push(key);
+          if (sizes.indexOf(key) < 0 && sizes.length < MAX_SIZES) { sizes.push(key); share(); }
         } catch (e) {}
       }
       document.addEventListener('playing', noteSize, true);

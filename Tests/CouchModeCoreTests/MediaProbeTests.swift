@@ -62,7 +62,7 @@ final class MediaProbeTests: XCTestCase {
     private func parse(_ bytes: [UInt8]) throws -> [[String: Any]] {
         let ctx = try XCTUnwrap(JSContext())
         ctx.exceptionHandler = { _, e in XCTFail("js: \(String(describing: e))") }
-        ctx.evaluateScript("var globalThis = this; var document = { addEventListener: function () {} };")
+        ctx.evaluateScript("var globalThis = this; var top = this; var document = { addEventListener: function () {} };")
         ctx.evaluateScript(MediaProbeScript.source)
         let fn = try XCTUnwrap(ctx.evaluateScript("(function (a) { return JSON.stringify(__cmProbe.parse(new Uint8Array(a))); })"))
         let json = try XCTUnwrap(fn.call(withArguments: [bytes.map { Int($0) }])?.toString())
@@ -127,5 +127,30 @@ final class MediaProbeTests: XCTestCase {
         XCTAssertEqual(try parse([0xFF, 0xFF, 0xFF, 0xFF, 0x6D, 0x6F, 0x6F, 0x76, 0, 0]).count, 0)
         let good = initSegment(entry: audioEntry("ec-3", child: dec3(acmod: 7, lfe: 1)))
         _ = try parse(Array(good.prefix(good.count - 6)))
+    }
+
+    func testManagedMediaSourceRecordsOnceAndRepeatInjectionDoesNotDoubleWrap() throws {
+        let ctx = try XCTUnwrap(JSContext())
+        ctx.exceptionHandler = { _, e in XCTFail("js: \(String(describing: e))") }
+        ctx.evaluateScript("""
+        var globalThis = this; var top = this; var document = { addEventListener: function () {} };
+        globalThis.MediaSource = class { addSourceBuffer(m) { return new SourceBuffer(); } }
+        globalThis.ManagedMediaSource = class extends MediaSource {}
+        globalThis.SourceBuffer = class { appendBuffer(d) { this.n = (this.n || 0) + 1; } }
+        globalThis.ManagedSourceBuffer = class extends SourceBuffer {}
+        """)
+        ctx.evaluateScript(MediaProbeScript.source)
+        ctx.evaluateScript(MediaProbeScript.source)
+        let bytes = initSegment(entry: audioEntry("ec-3", child: dec3(acmod: 7, lfe: 1))).map { Int($0) }
+        ctx.setObject(bytes, forKeyedSubscript: "init" as NSString)
+        let out = try XCTUnwrap(ctx.evaluateScript("""
+        var sb = new globalThis.ManagedMediaSource().addSourceBuffer('audio/mp4;codecs=ec-3');
+        sb.appendBuffer(new Uint8Array(init).buffer);
+        JSON.stringify({ count: __cmProbe.buffers.length, channels: __cmProbe.buffers[0].parsed[0].channels, appended: sb.n });
+        """)?.toString())
+        let obj = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(out.utf8)) as? [String: Int])
+        XCTAssertEqual(obj["count"], 1)
+        XCTAssertEqual(obj["channels"], 6)
+        XCTAssertEqual(obj["appended"], 1)
     }
 }
