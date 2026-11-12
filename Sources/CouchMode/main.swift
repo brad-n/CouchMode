@@ -53,6 +53,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         hidPads.start()
         coordinator.show()
         coordinator.refreshContinueWatching()
+        ServiceIcons.shared.refreshIfNeeded(AppServices.all)
         coordinator.startIdleWatch()
         coordinator.watchInputDevices()
         if DebugServer.isEnabled {

@@ -125,8 +125,9 @@ struct RecentGame {
     var paused = false
 }
 
-/// What each streaming app is, for its tile and the hero. Generic symbols and
-/// our own words, not the services' logos.
+/// What each streaming app is, for its tile and the hero: generic symbols and
+/// our own words. A service's real icon is fetched at runtime (ServiceIcons),
+/// never shipped; these are the look when it isn't there.
 enum ServiceLook {
     static func symbol(_ id: String) -> String {
         switch id {
@@ -580,10 +581,16 @@ struct LandscapeCard: View {
 
 /// A glass app tile: color wash, big glyph and the app's name.
 private struct AppTile: View {
+    @ObservedObject private var icons = ServiceIcons.shared
     let item: HomeItem
     let focused: Bool
     let size: CGSize
     let s: CGFloat
+
+    private var serviceIcon: NSImage? {
+        if case .stream = item.action { return icons.image(for: item.id) }
+        return nil
+    }
 
     var body: some View {
         let w = size.width * s, h = size.height * s
@@ -593,10 +600,19 @@ private struct AppTile: View {
             // Glass: a soft top highlight.
             LinearGradient(colors: [.white.opacity(0.22), .clear], startPoint: .top, endPoint: .center)
             VStack(spacing: 10 * s) {
-                Image(systemName: item.symbol)
-                    .font(.system(size: 50 * s, weight: .semibold))
-                    .foregroundStyle(.white)
-                    .shadow(color: .black.opacity(0.3), radius: 6 * s, y: 3 * s)
+                if let icon = serviceIcon {
+                    // The service's own icon, drawn no larger than ~110 pt so a 180 px
+                    // icon stays sharp (it is downsampled, never magnified).
+                    Image(nsImage: icon).resizable().interpolation(.high)
+                        .frame(width: 104 * s, height: 104 * s)
+                        .clipShape(RoundedRectangle(cornerRadius: 24 * s, style: .continuous))
+                        .shadow(color: .black.opacity(0.4), radius: 10 * s, y: 5 * s)
+                } else {
+                    Image(systemName: item.symbol)
+                        .font(.system(size: 50 * s, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .shadow(color: .black.opacity(0.3), radius: 6 * s, y: 3 * s)
+                }
                 Text(item.title)
                     .font(DS.ui(26, s, .heavy))
                     .foregroundStyle(.white)
