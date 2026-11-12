@@ -1,0 +1,94 @@
+[
+  {
+    "currentSeasonID" : "00000000-0000-4000-8000-000000000302",
+    "seasons" : [
+      {
+        "episodes" : [
+
+        ],
+        "id" : "00000000-0000-4000-8000-000000000301",
+        "name" : "Season 1"
+      },
+      {
+        "episodes" : [
+
+        ],
+        "id" : "00000000-0000-4000-8000-000000000302",
+        "name" : "Season 2"
+      }
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : "https:\/\/disney.images.edge.bamgrid.com\/ripcut-delivery\/v2\/variant\/disney\/00000000-0000-4000-8000-0000000001b2\/compose?format=jpeg&width=1920",
+      "id" : "00000000-0000-4000-8000-000000000102",
+      "kind" : "show",
+      "name" : "Show B",
+      "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "play" : "https:\/\/www.disneyplus.com\/play\/00000000-0000-4000-8000-000000000201",
+      "rating" : "TV-PG",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : "2 Seasons",
+      "synopsis" : "Placeholder synopsis for Show B, the longer one.",
+      "tileArt" : "https:\/\/example.invalid\/tile",
+      "year" : 2023
+    }
+  },
+  {
+    "currentSeasonID" : "00000000-0000-4000-8000-000000000302",
+    "seasons" : [
+      {
+        "episodes" : [
+
+        ],
+        "id" : "00000000-0000-4000-8000-000000000301",
+        "name" : "Season 1"
+      },
+      {
+        "episodes" : [
+
+        ],
+        "id" : "00000000-0000-4000-8000-000000000302",
+        "name" : "Season 2"
+      }
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : "https:\/\/disney.images.edge.bamgrid.com\/ripcut-delivery\/v2\/variant\/disney\/00000000-0000-4000-8000-0000000001b2\/compose?format=jpeg&width=1920",
+      "id" : "00000000-0000-4000-8000-000000000102",
+      "kind" : "show",
+      "name" : "Show B",
+      "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "play" : "https:\/\/www.disneyplus.com\/play\/00000000-0000-4000-8000-000000000201",
+      "rating" : "TV-PG",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : "2 Seasons",
+      "synopsis" : "Placeholder synopsis for Show B, the longer one.",
+      "tileArt" : "https:\/\/example.invalid\/tile",
+      "year" : 2023
+    }
+  },
+  {
+    "currentSeasonID" : null,
+    "seasons" : [
+
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : "https:\/\/disney.images.edge.bamgrid.com\/ripcut-delivery\/v2\/variant\/disney\/00000000-0000-4000-8000-0000000001b1\/compose?format=jpeg&width=1920",
+      "id" : "00000000-0000-4000-8000-000000000101",
+      "kind" : "movie",
+      "name" : "Show B",
+      "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000101",
+      "play" : "https:\/\/www.disneyplus.com\/play\/00000000-0000-4000-8000-000000000101",
+      "rating" : "PG",
+      "resumeSeconds" : 1500,
+      "runtimeSeconds" : 6000,
+      "seasonsLabel" : null,
+      "synopsis" : "Placeholder synopsis for Movie A.",
+      "tileArt" : "https:\/\/example.invalid\/tile",
+      "year" : 2021
+    }
+  }
+]

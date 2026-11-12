@@ -1,0 +1,217 @@
+[
+  {
+    "currentSeasonID" : "S2season02",
+    "seasons" : [
+      {
+        "episodes" : [
+
+        ],
+        "id" : "S2season01",
+        "name" : "Season 1"
+      },
+      {
+        "episodes" : [
+          {
+            "art" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/ep0001._SX640_.jpg",
+            "id" : "S2ep000001",
+            "name" : "First Period",
+            "number" : 1,
+            "play" : "https:\/\/www.primevideo.com\/detail\/S2ep000001?autoplay=1",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 2903,
+            "synopsis" : "The start."
+          },
+          {
+            "art" : null,
+            "id" : "S2ep000002",
+            "name" : "Second Period",
+            "number" : 2,
+            "play" : "https:\/\/www.primevideo.com\/detail\/S2ep000002?autoplay=1",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 3014,
+            "synopsis" : null
+          },
+          {
+            "art" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/ep0003._SX640_.jpg",
+            "id" : "S2ep000003",
+            "name" : "Episode 3",
+            "number" : 3,
+            "play" : "https:\/\/www.primevideo.com\/detail\/S2ep000003?autoplay=1&t=1440",
+            "resumeSeconds" : 1440,
+            "runtimeSeconds" : 4231,
+            "synopsis" : "Partly watched."
+          },
+          {
+            "art" : null,
+            "id" : "S2ep000004",
+            "name" : "Not playable",
+            "number" : 4,
+            "play" : "https:\/\/www.primevideo.com\/detail\/S2ep000004",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 3000,
+            "synopsis" : null
+          }
+        ],
+        "id" : "S2season02",
+        "name" : "Season 2"
+      }
+    ],
+    "title" : {
+      "episodeLabel" : "S2 · E3",
+      "heroArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/hero0100._SX1920_.jpg",
+      "id" : "S2season02",
+      "kind" : "show",
+      "name" : "Show One",
+      "page" : "https:\/\/www.primevideo.com\/detail\/S2season02",
+      "play" : "https:\/\/www.primevideo.com\/detail\/S2ep000003?autoplay=1&t=1440",
+      "rating" : "TV-MA",
+      "resumeSeconds" : 1440,
+      "runtimeSeconds" : 4231,
+      "seasonsLabel" : "2 Seasons",
+      "synopsis" : "A longer synopsis of the season.",
+      "tileArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/hero0100._SX640_.jpg",
+      "year" : 2025
+    }
+  },
+  [
+    {
+      "art" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/ep0001._SX640_.jpg",
+      "id" : "S2ep000001",
+      "name" : "First Period",
+      "number" : 1,
+      "play" : "https:\/\/www.primevideo.com\/detail\/S2ep000001?autoplay=1",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : 2903,
+      "synopsis" : "The start."
+    },
+    {
+      "art" : null,
+      "id" : "S2ep000002",
+      "name" : "Second Period",
+      "number" : 2,
+      "play" : "https:\/\/www.primevideo.com\/detail\/S2ep000002?autoplay=1",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : 3014,
+      "synopsis" : null
+    },
+    {
+      "art" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/ep0003._SX640_.jpg",
+      "id" : "S2ep000003",
+      "name" : "Episode 3",
+      "number" : 3,
+      "play" : "https:\/\/www.primevideo.com\/detail\/S2ep000003?autoplay=1&t=1440",
+      "resumeSeconds" : 1440,
+      "runtimeSeconds" : 4231,
+      "synopsis" : "Partly watched."
+    },
+    {
+      "art" : null,
+      "id" : "S2ep000004",
+      "name" : "Not playable",
+      "number" : 4,
+      "play" : "https:\/\/www.primevideo.com\/detail\/S2ep000004",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : 3000,
+      "synopsis" : null
+    }
+  ],
+  {
+    "currentSeasonID" : "L1limited1",
+    "seasons" : [
+      {
+        "episodes" : [
+          {
+            "art" : null,
+            "id" : "L1ep000001",
+            "name" : "One",
+            "number" : 1,
+            "play" : "https:\/\/www.primevideo.com\/detail\/L1ep000001?autoplay=1",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 3311,
+            "synopsis" : null
+          }
+        ],
+        "id" : "L1limited1",
+        "name" : "Season 1"
+      }
+    ],
+    "title" : {
+      "episodeLabel" : "S1 · E1",
+      "heroArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/hero0200._SX1920_.jpg",
+      "id" : "L1limited1",
+      "kind" : "show",
+      "name" : "Limited Show",
+      "page" : "https:\/\/www.primevideo.com\/detail\/L1limited1",
+      "play" : "https:\/\/www.primevideo.com\/detail\/L1ep000001?autoplay=1",
+      "rating" : "TV-MA",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : 3311,
+      "seasonsLabel" : "1 Season",
+      "synopsis" : "Only one season.",
+      "tileArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/hero0200._SX640_.jpg",
+      "year" : 2026
+    }
+  },
+  [
+    {
+      "art" : null,
+      "id" : "L1ep000001",
+      "name" : "One",
+      "number" : 1,
+      "play" : "https:\/\/www.primevideo.com\/detail\/L1ep000001?autoplay=1",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : 3311,
+      "synopsis" : null
+    }
+  ],
+  {
+    "currentSeasonID" : null,
+    "seasons" : [
+
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/hero0300._SX1920_.jpg",
+      "id" : "M1movie001",
+      "kind" : "movie",
+      "name" : "Movie Four",
+      "page" : "https:\/\/www.primevideo.com\/detail\/M1movie001",
+      "play" : "https:\/\/www.primevideo.com\/detail\/M1movie001?autoplay=1&t=600",
+      "rating" : "R",
+      "resumeSeconds" : 600,
+      "runtimeSeconds" : 5580,
+      "seasonsLabel" : null,
+      "synopsis" : "A movie synopsis.",
+      "tileArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/hero0300._SX640_.jpg",
+      "year" : 2023
+    }
+  },
+  [
+
+  ],
+  {
+    "currentSeasonID" : null,
+    "seasons" : [
+
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/hero0400._SX1920_.jpg",
+      "id" : "P2rent0001",
+      "kind" : "movie",
+      "name" : "Movie To Rent",
+      "page" : "https:\/\/www.primevideo.com\/detail\/P2rent0001",
+      "play" : "https:\/\/www.primevideo.com\/detail\/P2rent0001",
+      "rating" : "PG",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : 3900,
+      "seasonsLabel" : null,
+      "synopsis" : "Rent or buy.",
+      "tileArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/hero0400._SX640_.jpg",
+      "year" : 2026
+    }
+  },
+  [
+
+  ]
+]

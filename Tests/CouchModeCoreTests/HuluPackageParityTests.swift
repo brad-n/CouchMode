@@ -9,8 +9,10 @@ final class HuluPackageParityTests: XCTestCase {
     private var context: JSContext!
     private var decoder: PackageDecoder!
     private var manifest: PackageManifest!
+    private var g: Golden!
 
     override func setUpWithError() throws {
+        g = Golden("hulu", function: name)
         manifest = try PackageManifest.parse(Data(contentsOf: Self.appDirectory.appendingPathComponent("manifest.json")))
         decoder = PackageDecoder(manifest: manifest)
         context = try Self.makeContext()
@@ -51,9 +53,10 @@ final class HuluPackageParityTests: XCTestCase {
 
     private func assertHomeParity(_ read: String, file: StaticString = #filePath, line: UInt = #line) throws {
         let js = build("home", read)
-        guard let expected = HuluHome.parse(read) else { XCTAssertNil(decoder.home(js, serviceID: "hulu"), file: file, line: line); return }
+        let expected = try g.next(file: file, line: line)
+        guard !(expected is NSNull) else { XCTAssertNil(decoder.home(js, serviceID: "hulu"), file: file, line: line); return }
         let got = try XCTUnwrap(decoder.home(js, serviceID: "hulu"), "package returned no home", file: file, line: line)
-        XCTAssertEqual(got.home, expected, file: file, line: line)
+        Golden.assertEqual(got.home, expected, file: file, line: line)
         XCTAssertTrue(got.cursors.isEmpty, "Hulu's home has no paging", file: file, line: line)
     }
 
@@ -136,10 +139,10 @@ final class HuluPackageParityTests: XCTestCase {
         ]
         for address in addresses {
             let json = home(rows: [("1", "Row", [item(tile: address)])])
-            let expected = HuluHome.parse(json)?.rows.first?.titles.first
+            let expected = try g.next() as? [String: Any]
             let got = decoder.home(build("home", json), serviceID: "hulu")?.home.rows.first?.titles.first
-            XCTAssertEqual(got?.tileArt, expected?.tileArt, address)
-            XCTAssertEqual(got?.heroArt, expected?.heroArt, address)
+            XCTAssertEqual(got?.tileArt?.absoluteString, expected?["tileArt"] as? String, address)
+            XCTAssertEqual(got?.heroArt?.absoluteString, expected?["heroArt"] as? String, address)
             if address == addresses[0] {
                 XCTAssertTrue(try XCTUnwrap(got?.tileArt).absoluteString.contains("640x360"))
                 XCTAssertTrue(try XCTUnwrap(got?.heroArt).absoluteString.contains("1920x1080"))
@@ -155,8 +158,9 @@ final class HuluPackageParityTests: XCTestCase {
 
     private func assertDetailsParity(_ read: String, row: StreamTitle, file: StaticString = #filePath, line: UInt = #line) throws {
         let js = build("details", read, extra: ", \(try argument(row))")
-        guard let expected = HuluDetails.details(fromRead: read, title: row) else { XCTAssertNil(decoder.details(js), file: file, line: line); return }
-        XCTAssertEqual(try XCTUnwrap(decoder.details(js), "package returned no details", file: file, line: line), expected, file: file, line: line)
+        let expected = try g.next(file: file, line: line)
+        guard !(expected is NSNull) else { XCTAssertNil(decoder.details(js), file: file, line: line); return }
+        Golden.assertEqual(try XCTUnwrap(decoder.details(js), "package returned no details", file: file, line: line), expected, file: file, line: line)
     }
 
     func testEveryDetailsFixtureMatches() throws {
@@ -195,40 +199,40 @@ final class HuluPackageParityTests: XCTestCase {
 
     func testSeasonFixtureMatches() throws {
         let read = try fixture("hulu-season-read")
-        let expected = HuluDetails.episodes(fromSeason: read)
-        XCTAssertEqual(expected.count, 6)
-        XCTAssertEqual(decoder.episodes(build("season", read)), expected)
+        let expected = try g.next()
+        XCTAssertEqual((expected as? [Any])?.count, 6)
+        Golden.assertEqual(decoder.episodes(build("season", read)), expected)
         for json in ["nope", "[]", "{}", #"{"episodes":[{"id":"e1","number":"x"}]}"#] {
-            XCTAssertEqual(decoder.episodes(build("season", json)) ?? [], HuluDetails.episodes(fromSeason: json), json)
+            try g.expect(decoder.episodes(build("season", json)) ?? [], json)
         }
         let list = (1...(StreamLimits.maxEpisodesPerSeason + 20)).map { #"{"id":"e\#($0)","number":"\#($0)","name":"E"}"# }
         let big = #"{"episodes":[\#(list.joined(separator: ","))]}"#
-        XCTAssertEqual(decoder.episodes(build("season", big)), HuluDetails.episodes(fromSeason: big))
+        try g.expect(decoder.episodes(build("season", big)))
     }
 
     // MARK: Search
 
     func testSearchFixtureMatches() throws {
         let read = try fixture("hulu-search-read")
-        let expected = HuluSearch.titles(fromResults: read)
-        XCTAssertEqual(expected.count, 6)
-        XCTAssertEqual(decoder.titles(build("search", read)), expected)
+        let expected = try g.next()
+        XCTAssertEqual((expected as? [Any])?.count, 6)
+        Golden.assertEqual(decoder.titles(build("search", read)), expected)
         let reads = [
             #"[{"href":"/series/00000000-0000-4000-8000-000000000001","name":"Show A","art":"https://img.hulu.invalid/a?x=1"},{"href":"/movie/00000000-0000-4000-8000-000000000002","name":" Movie B ","art":null}]"#,
             #"[{"href":"/account","name":"Account"},{"href":"/network/abc","name":"Network"},{"href":"/series/bad id","name":"Bad"},{"href":"/series/a1","name":"  "},{"href":"/series/a2","name":"Two","art":"https://evil.example/x.jpg"},{"href":"/series/a2","name":"Again"},{"href":"/series/a3/extra","name":"Extra"},{"href":null,"name":"x"}]"#,
             "not json", "{}", "[]",
         ]
-        for json in reads { XCTAssertEqual(decoder.titles(build("search", json)) ?? [], HuluSearch.titles(fromResults: json), json) }
+        for json in reads { try g.expect(decoder.titles(build("search", json)) ?? [], json) }
         let cards = (1...(StreamLimits.maxSearchResults + 10)).map { #"{"href":"/series/s\#($0)","name":"T\#($0)"}"# }
         let big = "[" + cards.joined(separator: ",") + "]"
-        XCTAssertEqual(decoder.titles(build("search", big)), HuluSearch.titles(fromResults: big))
+        try g.expect(decoder.titles(build("search", big)))
     }
 
     // MARK: The manifest
 
     func testManifestAsksForWhatTheSwiftReaderOpens() throws {
         XCTAssertEqual(manifest.url(for: .home)?.absoluteString, "https://www.hulu.com/hub/home")
-        XCTAssertEqual(manifest.url(for: .search, .init(query: "show a"))?.absoluteString, HuluSearch.pageURL.absoluteString)
+        try g.expect(manifest.url(for: .search, .init(query: "show a"))?.absoluteString)
         XCTAssertEqual(manifest.url(for: .profile)?.absoluteString, "https://www.hulu.com/hub/home")
         XCTAssertEqual(manifest.url(for: .details, .init(titlePage: show.page))?.absoluteString, show.page?.absoluteString)
         XCTAssertEqual(manifest.url(for: .season, .init(titlePage: show.page, seasonID: "\(seriesID)::2"))?.absoluteString, show.page?.absoluteString)

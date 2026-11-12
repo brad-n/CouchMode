@@ -1,0 +1,59 @@
+[
+  {
+    "currentSeasonID" : "umc.cmc.synthseason2",
+    "seasons" : [
+      {
+        "episodes" : [
+
+        ],
+        "id" : "umc.cmc.synthseason1",
+        "name" : "Season 1"
+      },
+      {
+        "episodes" : [
+
+        ],
+        "id" : "umc.cmc.synthseason2",
+        "name" : "Season 2"
+      }
+    ],
+    "title" : {
+      "episodeLabel" : "S2 · E3",
+      "heroArt" : "https:\/\/example.invalid\/image\/thumb\/synthwide\/1920x1080.jpg",
+      "id" : "umc.cmc.synthshow1",
+      "kind" : "show",
+      "name" : "Synthetic Series",
+      "page" : "https:\/\/tv.apple.com\/us\/show\/synthetic-series\/umc.cmc.synthshow1",
+      "play" : "https:\/\/tv.apple.com\/us\/episode\/pilot\/umc.cmc.synthep0001?showId=umc.cmc.synthshow1&action=play",
+      "rating" : "TV-MA",
+      "resumeSeconds" : 750,
+      "runtimeSeconds" : 3000,
+      "seasonsLabel" : "2 Seasons",
+      "synopsis" : "A synthetic description of a made-up show.",
+      "tileArt" : null,
+      "year" : 2022
+    }
+  },
+  {
+    "currentSeasonID" : null,
+    "seasons" : [
+
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "umc.cmc.synthrent1",
+      "kind" : "movie",
+      "name" : "Rent This One",
+      "page" : "https:\/\/tv.apple.com\/us\/movie\/rent-this-one\/umc.cmc.synthrent1",
+      "play" : "https:\/\/tv.apple.com\/us\/movie\/rent-this-one\/umc.cmc.synthrent1",
+      "rating" : "PG-13",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : 5400,
+      "seasonsLabel" : null,
+      "synopsis" : "A synthetic movie you have to rent.",
+      "tileArt" : null,
+      "year" : 2018
+    }
+  }
+]

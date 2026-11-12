@@ -1,0 +1,191 @@
+[
+  {
+    "asksWhoIsWatching" : false,
+    "currentProfileID" : "Profile 1",
+    "hero" : {
+      "episodeLabel" : null,
+      "heroArt" : "https:\/\/disney.images.edge.bamgrid.com\/ripcut-delivery\/v2\/variant\/disney\/00000000-0000-4000-8000-0000000001b1\/compose?format=jpeg&width=1920",
+      "id" : "00000000-0000-4000-8000-000000000101",
+      "kind" : "movie",
+      "name" : "Movie A",
+      "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000101",
+      "play" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000101",
+      "rating" : "PG",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : 6000,
+      "seasonsLabel" : null,
+      "synopsis" : "Placeholder synopsis for Movie A.",
+      "tileArt" : "https:\/\/disney.images.edge.bamgrid.com\/ripcut-delivery\/v2\/variant\/disney\/00000000-0000-4000-8000-0000000001a1\/compose?format=jpeg&width=640",
+      "year" : 2021
+    },
+    "profiles" : [
+      {
+        "avatar" : "https:\/\/example.invalid\/avatar\/1",
+        "id" : "Profile 1",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 1"
+      },
+      {
+        "avatar" : "https:\/\/example.invalid\/avatar\/2",
+        "id" : "Profile 2",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 2"
+      },
+      {
+        "avatar" : null,
+        "id" : "Profile 3",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 3"
+      }
+    ],
+    "rows" : [
+      {
+        "id" : "disney-row-00000000-0000-4000-8000-0000000000a2",
+        "kind" : "standard",
+        "title" : "Recommended For You",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "00000000-0000-4000-8000-000000000103",
+            "kind" : "movie",
+            "name" : "Movie C",
+            "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000103",
+            "play" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000103",
+            "rating" : "PG-13",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 7200,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder.",
+            "tileArt" : "https:\/\/disney.images.edge.bamgrid.com\/ripcut-delivery\/v2\/variant\/disney\/00000000-0000-4000-8000-0000000001a3\/compose?format=jpeg&width=640",
+            "year" : 2019
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "00000000-0000-4000-8000-000000000104",
+            "kind" : "show",
+            "name" : "Show D",
+            "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000104",
+            "play" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000104",
+            "rating" : "TV-14",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : null,
+            "tileArt" : "https:\/\/disney.images.edge.bamgrid.com\/ripcut-delivery\/v2\/variant\/disney\/00000000-0000-4000-8000-0000000001a4\/compose?format=jpeg&width=640",
+            "year" : 2020
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "00000000-0000-4000-8000-000000000105",
+            "kind" : "show",
+            "name" : "Show E without art",
+            "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000105",
+            "play" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000105",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : null,
+            "tileArt" : null,
+            "year" : null
+          }
+        ],
+        "totalCount" : 50
+      },
+      {
+        "id" : "disney-row-00000000-0000-4000-8000-0000000000a3",
+        "kind" : "continueWatching",
+        "title" : "Continue Watching",
+        "titles" : [
+          {
+            "episodeLabel" : "S2 · E5",
+            "heroArt" : null,
+            "id" : "00000000-0000-4000-8000-000000000102",
+            "kind" : "show",
+            "name" : "Show B",
+            "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+            "play" : "https:\/\/www.disneyplus.com\/play\/00000000-0000-4000-8000-000000000201",
+            "rating" : "TV-PG",
+            "resumeSeconds" : 1080,
+            "runtimeSeconds" : 2700,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder episode synopsis.",
+            "tileArt" : "https:\/\/disney.images.edge.bamgrid.com\/ripcut-delivery\/v2\/variant\/disney\/00000000-0000-4000-8000-0000000001a5\/compose?format=jpeg&width=640",
+            "year" : null
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "00000000-0000-4000-8000-000000000101",
+            "kind" : "movie",
+            "name" : "Movie A",
+            "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000101",
+            "play" : "https:\/\/www.disneyplus.com\/play\/00000000-0000-4000-8000-000000000101",
+            "rating" : "PG",
+            "resumeSeconds" : 5400,
+            "runtimeSeconds" : 6000,
+            "seasonsLabel" : null,
+            "synopsis" : null,
+            "tileArt" : "https:\/\/disney.images.edge.bamgrid.com\/ripcut-delivery\/v2\/variant\/disney\/00000000-0000-4000-8000-0000000001a1\/compose?format=jpeg&width=640",
+            "year" : 2021
+          }
+        ],
+        "totalCount" : null
+      },
+      {
+        "id" : "disney-row-00000000-0000-4000-8000-0000000000a4",
+        "kind" : "ranked",
+        "title" : "Top 10",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "00000000-0000-4000-8000-000000000106",
+            "kind" : "show",
+            "name" : "Show F",
+            "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000106",
+            "play" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000106",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : null,
+            "tileArt" : "https:\/\/disney.images.edge.bamgrid.com\/ripcut-delivery\/v2\/variant\/disney\/00000000-0000-4000-8000-0000000001a6\/compose?format=jpeg&width=640",
+            "year" : 2024
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "00000000-0000-4000-8000-000000000107",
+            "kind" : "movie",
+            "name" : "Movie G",
+            "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000107",
+            "play" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000107",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 5400,
+            "seasonsLabel" : null,
+            "synopsis" : null,
+            "tileArt" : "https:\/\/disney.images.edge.bamgrid.com\/ripcut-delivery\/v2\/variant\/disney\/00000000-0000-4000-8000-0000000001a7\/compose?format=jpeg&width=640",
+            "year" : 2018
+          }
+        ],
+        "totalCount" : null
+      }
+    ],
+    "serviceID" : "disney"
+  },
+  {
+    "disney-row-00000000-0000-4000-8000-0000000000a2" : {
+      "next" : 30,
+      "query" : "setStyle=poster_vertical&setResolutionId=00000000-0000-4000-8000-0000000000c1&pageId=00000000-0000-4000-8000-0000000000d1",
+      "setID" : "00000000-0000-4000-8000-0000000000a2"
+    }
+  }
+]

@@ -1,0 +1,378 @@
+[
+  {
+    "currentSeasonID" : null,
+    "seasons" : [
+
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "00000000-0000-4000-8000-000000000102",
+      "kind" : "movie",
+      "name" : "Show B",
+      "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "play" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : null,
+      "synopsis" : "Short.",
+      "tileArt" : "https:\/\/example.invalid\/tile",
+      "year" : 2000
+    }
+  },
+  {
+    "currentSeasonID" : null,
+    "seasons" : [
+
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "00000000-0000-4000-8000-000000000102",
+      "kind" : "movie",
+      "name" : "Show B",
+      "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "play" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : null,
+      "synopsis" : "Short.",
+      "tileArt" : "https:\/\/example.invalid\/tile",
+      "year" : 2000
+    }
+  },
+  {
+    "currentSeasonID" : "s1",
+    "seasons" : [
+      {
+        "episodes" : [
+
+        ],
+        "id" : "s1",
+        "name" : "Only"
+      }
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "00000000-0000-4000-8000-000000000102",
+      "kind" : "show",
+      "name" : "Show B",
+      "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "play" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : "1 Season",
+      "synopsis" : "Short.",
+      "tileArt" : "https:\/\/example.invalid\/tile",
+      "year" : 2000
+    }
+  },
+  {
+    "currentSeasonID" : "s1",
+    "seasons" : [
+      {
+        "episodes" : [
+
+        ],
+        "id" : "s1",
+        "name" : "Only"
+      }
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "00000000-0000-4000-8000-000000000102",
+      "kind" : "show",
+      "name" : "Show B",
+      "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "play" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : "1 Season",
+      "synopsis" : "Short.",
+      "tileArt" : "https:\/\/example.invalid\/tile",
+      "year" : 2000
+    }
+  },
+  {
+    "currentSeasonID" : "s3",
+    "seasons" : [
+      {
+        "episodes" : [
+
+        ],
+        "id" : "s1",
+        "name" : "One"
+      },
+      {
+        "episodes" : [
+
+        ],
+        "id" : "s3",
+        "name" : "Three"
+      }
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "00000000-0000-4000-8000-000000000102",
+      "kind" : "show",
+      "name" : "Show B",
+      "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "play" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : "3 Seasons",
+      "synopsis" : "Short.",
+      "tileArt" : "https:\/\/example.invalid\/tile",
+      "year" : 2000
+    }
+  },
+  {
+    "currentSeasonID" : "s3",
+    "seasons" : [
+      {
+        "episodes" : [
+
+        ],
+        "id" : "s1",
+        "name" : "One"
+      },
+      {
+        "episodes" : [
+
+        ],
+        "id" : "s3",
+        "name" : "Three"
+      }
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "00000000-0000-4000-8000-000000000102",
+      "kind" : "show",
+      "name" : "Show B",
+      "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "play" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : "3 Seasons",
+      "synopsis" : "Short.",
+      "tileArt" : "https:\/\/example.invalid\/tile",
+      "year" : 2000
+    }
+  },
+  {
+    "currentSeasonID" : null,
+    "seasons" : [
+      {
+        "episodes" : [
+
+        ],
+        "id" : "s1",
+        "name" : "One"
+      },
+      {
+        "episodes" : [
+
+        ],
+        "id" : "s2",
+        "name" : "Two"
+      }
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "00000000-0000-4000-8000-000000000102",
+      "kind" : "show",
+      "name" : "Show B",
+      "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "play" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : "2 Seasons",
+      "synopsis" : "Short.",
+      "tileArt" : "https:\/\/example.invalid\/tile",
+      "year" : 2000
+    }
+  },
+  {
+    "currentSeasonID" : null,
+    "seasons" : [
+      {
+        "episodes" : [
+
+        ],
+        "id" : "s1",
+        "name" : "One"
+      },
+      {
+        "episodes" : [
+
+        ],
+        "id" : "s2",
+        "name" : "Two"
+      }
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "00000000-0000-4000-8000-000000000102",
+      "kind" : "show",
+      "name" : "Show B",
+      "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "play" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : "2 Seasons",
+      "synopsis" : "Short.",
+      "tileArt" : "https:\/\/example.invalid\/tile",
+      "year" : 2000
+    }
+  },
+  {
+    "currentSeasonID" : null,
+    "seasons" : [
+
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : "https:\/\/disney.images.edge.bamgrid.com\/ripcut-delivery\/v2\/variant\/disney\/w1\/compose?format=jpeg&width=1920",
+      "id" : "00000000-0000-4000-8000-000000000102",
+      "kind" : "movie",
+      "name" : "Show B",
+      "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "play" : "https:\/\/www.disneyplus.com\/play\/p-1",
+      "rating" : "R",
+      "resumeSeconds" : 1500,
+      "runtimeSeconds" : 6000,
+      "seasonsLabel" : null,
+      "synopsis" : "D",
+      "tileArt" : "https:\/\/example.invalid\/tile",
+      "year" : 2001
+    }
+  },
+  {
+    "currentSeasonID" : null,
+    "seasons" : [
+
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : "https:\/\/disney.images.edge.bamgrid.com\/ripcut-delivery\/v2\/variant\/disney\/w1\/compose?format=jpeg&width=1920",
+      "id" : "00000000-0000-4000-8000-000000000102",
+      "kind" : "movie",
+      "name" : "Show B",
+      "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "play" : "https:\/\/www.disneyplus.com\/play\/p-1",
+      "rating" : "R",
+      "resumeSeconds" : 1500,
+      "runtimeSeconds" : 6000,
+      "seasonsLabel" : null,
+      "synopsis" : "D",
+      "tileArt" : "https:\/\/example.invalid\/tile",
+      "year" : 2001
+    }
+  },
+  {
+    "currentSeasonID" : null,
+    "seasons" : [
+
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "00000000-0000-4000-8000-000000000102",
+      "kind" : "show",
+      "name" : "Show B",
+      "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "play" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : null,
+      "synopsis" : "Short.",
+      "tileArt" : "https:\/\/example.invalid\/tile",
+      "year" : 2000
+    }
+  },
+  {
+    "currentSeasonID" : null,
+    "seasons" : [
+
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "00000000-0000-4000-8000-000000000102",
+      "kind" : "movie",
+      "name" : "Show B",
+      "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "play" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : null,
+      "synopsis" : "Short.",
+      "tileArt" : "https:\/\/example.invalid\/tile",
+      "year" : 2000
+    }
+  },
+  {
+    "currentSeasonID" : null,
+    "seasons" : [
+
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "00000000-0000-4000-8000-000000000102",
+      "kind" : "show",
+      "name" : "Show B",
+      "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "play" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : null,
+      "synopsis" : "Short.",
+      "tileArt" : "https:\/\/example.invalid\/tile",
+      "year" : 2000
+    }
+  },
+  {
+    "currentSeasonID" : null,
+    "seasons" : [
+
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "00000000-0000-4000-8000-000000000102",
+      "kind" : "movie",
+      "name" : "Show B",
+      "page" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "play" : "https:\/\/www.disneyplus.com\/browse\/entity-00000000-0000-4000-8000-000000000102",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : null,
+      "synopsis" : "Short.",
+      "tileArt" : "https:\/\/example.invalid\/tile",
+      "year" : 2000
+    }
+  },
+  null,
+  null,
+  null,
+  null
+]

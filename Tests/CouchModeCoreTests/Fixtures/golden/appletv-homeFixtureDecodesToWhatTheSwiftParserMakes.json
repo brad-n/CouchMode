@@ -1,0 +1,170 @@
+[
+  {
+    "asksWhoIsWatching" : false,
+    "currentProfileID" : "main",
+    "hero" : {
+      "episodeLabel" : null,
+      "heroArt" : "https:\/\/example.invalid\/image\/thumb\/synthstage\/1920x1080.jpg",
+      "id" : "umc.cmc.synthstage1",
+      "kind" : "show",
+      "name" : "Stage Show",
+      "page" : "https:\/\/tv.apple.com\/us\/show\/stage-show\/umc.cmc.synthstage1",
+      "play" : "https:\/\/tv.apple.com\/us\/show\/stage-show\/umc.cmc.synthstage1",
+      "rating" : "TV-MA",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : null,
+      "synopsis" : null,
+      "tileArt" : null,
+      "year" : 2024
+    },
+    "profiles" : [
+      {
+        "avatar" : null,
+        "id" : "main",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Apple TV"
+      }
+    ],
+    "rows" : [
+      {
+        "id" : "appletv-row-uts.col.UpNext",
+        "kind" : "continueWatching",
+        "title" : "Continue Watching",
+        "titles" : [
+          {
+            "episodeLabel" : "S2 · E3",
+            "heroArt" : null,
+            "id" : "umc.cmc.synthshow1",
+            "kind" : "show",
+            "name" : "Synthetic Series",
+            "page" : "https:\/\/tv.apple.com\/us\/show\/synthetic-series\/umc.cmc.synthshow1",
+            "play" : "https:\/\/tv.apple.com\/us\/episode\/pilot\/umc.cmc.synthep0001?showId=umc.cmc.synthshow1&action=play",
+            "rating" : null,
+            "resumeSeconds" : 750,
+            "runtimeSeconds" : 3000,
+            "seasonsLabel" : null,
+            "synopsis" : null,
+            "tileArt" : "https:\/\/example.invalid\/image\/thumb\/synthtile1\/640x360KF.TVALC03.jpg?color=C78469",
+            "year" : null
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "umc.cmc.synthmovie1",
+            "kind" : "movie",
+            "name" : "Synthetic Movie",
+            "page" : "https:\/\/tv.apple.com\/us\/movie\/synthetic-movie\/umc.cmc.synthmovie1",
+            "play" : "https:\/\/tv.apple.com\/us\/movie\/synthetic-movie\/umc.cmc.synthmovie1?action=play",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 6000,
+            "seasonsLabel" : null,
+            "synopsis" : null,
+            "tileArt" : null,
+            "year" : 2019
+          },
+          {
+            "episodeLabel" : "S1 · E2",
+            "heroArt" : null,
+            "id" : "umc.cmc.synthshow2",
+            "kind" : "show",
+            "name" : "Next Episode Show",
+            "page" : "https:\/\/tv.apple.com\/us\/show\/next-episode-show\/umc.cmc.synthshow2",
+            "play" : "https:\/\/tv.apple.com\/us\/episode\/two\/umc.cmc.synthep0002?showId=umc.cmc.synthshow2&action=play",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 2400,
+            "seasonsLabel" : null,
+            "synopsis" : null,
+            "tileArt" : null,
+            "year" : null
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "umc.cmc.synthrent1",
+            "kind" : "movie",
+            "name" : "Rent This One",
+            "page" : "https:\/\/tv.apple.com\/us\/movie\/rent-this-one\/umc.cmc.synthrent1",
+            "play" : "https:\/\/tv.apple.com\/us\/movie\/rent-this-one\/umc.cmc.synthrent1",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 5400,
+            "seasonsLabel" : null,
+            "synopsis" : null,
+            "tileArt" : null,
+            "year" : null
+          }
+        ],
+        "totalCount" : null
+      },
+      {
+        "id" : "appletv-row-uts.col.ChartsShows.synth",
+        "kind" : "ranked",
+        "title" : "Top 10 Shows",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "umc.cmc.synthchart1",
+            "kind" : "show",
+            "name" : "Chart One",
+            "page" : "https:\/\/tv.apple.com\/us\/show\/chart-one\/umc.cmc.synthchart1",
+            "play" : "https:\/\/tv.apple.com\/us\/show\/chart-one\/umc.cmc.synthchart1",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : null,
+            "tileArt" : "https:\/\/example.invalid\/image\/thumb\/synthchart1\/640x360.jpg",
+            "year" : null
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "umc.cmc.synthchart2",
+            "kind" : "show",
+            "name" : "Chart Two",
+            "page" : "https:\/\/tv.apple.com\/us\/show\/chart-two\/umc.cmc.synthchart2",
+            "play" : "https:\/\/tv.apple.com\/us\/show\/chart-two\/umc.cmc.synthchart2",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : null,
+            "tileArt" : null,
+            "year" : null
+          }
+        ],
+        "totalCount" : null
+      },
+      {
+        "id" : "appletv-row-uts.col.synth-new",
+        "kind" : "standard",
+        "title" : "New Releases",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "umc.cmc.synthnew1",
+            "kind" : "show",
+            "name" : "New One",
+            "page" : "https:\/\/tv.apple.com\/us\/show\/new-one\/umc.cmc.synthnew1",
+            "play" : "https:\/\/tv.apple.com\/us\/show\/new-one\/umc.cmc.synthnew1",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : null,
+            "tileArt" : null,
+            "year" : 2026
+          }
+        ],
+        "totalCount" : null
+      }
+    ],
+    "serviceID" : "appletv"
+  }
+]

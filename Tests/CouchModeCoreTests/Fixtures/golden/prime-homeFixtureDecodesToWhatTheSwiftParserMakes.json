@@ -1,0 +1,191 @@
+[
+  {
+    "asksWhoIsWatching" : false,
+    "currentProfileID" : "Profile 1",
+    "hero" : {
+      "episodeLabel" : "S1",
+      "heroArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/hero0001._SX1920_.jpeg",
+      "id" : "H1synth01",
+      "kind" : "show",
+      "name" : "Hero Show",
+      "page" : "https:\/\/www.primevideo.com\/detail\/H1synth01",
+      "play" : "https:\/\/www.primevideo.com\/detail\/H1play01?autoplay=1",
+      "rating" : "TV-14",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : null,
+      "synopsis" : "A hero billboard synopsis.",
+      "tileArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/hero0001._SX640_.jpeg",
+      "year" : 2026
+    },
+    "profiles" : [
+      {
+        "avatar" : "https:\/\/example.invalid\/images\/G\/01\/Avatars\/animals_cat.png",
+        "id" : "Profile 1",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 1"
+      },
+      {
+        "avatar" : "https:\/\/example.invalid\/images\/G\/02\/kid-1.png",
+        "id" : "Profile 3",
+        "isKids" : true,
+        "isLocked" : false,
+        "name" : "Profile 3"
+      },
+      {
+        "avatar" : null,
+        "id" : "Profile 4",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 4"
+      }
+    ],
+    "rows" : [
+      {
+        "id" : "prime-row-1",
+        "kind" : "continueWatching",
+        "title" : "Continue watching",
+        "titles" : [
+          {
+            "episodeLabel" : "S2",
+            "heroArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/cover001._SX1920_.jpg",
+            "id" : "CW1season2",
+            "kind" : "show",
+            "name" : "Show One",
+            "page" : "https:\/\/www.primevideo.com\/detail\/CW1season2",
+            "play" : "https:\/\/www.primevideo.com\/detail\/CW1ep0005?autoplay=1&t=1737",
+            "rating" : "TV-MA",
+            "resumeSeconds" : 1737,
+            "runtimeSeconds" : 3130,
+            "seasonsLabel" : null,
+            "synopsis" : "Season 2・Synthetic.",
+            "tileArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/cover001._SX640_.jpg",
+            "year" : 2025
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/cover002._SX1920_.jpg",
+            "id" : "CW2movie01",
+            "kind" : "movie",
+            "name" : "Movie Two",
+            "page" : "https:\/\/www.primevideo.com\/detail\/CW2movie01",
+            "play" : "https:\/\/www.primevideo.com\/detail\/CW2movie01?autoplay=1&t=4282",
+            "rating" : "PG-13",
+            "resumeSeconds" : 4282,
+            "runtimeSeconds" : 4922,
+            "seasonsLabel" : null,
+            "synopsis" : "A partly watched movie.",
+            "tileArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/cover002._SX640_.jpg",
+            "year" : 2024
+          },
+          {
+            "episodeLabel" : "S1",
+            "heroArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/cover003._SX1920_.jpg",
+            "id" : "CW3queued1",
+            "kind" : "show",
+            "name" : "Show Three",
+            "page" : "https:\/\/www.primevideo.com\/detail\/CW3queued1",
+            "play" : "https:\/\/www.primevideo.com\/detail\/CW3ep00001?autoplay=1",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : null,
+            "tileArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/cover003._SX640_.jpg",
+            "year" : 2026
+          }
+        ],
+        "totalCount" : null
+      },
+      {
+        "id" : "prime-row-2",
+        "kind" : "standard",
+        "title" : "Popular now",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/cover004._SX1920_.jpg",
+            "id" : "P1movie001",
+            "kind" : "movie",
+            "name" : "Movie Four",
+            "page" : "https:\/\/www.primevideo.com\/detail\/P1movie001",
+            "play" : "https:\/\/www.primevideo.com\/detail\/P1movie001?autoplay=1",
+            "rating" : "R",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "A movie.",
+            "tileArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/cover004._SX640_.jpg",
+            "year" : 2023
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/cover005._SX1920_.jpg",
+            "id" : "P2rent0001",
+            "kind" : "movie",
+            "name" : "Movie To Rent",
+            "page" : "https:\/\/www.primevideo.com\/detail\/P2rent0001",
+            "play" : "https:\/\/www.primevideo.com\/detail\/P2rent0001",
+            "rating" : "PG",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Rent or buy.",
+            "tileArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/cover005._SX640_.jpg",
+            "year" : 2026
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "P3noart001",
+            "kind" : "show",
+            "name" : "Show Without Art",
+            "page" : "https:\/\/www.primevideo.com\/detail\/P3noart001",
+            "play" : "https:\/\/www.primevideo.com\/detail\/P3ep000001?autoplay=1",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : null,
+            "tileArt" : null,
+            "year" : null
+          }
+        ],
+        "totalCount" : 60
+      },
+      {
+        "id" : "prime-row-3",
+        "kind" : "ranked",
+        "title" : "Top 10 shows",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/cover006._SX1920_.jpg",
+            "id" : "T1show0001",
+            "kind" : "show",
+            "name" : "Chart Show",
+            "page" : "https:\/\/www.primevideo.com\/detail\/T1show0001",
+            "play" : "https:\/\/www.primevideo.com\/detail\/T1ep000001?autoplay=1",
+            "rating" : "TV-14",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Ranked.",
+            "tileArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/cover006._SX640_.jpg",
+            "year" : 2026
+          }
+        ],
+        "totalCount" : null
+      }
+    ],
+    "serviceID" : "prime"
+  },
+  {
+    "prime-row-2" : {
+      "start" : 20,
+      "target" : "synth-target_id=",
+      "token" : "synth-token_A="
+    }
+  }
+]

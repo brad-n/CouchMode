@@ -1,0 +1,270 @@
+[
+  {
+    "currentSeasonID" : "00000000-0000-4000-8000-000000000001::1",
+    "seasons" : [
+      {
+        "episodes" : [
+          {
+            "art" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000002?base_image_bucket_name=image_manager&base_image=art-1&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000002",
+            "name" : "Episode 1",
+            "number" : 1,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000002",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 1594,
+            "synopsis" : "Placeholder synopsis for episode 1."
+          },
+          {
+            "art" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000003?base_image_bucket_name=image_manager&base_image=art-2&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000003",
+            "name" : "Episode 2",
+            "number" : 2,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000003",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 1451,
+            "synopsis" : "Placeholder synopsis for episode 2."
+          },
+          {
+            "art" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000004?base_image_bucket_name=image_manager&base_image=art-3&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000004",
+            "name" : "Episode 3",
+            "number" : 3,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000004",
+            "resumeSeconds" : 573,
+            "runtimeSeconds" : 1434,
+            "synopsis" : "Placeholder synopsis for episode 3."
+          },
+          {
+            "art" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000005?base_image_bucket_name=image_manager&base_image=art-4&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000005",
+            "name" : "Episode 4",
+            "number" : 4,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000005",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 1541,
+            "synopsis" : "Placeholder synopsis for episode 4."
+          },
+          {
+            "art" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000006?base_image_bucket_name=image_manager&base_image=art-5&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000006",
+            "name" : "Episode 5",
+            "number" : 5,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000006",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 1337,
+            "synopsis" : "Placeholder synopsis for episode 5."
+          },
+          {
+            "art" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000007?base_image_bucket_name=image_manager&base_image=art-6&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000007",
+            "name" : "Episode 6",
+            "number" : 6,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000007",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 1269,
+            "synopsis" : "Placeholder synopsis for episode 6."
+          },
+          {
+            "art" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000008?base_image_bucket_name=image_manager&base_image=art-7&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000008",
+            "name" : "Episode 7",
+            "number" : 7,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000008",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 1327,
+            "synopsis" : "Placeholder synopsis for episode 7."
+          },
+          {
+            "art" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000009?base_image_bucket_name=image_manager&base_image=art-8&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000009",
+            "name" : "Episode 8",
+            "number" : 8,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000009",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 1267,
+            "synopsis" : "Placeholder synopsis for episode 8."
+          },
+          {
+            "art" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000010?base_image_bucket_name=image_manager&base_image=art-9&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000010",
+            "name" : "Episode 9",
+            "number" : 9,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000010",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 1258,
+            "synopsis" : "Placeholder synopsis for episode 9."
+          },
+          {
+            "art" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000011?base_image_bucket_name=image_manager&base_image=art-10&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000011",
+            "name" : "Episode 10",
+            "number" : 10,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000011",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 1544,
+            "synopsis" : "Placeholder synopsis for episode 10."
+          }
+        ],
+        "id" : "00000000-0000-4000-8000-000000000001::1",
+        "name" : "Season 1"
+      },
+      {
+        "episodes" : [
+
+        ],
+        "id" : "00000000-0000-4000-8000-000000000001::2",
+        "name" : "Season 2"
+      }
+    ],
+    "title" : {
+      "episodeLabel" : "S1 · E3",
+      "heroArt" : null,
+      "id" : "00000000-0000-4000-8000-000000000001",
+      "kind" : "show",
+      "name" : "Show A",
+      "page" : "https:\/\/www.hulu.com\/series\/00000000-0000-4000-8000-000000000001",
+      "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000004",
+      "rating" : "TVMA",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : "2 Seasons",
+      "synopsis" : "Placeholder synopsis for Show A.",
+      "tileArt" : null,
+      "year" : 2020
+    }
+  },
+  {
+    "currentSeasonID" : "00000000-0000-4000-8000-000000000001::1",
+    "seasons" : [
+      {
+        "episodes" : [
+          {
+            "art" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000002?base_image_bucket_name=image_manager&base_image=art-1&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000002",
+            "name" : "Episode 1",
+            "number" : 1,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000002",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 1594,
+            "synopsis" : "Placeholder synopsis for episode 1."
+          },
+          {
+            "art" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000003?base_image_bucket_name=image_manager&base_image=art-2&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000003",
+            "name" : "Episode 2",
+            "number" : 2,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000003",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 1451,
+            "synopsis" : "Placeholder synopsis for episode 2."
+          },
+          {
+            "art" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000004?base_image_bucket_name=image_manager&base_image=art-3&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000004",
+            "name" : "Episode 3",
+            "number" : 3,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000004",
+            "resumeSeconds" : 573,
+            "runtimeSeconds" : 1434,
+            "synopsis" : "Placeholder synopsis for episode 3."
+          },
+          {
+            "art" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000005?base_image_bucket_name=image_manager&base_image=art-4&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000005",
+            "name" : "Episode 4",
+            "number" : 4,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000005",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 1541,
+            "synopsis" : "Placeholder synopsis for episode 4."
+          },
+          {
+            "art" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000006?base_image_bucket_name=image_manager&base_image=art-5&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000006",
+            "name" : "Episode 5",
+            "number" : 5,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000006",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 1337,
+            "synopsis" : "Placeholder synopsis for episode 5."
+          },
+          {
+            "art" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000007?base_image_bucket_name=image_manager&base_image=art-6&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000007",
+            "name" : "Episode 6",
+            "number" : 6,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000007",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 1269,
+            "synopsis" : "Placeholder synopsis for episode 6."
+          },
+          {
+            "art" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000008?base_image_bucket_name=image_manager&base_image=art-7&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000008",
+            "name" : "Episode 7",
+            "number" : 7,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000008",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 1327,
+            "synopsis" : "Placeholder synopsis for episode 7."
+          },
+          {
+            "art" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000009?base_image_bucket_name=image_manager&base_image=art-8&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000009",
+            "name" : "Episode 8",
+            "number" : 8,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000009",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 1267,
+            "synopsis" : "Placeholder synopsis for episode 8."
+          },
+          {
+            "art" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000010?base_image_bucket_name=image_manager&base_image=art-9&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000010",
+            "name" : "Episode 9",
+            "number" : 9,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000010",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 1258,
+            "synopsis" : "Placeholder synopsis for episode 9."
+          },
+          {
+            "art" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000011?base_image_bucket_name=image_manager&base_image=art-10&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000011",
+            "name" : "Episode 10",
+            "number" : 10,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000011",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 1544,
+            "synopsis" : "Placeholder synopsis for episode 10."
+          }
+        ],
+        "id" : "00000000-0000-4000-8000-000000000001::1",
+        "name" : "Season 1"
+      },
+      {
+        "episodes" : [
+
+        ],
+        "id" : "00000000-0000-4000-8000-000000000001::2",
+        "name" : "Season 2"
+      }
+    ],
+    "title" : {
+      "episodeLabel" : "S1 · E3",
+      "heroArt" : null,
+      "id" : "00000000-0000-4000-8000-000000000001",
+      "kind" : "show",
+      "name" : "Show A",
+      "page" : null,
+      "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000004",
+      "rating" : "TVMA",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : "2 Seasons",
+      "synopsis" : "Placeholder synopsis for Show A.",
+      "tileArt" : null,
+      "year" : 2020
+    }
+  }
+]

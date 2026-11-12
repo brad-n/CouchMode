@@ -1,0 +1,435 @@
+[
+  {
+    "asksWhoIsWatching" : false,
+    "currentProfileID" : null,
+    "hero" : null,
+    "profiles" : [
+
+    ],
+    "rows" : [
+      {
+        "id" : "hulu-row-1",
+        "kind" : "standard",
+        "title" : "Mixed",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "a3",
+            "kind" : "show",
+            "name" : "Show Z",
+            "page" : "https:\/\/www.hulu.com\/series\/a3",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000099",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "a4",
+            "kind" : "movie",
+            "name" : "Show Z",
+            "page" : "https:\/\/www.hulu.com\/movie\/a4",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000099",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          },
+          {
+            "episodeLabel" : "S2 · E5",
+            "heroArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "a5",
+            "kind" : "episode",
+            "name" : "Show Z",
+            "page" : null,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000099",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          }
+        ],
+        "totalCount" : null
+      }
+    ],
+    "serviceID" : "hulu"
+  },
+  {
+    "asksWhoIsWatching" : false,
+    "currentProfileID" : null,
+    "hero" : null,
+    "profiles" : [
+
+    ],
+    "rows" : [
+      {
+        "id" : "hulu-row-1",
+        "kind" : "standard",
+        "title" : "Mixed",
+        "titles" : [
+          {
+            "episodeLabel" : "S1 · E7",
+            "heroArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "c1",
+            "kind" : "show",
+            "name" : "Show Z",
+            "page" : "https:\/\/www.hulu.com\/series\/c1",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000099",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "c2",
+            "kind" : "show",
+            "name" : "Show Z",
+            "page" : "https:\/\/www.hulu.com\/series\/c2",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000099",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "c3",
+            "kind" : "show",
+            "name" : "Show Z",
+            "page" : "https:\/\/www.hulu.com\/series\/c3",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000099",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          },
+          {
+            "episodeLabel" : "S2 · E5",
+            "heroArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "c4",
+            "kind" : "episode",
+            "name" : "Show Z",
+            "page" : null,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000099",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "c5",
+            "kind" : "episode",
+            "name" : "Show Z",
+            "page" : null,
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000099",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          }
+        ],
+        "totalCount" : null
+      }
+    ],
+    "serviceID" : "hulu"
+  },
+  {
+    "asksWhoIsWatching" : false,
+    "currentProfileID" : null,
+    "hero" : {
+      "episodeLabel" : null,
+      "heroArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+      "id" : "h2",
+      "kind" : "movie",
+      "name" : "Movie H",
+      "page" : "https:\/\/www.hulu.com\/movie\/h2",
+      "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000099",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : null,
+      "synopsis" : "Placeholder.",
+      "tileArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+      "year" : null
+    },
+    "profiles" : [
+
+    ],
+    "rows" : [
+      {
+        "id" : "hulu-row-3",
+        "kind" : "standard",
+        "title" : "Popular",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "p1",
+            "kind" : "show",
+            "name" : "Show Z",
+            "page" : "https:\/\/www.hulu.com\/series\/p1",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000099",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          }
+        ],
+        "totalCount" : null
+      }
+    ],
+    "serviceID" : "hulu"
+  },
+  {
+    "asksWhoIsWatching" : false,
+    "currentProfileID" : null,
+    "hero" : null,
+    "profiles" : [
+
+    ],
+    "rows" : [
+      {
+        "id" : "hulu-row-1",
+        "kind" : "continueWatching",
+        "title" : "Continue Watching for Profile 1",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "c1",
+            "kind" : "show",
+            "name" : "Show Z",
+            "page" : "https:\/\/www.hulu.com\/series\/c1",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000099",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          }
+        ],
+        "totalCount" : null
+      },
+      {
+        "id" : "hulu-row-2",
+        "kind" : "ranked",
+        "title" : "Top 10 Movies",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "c2",
+            "kind" : "show",
+            "name" : "Show Z",
+            "page" : "https:\/\/www.hulu.com\/series\/c2",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000099",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          }
+        ],
+        "totalCount" : null
+      },
+      {
+        "id" : "hulu-row-3",
+        "kind" : "standard",
+        "title" : "Top Picks",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "c3",
+            "kind" : "show",
+            "name" : "Show Z",
+            "page" : "https:\/\/www.hulu.com\/series\/c3",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000099",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          }
+        ],
+        "totalCount" : null
+      },
+      {
+        "id" : "hulu-row-4",
+        "kind" : "standard",
+        "title" : "Comedy",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "c4",
+            "kind" : "show",
+            "name" : "Show Z",
+            "page" : "https:\/\/www.hulu.com\/series\/c4",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000099",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          }
+        ],
+        "totalCount" : null
+      }
+    ],
+    "serviceID" : "hulu"
+  },
+  {
+    "asksWhoIsWatching" : false,
+    "currentProfileID" : "3",
+    "hero" : null,
+    "profiles" : [
+      {
+        "avatar" : null,
+        "id" : "1",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 1"
+      },
+      {
+        "avatar" : null,
+        "id" : "2",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 2"
+      },
+      {
+        "avatar" : null,
+        "id" : "3",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 3"
+      },
+      {
+        "avatar" : null,
+        "id" : "4",
+        "isKids" : true,
+        "isLocked" : false,
+        "name" : "Profile 4"
+      },
+      {
+        "avatar" : null,
+        "id" : "5",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 5"
+      },
+      {
+        "avatar" : null,
+        "id" : "6",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 6"
+      },
+      {
+        "avatar" : null,
+        "id" : "7",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 7"
+      },
+      {
+        "avatar" : null,
+        "id" : "8",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 8"
+      },
+      {
+        "avatar" : null,
+        "id" : "9",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 9"
+      },
+      {
+        "avatar" : null,
+        "id" : "10",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 10"
+      }
+    ],
+    "rows" : [
+      {
+        "id" : "hulu-row-1",
+        "kind" : "standard",
+        "title" : "Popular",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000042",
+            "kind" : "show",
+            "name" : "Show Z",
+            "page" : "https:\/\/www.hulu.com\/series\/00000000-0000-4000-8000-000000000042",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000099",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/a?x=1&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          }
+        ],
+        "totalCount" : null
+      }
+    ],
+    "serviceID" : "hulu"
+  },
+  null,
+  null,
+  null,
+  null,
+  null,
+  null
+]

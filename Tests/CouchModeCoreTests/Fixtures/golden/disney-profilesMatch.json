@@ -1,0 +1,185 @@
+[
+  {
+    "asksWhoIsWatching" : false,
+    "currentProfileID" : "A",
+    "hero" : null,
+    "profiles" : [
+      {
+        "avatar" : "https:\/\/example.invalid\/a",
+        "id" : "A",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "A"
+      },
+      {
+        "avatar" : null,
+        "id" : "C",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "C"
+      }
+    ],
+    "rows" : [
+      {
+        "id" : "disney-row-r1",
+        "kind" : "standard",
+        "title" : "A",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "t1",
+            "kind" : "show",
+            "name" : "X",
+            "page" : "https:\/\/www.disneyplus.com\/browse\/entity-t1",
+            "play" : "https:\/\/www.disneyplus.com\/browse\/entity-t1",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : null,
+            "tileArt" : null,
+            "year" : null
+          }
+        ],
+        "totalCount" : null
+      }
+    ],
+    "serviceID" : "disney"
+  },
+  {
+
+  },
+  {
+    "asksWhoIsWatching" : false,
+    "currentProfileID" : "A",
+    "hero" : null,
+    "profiles" : [
+      {
+        "avatar" : null,
+        "id" : "A",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "A"
+      }
+    ],
+    "rows" : [
+      {
+        "id" : "disney-row-r1",
+        "kind" : "standard",
+        "title" : "A",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "t1",
+            "kind" : "show",
+            "name" : "X",
+            "page" : "https:\/\/www.disneyplus.com\/browse\/entity-t1",
+            "play" : "https:\/\/www.disneyplus.com\/browse\/entity-t1",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : null,
+            "tileArt" : null,
+            "year" : null
+          }
+        ],
+        "totalCount" : null
+      }
+    ],
+    "serviceID" : "disney"
+  },
+  {
+
+  },
+  {
+    "asksWhoIsWatching" : false,
+    "currentProfileID" : null,
+    "hero" : null,
+    "profiles" : [
+      {
+        "avatar" : null,
+        "id" : "ok",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "ok"
+      }
+    ],
+    "rows" : [
+      {
+        "id" : "disney-row-r1",
+        "kind" : "standard",
+        "title" : "A",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "t1",
+            "kind" : "show",
+            "name" : "X",
+            "page" : "https:\/\/www.disneyplus.com\/browse\/entity-t1",
+            "play" : "https:\/\/www.disneyplus.com\/browse\/entity-t1",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : null,
+            "tileArt" : null,
+            "year" : null
+          }
+        ],
+        "totalCount" : null
+      }
+    ],
+    "serviceID" : "disney"
+  },
+  {
+
+  },
+  {
+    "asksWhoIsWatching" : false,
+    "currentProfileID" : "A",
+    "hero" : null,
+    "profiles" : [
+      {
+        "avatar" : "https:\/\/img.bamgrid.com\/a.png",
+        "id" : "A",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "A"
+      }
+    ],
+    "rows" : [
+      {
+        "id" : "disney-row-r1",
+        "kind" : "standard",
+        "title" : "A",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "t1",
+            "kind" : "show",
+            "name" : "X",
+            "page" : "https:\/\/www.disneyplus.com\/browse\/entity-t1",
+            "play" : "https:\/\/www.disneyplus.com\/browse\/entity-t1",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : null,
+            "tileArt" : null,
+            "year" : null
+          }
+        ],
+        "totalCount" : null
+      }
+    ],
+    "serviceID" : "disney"
+  },
+  {
+
+  }
+]

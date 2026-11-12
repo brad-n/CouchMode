@@ -1,0 +1,176 @@
+[
+  {
+    "currentSeasonID" : "70001096",
+    "seasons" : [
+      {
+        "episodes" : [
+          {
+            "art" : "https:\/\/art.invalid\/ep-1.jpg",
+            "id" : "70001233",
+            "name" : "Episode One Title",
+            "number" : 1,
+            "play" : "https:\/\/www.netflix.com\/watch\/70001233",
+            "resumeSeconds" : 26,
+            "runtimeSeconds" : 3533,
+            "synopsis" : "Synopsis for episode 1."
+          },
+          {
+            "art" : "https:\/\/art.invalid\/ep-2.jpg",
+            "id" : "70001370",
+            "name" : "Episode Two Title",
+            "number" : 2,
+            "play" : "https:\/\/www.netflix.com\/watch\/70001370",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 3617,
+            "synopsis" : "Synopsis for episode 2."
+          },
+          {
+            "art" : "https:\/\/art.invalid\/ep-3.jpg",
+            "id" : "70001507",
+            "name" : "Episode Three Title",
+            "number" : 3,
+            "play" : "https:\/\/www.netflix.com\/watch\/70001507",
+            "resumeSeconds" : 3129,
+            "runtimeSeconds" : 3237,
+            "synopsis" : "Synopsis for episode 3."
+          }
+        ],
+        "id" : "70001096",
+        "name" : "S1: Alpha"
+      },
+      {
+        "episodes" : [
+
+        ],
+        "id" : "70001781",
+        "name" : "S2: Bravo"
+      },
+      {
+        "episodes" : [
+
+        ],
+        "id" : "70001918",
+        "name" : "S3: Charlie"
+      }
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "70000959",
+      "kind" : "show",
+      "name" : "A Show",
+      "page" : "https:\/\/www.netflix.com\/title\/70000959",
+      "play" : "https:\/\/www.netflix.com\/watch\/1",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : null,
+      "synopsis" : "Show synopsis.",
+      "tileArt" : "https:\/\/art.invalid\/tile",
+      "year" : null
+    }
+  },
+  {
+    "currentSeasonID" : "70001096",
+    "seasons" : [
+      {
+        "episodes" : [
+          {
+            "art" : "https:\/\/art.invalid\/ep-1.jpg",
+            "id" : "70001233",
+            "name" : "Episode One Title",
+            "number" : 1,
+            "play" : "https:\/\/www.netflix.com\/watch\/70001233",
+            "resumeSeconds" : 26,
+            "runtimeSeconds" : 3533,
+            "synopsis" : "Synopsis for episode 1."
+          },
+          {
+            "art" : "https:\/\/art.invalid\/ep-2.jpg",
+            "id" : "70001370",
+            "name" : "Episode Two Title",
+            "number" : 2,
+            "play" : "https:\/\/www.netflix.com\/watch\/70001370",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 3617,
+            "synopsis" : "Synopsis for episode 2."
+          },
+          {
+            "art" : "https:\/\/art.invalid\/ep-3.jpg",
+            "id" : "70001507",
+            "name" : "Episode Three Title",
+            "number" : 3,
+            "play" : "https:\/\/www.netflix.com\/watch\/70001507",
+            "resumeSeconds" : 3129,
+            "runtimeSeconds" : 3237,
+            "synopsis" : "Synopsis for episode 3."
+          }
+        ],
+        "id" : "70001096",
+        "name" : "S1: Alpha"
+      },
+      {
+        "episodes" : [
+
+        ],
+        "id" : "70001781",
+        "name" : "S2: Bravo"
+      },
+      {
+        "episodes" : [
+
+        ],
+        "id" : "70001918",
+        "name" : "S3: Charlie"
+      }
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "70000959",
+      "kind" : "movie",
+      "name" : "A Show",
+      "page" : "https:\/\/www.netflix.com\/title\/70000959",
+      "play" : "https:\/\/www.netflix.com\/watch\/1",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : null,
+      "synopsis" : "Show synopsis.",
+      "tileArt" : null,
+      "year" : null
+    }
+  },
+  [
+    {
+      "art" : "https:\/\/art.invalid\/ep-1.jpg",
+      "id" : "70001233",
+      "name" : "Episode One Title",
+      "number" : 1,
+      "play" : "https:\/\/www.netflix.com\/watch\/70001233",
+      "resumeSeconds" : 26,
+      "runtimeSeconds" : 3533,
+      "synopsis" : "Synopsis for episode 1."
+    },
+    {
+      "art" : "https:\/\/art.invalid\/ep-2.jpg",
+      "id" : "70001370",
+      "name" : "Episode Two Title",
+      "number" : 2,
+      "play" : "https:\/\/www.netflix.com\/watch\/70001370",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : 3617,
+      "synopsis" : "Synopsis for episode 2."
+    },
+    {
+      "art" : "https:\/\/art.invalid\/ep-3.jpg",
+      "id" : "70001507",
+      "name" : "Episode Three Title",
+      "number" : 3,
+      "play" : "https:\/\/www.netflix.com\/watch\/70001507",
+      "resumeSeconds" : 3129,
+      "runtimeSeconds" : 3237,
+      "synopsis" : "Synopsis for episode 3."
+    }
+  ]
+]

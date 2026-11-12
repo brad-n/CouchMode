@@ -8,8 +8,10 @@ import JavaScriptCore
 final class PrimePackageParityTests: XCTestCase {
     private var context: JSContext!
     private var decoder: PackageDecoder!
+    private var g: Golden!
 
     override func setUpWithError() throws {
+        g = Golden("prime", function: name)
         let manifest = try PackageManifest.parse(Data(contentsOf: Self.appDirectory.appendingPathComponent("manifest.json")))
         decoder = PackageDecoder(manifest: manifest)
         context = try Self.makeContext()
@@ -41,25 +43,24 @@ final class PrimePackageParityTests: XCTestCase {
     }
 
     private func row(_ id: String, kind: StreamTitle.Kind, name: String) -> StreamTitle {
-        StreamTitle(id: id, name: name, kind: kind, play: PrimeSite.pageURL(id: id)!, page: PrimeSite.pageURL(id: id))
+        StreamTitle(id: id, name: name, kind: kind, play: URL(string: "https://www.primevideo.com/detail/\(id)")!, page: URL(string: "https://www.primevideo.com/detail/\(id)"))
     }
 
     // MARK: Home
 
     private func assertHomeParity(_ read: String, file: StaticString = #filePath, line: UInt = #line) throws {
-        let expected = PrimeHome.parse(read)
+        let expected = try g.next(file: file, line: line)
         let js = build("home", read)
-        guard let expected else { XCTAssertNil(decoder.home(js, serviceID: "prime"), file: file, line: line); return }
+        guard !(expected is NSNull) else { XCTAssertNil(decoder.home(js, serviceID: "prime"), file: file, line: line); return }
         let got = try XCTUnwrap(decoder.home(js, serviceID: "prime"), "package returned no home", file: file, line: line)
-        XCTAssertEqual(got.home, expected, file: file, line: line)
+        Golden.assertEqual(got.home, expected, file: file, line: line)
         // Paging: the same rows can ask for more, from the same position.
-        let cursors = PrimeMore.cursors(fromHome: read)
-        XCTAssertEqual(Set(got.cursors.keys), Set(cursors.keys), file: file, line: line)
+        var cursors: [String: Any] = [:]
         for (rowID, text) in got.cursors {
             let object = try XCTUnwrap(StreamJSON.object(text))
-            XCTAssertEqual(PrimeMore.Cursor(target: object["target"] as? String ?? "", token: object["token"] as? String ?? "",
-                                            start: StreamJSON.int(object["start"]) ?? -1), cursors[rowID], file: file, line: line)
+            cursors[rowID] = ["target": object["target"] as? String ?? "", "token": object["token"] as? String ?? "", "start": StreamJSON.int(object["start"]) ?? -1] as [String: Any]
         }
+        try g.expect(cursors, file: file, line: line)
     }
 
     func testHomeFixtureDecodesToWhatTheSwiftParserMakes() throws {
@@ -101,33 +102,32 @@ final class PrimePackageParityTests: XCTestCase {
 
     func testSearchFixtureMatches() throws {
         let read = try fixture("prime-search-read")
-        XCTAssertEqual(decoder.titles(build("search", read)), PrimeSearch.titles(fromResults: read))
+        try g.expect(decoder.titles(build("search", read)))
         XCTAssertEqual(decoder.titles(build("search", "{}")), [])
         let items = (0..<80).map { #"{"id":"R\#(String(format: "%08d", $0))","name":"R\#($0)","type":"Movie"}"# }
         let big = "[\(items.joined(separator: ","))]"
-        XCTAssertEqual(decoder.titles(build("search", big)), PrimeSearch.titles(fromResults: big))
+        try g.expect(decoder.titles(build("search", big)))
     }
 
     func testMoreMatches() throws {
-        let cursor = PrimeMore.Cursor(target: "t_1", token: "k_1", start: 20)
         let cursorJS = #", {"target":"t_1","token":"k_1","start":20}"#
         for read in [#"{"items":[{"id":"M1synth01","name":"More One","type":"Movie"},{"id":"M2synth02","name":"More Two","type":"TV Show","title":"More Two - Season 1"},{"name":"no id"}],"hasMore":true,"token":"k_2=","start":40}"#,
                      #"{"items":[{"id":"M1synth01","name":"Last","type":"Movie"}],"hasMore":false,"token":"k_2","start":21}"#,
                      #"{"items":[],"hasMore":true,"start":21}"#, #"{"items":[],"hasMore":true,"token":"k_2","start":20}"#] {
-            let expected = try XCTUnwrap(PrimeMore.titles(fromRead: read, cursor: cursor))
+            let expected = try XCTUnwrap(try g.next() as? [String: Any])
             let got = try XCTUnwrap(decoder.more(build("more", read, extra: cursorJS)))
-            XCTAssertEqual(got.titles, expected.titles)
-            if let next = expected.cursor {
+            Golden.assertEqual(got.titles, try XCTUnwrap(expected["titles"]))
+            if let next = expected["cursor"] as? [String: Any] {
                 let object = try XCTUnwrap(StreamJSON.object(try XCTUnwrap(got.cursor)))
-                XCTAssertEqual(object["target"] as? String, next.target)
-                XCTAssertEqual(object["token"] as? String, next.token)
-                XCTAssertEqual(StreamJSON.int(object["start"]), next.start)
+                XCTAssertEqual(object["target"] as? String, next["target"] as? String)
+                XCTAssertEqual(object["token"] as? String, next["token"] as? String)
+                XCTAssertEqual(StreamJSON.int(object["start"]), next["start"] as? Int)
             } else {
                 XCTAssertNil(got.cursor)
             }
         }
         for read in ["", "[1]", #"{"hasMore":true}"#] {
-            XCTAssertNil(PrimeMore.titles(fromRead: read, cursor: cursor))
+            XCTAssertTrue(try g.nextIsNil())
             XCTAssertNil(decoder.more(build("more", read, extra: cursorJS)))
         }
     }
@@ -137,10 +137,11 @@ final class PrimePackageParityTests: XCTestCase {
     private func assertDetailsParity(_ name: String, row: StreamTitle, file: StaticString = #filePath, line: UInt = #line) throws {
         let read = try fixture(name)
         let argument = try String(decoding: JSONSerialization.data(withJSONObject: PackageDecoder.argument(for: row)), as: UTF8.self)
-        let expected = try XCTUnwrap(PrimeDetails.details(fromRead: read, title: row), file: file, line: line)
+        let expected = try g.next(file: file, line: line)
+        XCTAssertFalse(expected is NSNull, file: file, line: line)
         let got = try XCTUnwrap(decoder.details(build("details", read, extra: ", \(argument)")), "package returned no details", file: file, line: line)
-        XCTAssertEqual(got, expected, name, file: file, line: line)
-        XCTAssertEqual(decoder.episodes(build("episodes", read)), PrimeDetails.episodes(fromRead: read), name, file: file, line: line)
+        Golden.assertEqual(got, expected, name, file: file, line: line)
+        try g.expect(decoder.episodes(build("episodes", read)), name, file: file, line: line)
     }
 
     func testEveryDetailsFixtureMatches() throws {
@@ -156,23 +157,22 @@ final class PrimePackageParityTests: XCTestCase {
         full.tileArt = URL(string: "https://example.invalid/images/S/a/tile.jpg")
         let argument = try String(decoding: JSONSerialization.data(withJSONObject: PackageDecoder.argument(for: full)), as: UTF8.self)
         let read = try fixture("prime-details-show-read")
-        XCTAssertEqual(decoder.details(build("details", read, extra: ", \(argument)")), PrimeDetails.details(fromRead: read, title: full))
+        try g.expect(decoder.details(build("details", read, extra: ", \(argument)")))
     }
 
-    func testNonsenseGivesNothing() {
+    func testNonsenseGivesNothing() throws {
         for read in ["", "[]", "nope", "null"] {
             XCTAssertNil(decoder.details(build("details", read, extra: ", {}")))
             XCTAssertEqual(decoder.episodes(build("episodes", read)) ?? [], [])
         }
-        XCTAssertEqual(PrimeDetails.episodes(fromRead: "nope"), [])
+        try g.expect([StreamEpisode]())
     }
 
     func testRuntimeTextShapes() throws {
         for text in ["1 h 33 min", "55min", "2 h", "", "soon"] {
             let read = #"{"id":"M1movie001","name":"X","runtimeText":"\#(text)","episodes":[]}"#
             let argument = try String(decoding: JSONSerialization.data(withJSONObject: PackageDecoder.argument(for: row("M1movie001", kind: .movie, name: "X"))), as: UTF8.self)
-            XCTAssertEqual(decoder.details(build("details", read, extra: ", \(argument)"))?.title.runtimeSeconds,
-                           PrimeDetails.seconds(fromRuntimeText: text), text)
+            try g.expect(decoder.details(build("details", read, extra: ", \(argument)"))?.title.runtimeSeconds, text)
         }
     }
 

@@ -1,0 +1,41 @@
+[
+  {
+    "asksWhoIsWatching" : true,
+    "currentProfileID" : null,
+    "hero" : null,
+    "profiles" : [
+      {
+        "avatar" : "https:\/\/example.invalid\/avatar\/1.png",
+        "id" : "SYNTHPROFILE0000000000000001",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 1"
+      },
+      {
+        "avatar" : "https:\/\/example.invalid\/avatar\/2.png",
+        "id" : "SYNTHPROFILE0000000000000002",
+        "isKids" : false,
+        "isLocked" : true,
+        "name" : "Profile 2"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTHPROFILE0000000000000003",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 3"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTHPROFILE0000000000000005",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 5"
+      }
+    ],
+    "rows" : [
+
+    ],
+    "serviceID" : "netflix"
+  }
+]

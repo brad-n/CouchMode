@@ -1,0 +1,44 @@
+[
+  [
+    {
+      "art" : "https:\/\/example.invalid\/image\/thumb\/synthep1\/640x360.jpg",
+      "id" : "umc.cmc.synthep0001",
+      "name" : "Pilot",
+      "number" : 1,
+      "play" : "https:\/\/tv.apple.com\/us\/episode\/pilot\/umc.cmc.synthep0001?showId=umc.cmc.synthshow1&action=play",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : 2700,
+      "synopsis" : "The first episode."
+    },
+    {
+      "art" : null,
+      "id" : "umc.cmc.synthep0002",
+      "name" : "Second",
+      "number" : 2,
+      "play" : "https:\/\/tv.apple.com\/us\/episode\/second\/umc.cmc.synthep0002?showId=umc.cmc.synthshow1&action=play",
+      "resumeSeconds" : 900,
+      "runtimeSeconds" : 2700,
+      "synopsis" : null
+    },
+    {
+      "art" : null,
+      "id" : "umc.cmc.synthep0003",
+      "name" : "Locked",
+      "number" : 3,
+      "play" : "https:\/\/tv.apple.com\/us\/episode\/locked\/umc.cmc.synthep0003?showId=umc.cmc.synthshow1",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : 2700,
+      "synopsis" : null
+    },
+    {
+      "art" : null,
+      "id" : "umc.cmc.synthep0005",
+      "name" : "Episode 5",
+      "number" : 5,
+      "play" : "https:\/\/tv.apple.com\/us\/episode\/five\/umc.cmc.synthep0005?showId=umc.cmc.synthshow1",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "synopsis" : null
+    }
+  ]
+]

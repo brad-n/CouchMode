@@ -9,10 +9,12 @@ final class DisneyPackageParityTests: XCTestCase {
     private var context: JSContext!
     private var decoder: PackageDecoder!
     private var manifest: PackageManifest!
+    private var g: Golden!
 
     private static let showID = "00000000-0000-4000-8000-000000000102"
 
     override func setUpWithError() throws {
+        g = Golden("disney", function: name)
         manifest = try PackageManifest.parse(Data(contentsOf: Self.appDirectory.appendingPathComponent("manifest.json")))
         decoder = PackageDecoder(manifest: manifest)
         context = try Self.makeContext()
@@ -44,27 +46,26 @@ final class DisneyPackageParityTests: XCTestCase {
     }
 
     private func rowTitle(kind: StreamTitle.Kind = .show, id: String = DisneyPackageParityTests.showID) -> StreamTitle {
-        let page = DisneyExplore.pageURL(entityID: id)
-        return StreamTitle(id: id, name: "Show B", kind: kind, play: page ?? DisneyExplore.sessionPageURL, page: page,
+        let page = URL(string: "https://www.disneyplus.com/browse/entity-\(id)")
+        return StreamTitle(id: id, name: "Show B", kind: kind, play: page ?? URL(string: "https://www.disneyplus.com/browse/search")!, page: page,
                            synopsis: "Short.", year: 2000, tileArt: URL(string: "https://example.invalid/tile"))
     }
 
     // MARK: Home
 
     private func assertHomeParity(_ read: String, file: StaticString = #filePath, line: UInt = #line) throws {
-        let expected = DisneyHome.parse(read)
+        let expected = try g.next(file: file, line: line)
         let js = build("home", read)
-        guard let expected else { XCTAssertNil(decoder.home(js, serviceID: "disney"), read, file: file, line: line); return }
+        guard !(expected is NSNull) else { XCTAssertNil(decoder.home(js, serviceID: "disney"), read, file: file, line: line); return }
         let got = try XCTUnwrap(decoder.home(js, serviceID: "disney"), "package returned no home", file: file, line: line)
-        XCTAssertEqual(got.home, expected, file: file, line: line)
+        Golden.assertEqual(got.home, expected, file: file, line: line)
         // Paging: the same rows can ask for more, from the same position.
-        let cursors = DisneyMore.cursors(fromHome: read)
-        XCTAssertEqual(Set(got.cursors.keys), Set(cursors.keys), file: file, line: line)
+        var cursors: [String: Any] = [:]
         for (rowID, text) in got.cursors {
             let object = try XCTUnwrap(StreamJSON.object(text))
-            XCTAssertEqual(DisneyMore.Cursor(setID: object["setID"] as? String ?? "", query: object["query"] as? String ?? "",
-                                             next: StreamJSON.int(object["next"]) ?? -1), cursors[rowID], file: file, line: line)
+            cursors[rowID] = ["setID": object["setID"] as? String ?? "", "query": object["query"] as? String ?? "", "next": StreamJSON.int(object["next"]) ?? -1] as [String: Any]
         }
+        try g.expect(cursors, file: file, line: line)
     }
 
     func testHomeFixtureDecodesToWhatTheSwiftParserMakes() throws {
@@ -140,34 +141,33 @@ final class DisneyPackageParityTests: XCTestCase {
 
     func testSearchFixtureMatches() throws {
         let read = try fixture("disney-search-read")
-        XCTAssertEqual(decoder.titles(build("search", read)), DisneySearch.titles(fromResults: read))
+        try g.expect(decoder.titles(build("search", read)))
         XCTAssertFalse(try XCTUnwrap(decoder.titles(build("search", read))).isEmpty)
         XCTAssertEqual(decoder.titles(build("search", "{}")), [])
         let items = (0..<80).map { #"{"id":"r\#($0)","name":"R\#($0)"}"# } + [#"{"id":"r1","name":"Again"}"#, #"{"name":"no id"}"#]
         let big = "[\(items.joined(separator: ","))]"
-        XCTAssertEqual(decoder.titles(build("search", big)), DisneySearch.titles(fromResults: big))
+        try g.expect(decoder.titles(build("search", big)))
     }
 
     func testMoreMatchesAndAdvancesTheCursor() throws {
-        let cursor = DisneyMore.Cursor(setID: "s1", query: "a=b", next: 30)
         let cursorJS = #", {"setID":"s1","query":"a=b","next":30}"#
         let item = #"{"id":"00000000-0000-4000-8000-000000000301","name":"More One"}"#
         for read in [#"{"items":[\#(item),{"id":"m2","name":"More Two","season":1,"runtimeMs":100000},{"name":"no id"}],"count":3,"hasMore":true}"#,
                      #"{"items":[\#(item)],"count":1,"hasMore":false}"#, #"{"items":[],"count":0,"hasMore":true}"#, #"{"items":[\#(item)],"hasMore":true}"#,
                      #"{"items":[\#(item)],"count":4975,"hasMore":true}"#, #"{"items":[\#(item)],"count":4970,"hasMore":true}"#] {
-            let expected = try XCTUnwrap(DisneyMore.titles(fromRead: read, cursor: cursor), read)
+            let expected = try XCTUnwrap(try g.next() as? [String: Any], read)
             let got = try XCTUnwrap(decoder.more(build("more", read, extra: cursorJS)), read)
-            XCTAssertEqual(got.titles, expected.titles, read)
-            if let next = expected.cursor {
+            Golden.assertEqual(got.titles, try XCTUnwrap(expected["titles"]), read)
+            if !(expected["cursor"] is NSNull) {
                 let object = try XCTUnwrap(StreamJSON.object(try XCTUnwrap(got.cursor)), read)
-                XCTAssertEqual(DisneyMore.Cursor(setID: object["setID"] as? String ?? "", query: object["query"] as? String ?? "",
-                                                 next: StreamJSON.int(object["next"]) ?? -1), next, read)
+                Golden.assertEqual(["setID": object["setID"] as? String ?? "", "query": object["query"] as? String ?? "", "next": StreamJSON.int(object["next"]) ?? -1] as [String: Any],
+                                   try XCTUnwrap(expected["cursor"]), read)
             } else {
                 XCTAssertNil(got.cursor, read)
             }
         }
         for read in ["", "[1]", #"{"count":1}"#] {
-            XCTAssertNil(DisneyMore.titles(fromRead: read, cursor: cursor))
+            XCTAssertTrue(try g.nextIsNil())
             XCTAssertNil(decoder.more(build("more", read, extra: cursorJS)))
         }
         XCTAssertNil(decoder.more(build("more", #"{"items":[]}"#, extra: #", {"setID":"a b","query":"x=1","next":0}"#)), "an odd cursor reads nothing")
@@ -178,9 +178,10 @@ final class DisneyPackageParityTests: XCTestCase {
     private func assertDetailsParity(_ name: String, row: StreamTitle, file: StaticString = #filePath, line: UInt = #line) throws {
         let read = try fixture(name)
         let argument = try String(decoding: JSONSerialization.data(withJSONObject: PackageDecoder.argument(for: row)), as: UTF8.self)
-        let expected = try XCTUnwrap(DisneyDetails.details(fromRead: read, title: row), file: file, line: line)
+        let expected = try g.next(file: file, line: line)
+        XCTAssertFalse(expected is NSNull, file: file, line: line)
         let got = try XCTUnwrap(decoder.details(build("details", read, extra: ", \(argument)")), "package returned no details", file: file, line: line)
-        XCTAssertEqual(got, expected, name, file: file, line: line)
+        Golden.assertEqual(got, expected, name, file: file, line: line)
     }
 
     func testEveryDetailsFixtureMatches() throws {
@@ -202,40 +203,40 @@ final class DisneyPackageParityTests: XCTestCase {
             for kind in [StreamTitle.Kind.show, .movie] {
                 let row = rowTitle(kind: kind)
                 let argument = try String(decoding: JSONSerialization.data(withJSONObject: PackageDecoder.argument(for: row)), as: UTF8.self)
-                XCTAssertEqual(decoder.details(build("details", read, extra: ", \(argument)")), DisneyDetails.details(fromRead: read, title: row), read)
+                try g.expect(decoder.details(build("details", read, extra: ", \(argument)")), read)
             }
         }
         for read in ["", "[]", "nope", "null"] {
             XCTAssertNil(decoder.details(build("details", read, extra: ", {}")))
-            XCTAssertNil(DisneyDetails.details(fromRead: read, title: rowTitle()))
+            XCTAssertTrue(try g.nextIsNil())
         }
     }
 
     func testSeasonFixtureEpisodesMatch() throws {
         let read = try fixture("disney-season-read")
-        let expected = DisneyDetails.episodes(fromSeason: read)
-        XCTAssertFalse(expected.isEmpty)
-        XCTAssertEqual(decoder.episodes(build("episodes", read)), expected)
+        let expected = try g.next()
+        XCTAssertFalse((expected as? [Any])?.isEmpty ?? true)
+        Golden.assertEqual(decoder.episodes(build("episodes", read)), expected)
         for odd in [#"{"episodes":[{"id":"e1","playId":"p1"},{"id":"e1","playId":"p2"},{"id":"e2"},{"id":"e3","playId":"p3","number":0,"name":"  "},{"id":"e4","playId":"p4","number":"7","durationMs":60000,"pct":10}]}"#,
                     "{}", "", "nope"] {
-            XCTAssertEqual(decoder.episodes(build("episodes", odd)) ?? [], DisneyDetails.episodes(fromSeason: odd), odd)
+            try g.expect(decoder.episodes(build("episodes", odd)) ?? [], odd)
         }
         let many = (0..<130).map { #"{"id":"e\#($0)","playId":"p\#($0)"}"# }.joined(separator: ",")
-        XCTAssertEqual(decoder.episodes(build("episodes", #"{"episodes":[\#(many)]}"#)), DisneyDetails.episodes(fromSeason: #"{"episodes":[\#(many)]}"#))
+        try g.expect(decoder.episodes(build("episodes", #"{"episodes":[\#(many)]}"#)))
     }
 
     // MARK: Pages and profiles
 
-    func testTheManifestDescribesTheSwiftReadersPages() {
-        XCTAssertEqual(manifest.url(for: .home), DisneyExplore.sessionPageURL)
-        XCTAssertEqual(manifest.url(for: .search, .init(query: "x")), DisneyExplore.sessionPageURL)
-        XCTAssertEqual(manifest.url(for: .restore), DisneyHome.selectProfileURL)
+    func testTheManifestDescribesTheSwiftReadersPages() throws {
+        try g.expect(manifest.url(for: .home))
+        try g.expect(manifest.url(for: .search, .init(query: "x")))
+        try g.expect(manifest.url(for: .restore))
         for url in ["https://www.disneyplus.com/browse/search", "https://www.disneyplus.com/", "https://www.disneyplus.com/browse/entity-x", "https://www.disneyplus.com/play/x",
                     "https://www.disneyplus.com/video/x", "http://www.disneyplus.com/", "https://evil.invalid/", "https://www.disneyplus.com/update-profile/1",
                     "https://www.disneyplus.com/select-profile"] {
             let u = URL(string: url)
-            XCTAssertEqual(manifest.isReusableSitePage(u), DisneyExplore.isUsableSessionPage(u), url)
-            XCTAssertEqual(manifest.isProfileForm(u), DisneyHome.isProfileForm(u), url)
+            try g.expect(manifest.isReusableSitePage(u), url)
+            try g.expect(manifest.isProfileForm(u), url)
         }
         XCTAssertFalse(manifest.isReusableSitePage(nil))
         XCTAssertEqual(manifest.pages[.profile]?.settled, "profileSettled")

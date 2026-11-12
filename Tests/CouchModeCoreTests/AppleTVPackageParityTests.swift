@@ -9,8 +9,10 @@ final class AppleTVPackageParityTests: XCTestCase {
     private var context: JSContext!
     private var decoder: PackageDecoder!
     private var manifest: PackageManifest!
+    private var g: Golden!
 
     override func setUpWithError() throws {
+        g = Golden("appletv", function: name)
         manifest = try PackageManifest.parse(Data(contentsOf: Self.appDirectory.appendingPathComponent("manifest.json")))
         decoder = PackageDecoder(manifest: manifest)
         let source = try String(contentsOf: Self.appDirectory.appendingPathComponent("reader.js"), encoding: .utf8)
@@ -46,11 +48,11 @@ final class AppleTVPackageParityTests: XCTestCase {
 
     // MARK: Manifest
 
-    func testManifestIsValidAndAllActionsUseTheQuietSessionPage() {
+    func testManifestIsValidAndAllActionsUseTheQuietSessionPage() throws {
         XCTAssertEqual(manifest.id, "appletv")
         XCTAssertTrue(manifest.definesPlayerShown)
         for kind in [PackageManifest.PageKind.home, .details, .season, .search, .profile] {
-            XCTAssertEqual(manifest.url(for: kind, .init(query: "x")), AppleTVSite.sessionPageURL, "\(kind)")
+            try g.expect(manifest.url(for: kind, .init(query: "x")), "\(kind)")
             XCTAssertEqual(manifest.pages[kind]?.reuseSitePage, kind != .home)
         }
         XCTAssertNil(manifest.pages[.more], "rows hold what the home request returned")
@@ -60,9 +62,10 @@ final class AppleTVPackageParityTests: XCTestCase {
 
     private func assertHomeParity(_ read: String, file: StaticString = #filePath, line: UInt = #line) throws {
         let js = build("home", read)
-        guard let expected = AppleTVHome.parse(read) else { XCTAssertNil(decoder.home(js, serviceID: "appletv"), file: file, line: line); return }
+        let expected = try g.next(file: file, line: line)
+        guard !(expected is NSNull) else { XCTAssertNil(decoder.home(js, serviceID: "appletv"), file: file, line: line); return }
         let got = try XCTUnwrap(decoder.home(js, serviceID: "appletv"), "package returned no home", file: file, line: line)
-        XCTAssertEqual(got.home, expected, file: file, line: line)
+        Golden.assertEqual(got.home, expected, file: file, line: line)
         XCTAssertTrue(got.cursors.isEmpty, file: file, line: line)
     }
 
@@ -137,22 +140,22 @@ final class AppleTVPackageParityTests: XCTestCase {
 
     // MARK: Search
 
-    private func assertSearchParity(_ read: String, file: StaticString = #filePath, line: UInt = #line) {
-        XCTAssertEqual(decoder.titles(build("search", read)) ?? [], AppleTVSearch.titles(fromResults: read), file: file, line: line)
+    private func assertSearchParity(_ read: String, file: StaticString = #filePath, line: UInt = #line) throws {
+        try g.expect(decoder.titles(build("search", read)) ?? [], file: file, line: line)
     }
 
     func testSearchFixtureMatches() throws {
         let read = try fixture("appletv-search-read")
-        assertSearchParity(read)
+        try assertSearchParity(read)
         XCTAssertEqual(decoder.titles(build("search", read))?.map(\.name), ["Search Show A", "Search Movie B"])
     }
 
-    func testSearchEdgeCasesAndBoundsMatch() {
+    func testSearchEdgeCasesAndBoundsMatch() throws {
         for read in ["", "nope", "{}", "null", "[]", #"[{"id":"x"},"junk",5,null]"#, "[" + [card("umc.cmc.a1"), card("umc.cmc.a1"), card("bad id"), card("umc.cmc.a2", page: "https://example.com/x")].joined(separator: ",") + "]"] {
-            assertSearchParity(read)
+            try assertSearchParity(read)
         }
         let many = (1...(StreamLimits.maxSearchResults + 10)).map { card("umc.cmc.s\($0)") }
-        assertSearchParity("[" + many.joined(separator: ",") + "]")
+        try assertSearchParity("[" + many.joined(separator: ",") + "]")
         XCTAssertEqual(decoder.titles(build("search", "[" + many.joined(separator: ",") + "]"))?.count, StreamLimits.maxSearchResults)
     }
 
@@ -160,9 +163,10 @@ final class AppleTVPackageParityTests: XCTestCase {
 
     private func assertDetailsParity(_ name: String, row: StreamTitle, file: StaticString = #filePath, line: UInt = #line) throws {
         let read = try fixture(name)
-        let expected = try XCTUnwrap(AppleTVDetails.details(fromRead: read, title: row), file: file, line: line)
+        let expected = try g.next(file: file, line: line)
+        XCTAssertFalse(expected is NSNull, file: file, line: line)
         let got = try XCTUnwrap(decoder.details(build("details", read, extra: ", \(argument(row))")), "package returned no details", file: file, line: line)
-        XCTAssertEqual(got, expected, name, file: file, line: line)
+        Golden.assertEqual(got, expected, name, file: file, line: line)
     }
 
     func testEveryDetailsFixtureMatches() throws {
@@ -194,23 +198,22 @@ final class AppleTVPackageParityTests: XCTestCase {
             #"{"id":"umc.cmc.x1","kind":"show","desc":"  ","rating":null,"year":3000,"wide":{"u":"https://evil.example.com/{w}.jpg"},"tile":{"u":"https://example.invalid/{w}x{h}.{f}"}}"#,
         ]
         for read in reads {
-            let expected = AppleTVDetails.details(fromRead: read, title: r)
-            XCTAssertEqual(decoder.details(build("details", read, extra: ", \(try argument(r))")), expected, read)
+            try g.expect(decoder.details(build("details", read, extra: ", \(try argument(r))")), read)
         }
         for read in ["", "[]", "nope", "null", #"{"id":"umc.cmc.other","kind":"show"}"#] {
-            XCTAssertNil(AppleTVDetails.details(fromRead: read, title: r))
+            XCTAssertTrue(try g.nextIsNil())
             XCTAssertNil(decoder.details(build("details", read, extra: ", \(try argument(r))")), read)
         }
     }
 
     func testSeasonFixtureMatches() throws {
         let read = try fixture("appletv-season-read")
-        let expected = AppleTVDetails.episodes(fromSeason: read)
-        XCTAssertEqual(decoder.episodes(build("season", read)), expected)
-        XCTAssertEqual(expected.map(\.number), [1, 2, 3, 5])
+        let expected = try g.next()
+        Golden.assertEqual(decoder.episodes(build("season", read)), expected)
+        XCTAssertEqual((expected as? [[String: Any]])?.map { $0["number"] as? Int }, [1, 2, 3, 5])
     }
 
-    func testSeasonEdgeCasesAndBoundsMatch() {
+    func testSeasonEdgeCasesAndBoundsMatch() throws {
         let page = "https://tv.apple.com/us/episode/e/umc.cmc.e"
         func episode(_ n: Int, extra: String = "") -> String { #"{"id":"umc.cmc.e\#(n)","name":"E\#(n)","number":\#(n),"url":"\#(page)\#(n)"\#(extra)}"# }
         let reads = [
@@ -220,10 +223,10 @@ final class AppleTVPackageParityTests: XCTestCase {
             "{\"episodes\":[\(episode(1, extra: #","canPlay":true,"runtime":2000,"resume":2000"#))]}",
             "", "nope", "[]", "{}", "null", #"{"episodes":"x"}"#,
         ]
-        for read in reads { XCTAssertEqual(decoder.episodes(build("season", read)) ?? [], AppleTVDetails.episodes(fromSeason: read), read) }
+        for read in reads { try g.expect(decoder.episodes(build("season", read)) ?? [], read) }
         let many = (1...(StreamLimits.maxEpisodesPerSeason + 20)).map { episode($0) }
         let big = "{\"episodes\":[\(many.joined(separator: ","))]}"
-        XCTAssertEqual(decoder.episodes(build("season", big)), AppleTVDetails.episodes(fromSeason: big))
+        try g.expect(decoder.episodes(build("season", big)))
         XCTAssertEqual(decoder.episodes(build("season", big))?.count, StreamLimits.maxEpisodesPerSeason)
     }
 
@@ -233,8 +236,7 @@ final class AppleTVPackageParityTests: XCTestCase {
         for address in ["https://tv.apple.com/us/movie/x/umc.cmc.m1", "https://tv.apple.com/us/movie/x/umc.cmc.m1?action=play", "https://tv.apple.com/us/episode/e/umc.cmc.e1?showId=umc.cmc.s1",
                         "https://tv.apple.com/us/episode/e/umc.cmc.e1?action=stop&showId=umc.cmc.s1&action=play", "https://tv.apple.com/us/show/x/umc.cmc.s1#top", "https://TV.APPLE.COM/us/show/x/umc.cmc.s1?a=1"] {
             let json = home([("a", "Row", "lockup", [card("umc.cmc.t1", page: address, extra: #","canPlay":true"#)])])
-            XCTAssertEqual(decoder.home(build("home", json), serviceID: "appletv")?.home.rows.first?.titles.first?.play,
-                           AppleTVHome.parse(json)?.rows.first?.titles.first?.play, address)
+            try g.expect(decoder.home(build("home", json), serviceID: "appletv")?.home.rows.first?.titles.first?.play, address)
         }
     }
 
@@ -352,7 +354,7 @@ final class AppleTVPackageParityTests: XCTestCase {
         standIn(answers: answers)
         let r = row("umc.cmc.s1", kind: .show, name: "Show One")
         let list = decoder.episodes(answer("reader.season({seasonID: 'umc.cmc.se1', title: \((try? argument(r)) ?? "{}")})"))
-        XCTAssertEqual(requests().count, AppleTVDetails.maxWindows)
+        XCTAssertEqual(requests().count, 6, "the reader's window budget")
         XCTAssertEqual(list?.count, 60)
     }
 

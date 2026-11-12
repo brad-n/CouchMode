@@ -1,0 +1,107 @@
+[
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  {
+    "asksWhoIsWatching" : true,
+    "currentProfileID" : null,
+    "hero" : null,
+    "profiles" : [
+      {
+        "avatar" : "https:\/\/art.invalid\/a.png",
+        "id" : "locked-2",
+        "isKids" : false,
+        "isLocked" : true,
+        "name" : "Locked"
+      }
+    ],
+    "rows" : [
+
+    ],
+    "serviceID" : "netflix"
+  },
+  {
+    "asksWhoIsWatching" : true,
+    "currentProfileID" : null,
+    "hero" : null,
+    "profiles" : [
+      {
+        "avatar" : null,
+        "id" : "SYNTH1",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 1"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTH2",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 2"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTH3",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 3"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTH4",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 4"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTH5",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 5"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTH6",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 6"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTH7",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 7"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTH8",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 8"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTH9",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 9"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTH10",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 10"
+      }
+    ],
+    "rows" : [
+
+    ],
+    "serviceID" : "netflix"
+  }
+]

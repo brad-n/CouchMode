@@ -1,0 +1,76 @@
+[
+  {
+    "currentSeasonID" : "S2season02",
+    "seasons" : [
+      {
+        "episodes" : [
+
+        ],
+        "id" : "S2season01",
+        "name" : "Season 1"
+      },
+      {
+        "episodes" : [
+          {
+            "art" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/ep0001._SX640_.jpg",
+            "id" : "S2ep000001",
+            "name" : "First Period",
+            "number" : 1,
+            "play" : "https:\/\/www.primevideo.com\/detail\/S2ep000001?autoplay=1",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 2903,
+            "synopsis" : "The start."
+          },
+          {
+            "art" : null,
+            "id" : "S2ep000002",
+            "name" : "Second Period",
+            "number" : 2,
+            "play" : "https:\/\/www.primevideo.com\/detail\/S2ep000002?autoplay=1",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 3014,
+            "synopsis" : null
+          },
+          {
+            "art" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/ep0003._SX640_.jpg",
+            "id" : "S2ep000003",
+            "name" : "Episode 3",
+            "number" : 3,
+            "play" : "https:\/\/www.primevideo.com\/detail\/S2ep000003?autoplay=1&t=1440",
+            "resumeSeconds" : 1440,
+            "runtimeSeconds" : 4231,
+            "synopsis" : "Partly watched."
+          },
+          {
+            "art" : null,
+            "id" : "S2ep000004",
+            "name" : "Not playable",
+            "number" : 4,
+            "play" : "https:\/\/www.primevideo.com\/detail\/S2ep000004",
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 3000,
+            "synopsis" : null
+          }
+        ],
+        "id" : "S2season02",
+        "name" : "Season 2"
+      }
+    ],
+    "title" : {
+      "episodeLabel" : "S2 · E3",
+      "heroArt" : "https:\/\/example.invalid\/images\/S\/synthetic-a\/hero0100._SX1920_.jpg",
+      "id" : "S2season02",
+      "kind" : "show",
+      "name" : "Show One",
+      "page" : "https:\/\/www.primevideo.com\/detail\/S2season02",
+      "play" : "https:\/\/www.primevideo.com\/detail\/S2ep000003?autoplay=1&t=1440",
+      "rating" : "TV-MA",
+      "resumeSeconds" : 1440,
+      "runtimeSeconds" : 4231,
+      "seasonsLabel" : "2 Seasons",
+      "synopsis" : "A longer synopsis of the season.",
+      "tileArt" : "https:\/\/example.invalid\/images\/S\/a\/tile.jpg",
+      "year" : 2025
+    }
+  }
+]

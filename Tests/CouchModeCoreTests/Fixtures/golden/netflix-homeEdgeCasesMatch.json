@@ -1,0 +1,660 @@
+[
+  null,
+  null,
+  null,
+  null,
+  null,
+  {
+    "asksWhoIsWatching" : false,
+    "currentProfileID" : null,
+    "hero" : null,
+    "profiles" : [
+
+    ],
+    "rows" : [
+
+    ],
+    "serviceID" : "netflix"
+  },
+  {
+    "asksWhoIsWatching" : false,
+    "currentProfileID" : null,
+    "hero" : {
+      "episodeLabel" : null,
+      "heroArt" : "https:\/\/art.invalid\/1.jpg",
+      "id" : "70005069",
+      "kind" : "movie",
+      "name" : "Sample Movie Original Title",
+      "page" : "https:\/\/www.netflix.com\/title\/70005069",
+      "play" : "https:\/\/www.netflix.com\/watch\/70005069",
+      "rating" : "R",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : 5627,
+      "seasonsLabel" : null,
+      "synopsis" : "A small-town hairdresser sets out on a sample adventure.",
+      "tileArt" : null,
+      "year" : 2026
+    },
+    "profiles" : [
+      {
+        "avatar" : null,
+        "id" : "SYNTHPROFILE0000000000000002",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 1"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTHPROFILE0000000000000004",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 2"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTHPROFILE0000000000000005",
+        "isKids" : true,
+        "isLocked" : false,
+        "name" : "Profile 3"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTHPROFILE0000000000000003",
+        "isKids" : true,
+        "isLocked" : false,
+        "name" : "Profile 4"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTHPROFILE0000000000000001",
+        "isKids" : true,
+        "isLocked" : false,
+        "name" : "Profile 5"
+      }
+    ],
+    "rows" : [
+      {
+        "id" : "netflix-row-1",
+        "kind" : "standard",
+        "title" : "New on Netflix",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70000959",
+            "kind" : "show",
+            "name" : "Sample Series",
+            "page" : "https:\/\/www.netflix.com\/title\/70000959",
+            "play" : "https:\/\/www.netflix.com\/watch\/70004932",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 4157,
+            "seasonsLabel" : "11 Seasons",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/7.jpg",
+            "year" : 2020
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70003288",
+            "kind" : "show",
+            "name" : "Charlie Docuseries",
+            "page" : "https:\/\/www.netflix.com\/title\/70003288",
+            "play" : "https:\/\/www.netflix.com\/watch\/70003973",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 2447,
+            "seasonsLabel" : "3 Episodes",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/9.jpg",
+            "year" : 2026
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70002466",
+            "kind" : "show",
+            "name" : "Alpha Show",
+            "page" : "https:\/\/www.netflix.com\/title\/70002466",
+            "play" : "https:\/\/www.netflix.com\/watch\/70002603",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 3338,
+            "seasonsLabel" : "2 Seasons",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/11.jpg",
+            "year" : 2024
+          }
+        ],
+        "totalCount" : 75
+      },
+      {
+        "id" : "netflix-row-2",
+        "kind" : "continueWatching",
+        "title" : "Continue Watching for Profile 1",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70000959",
+            "kind" : "show",
+            "name" : "Sample Series",
+            "page" : "https:\/\/www.netflix.com\/title\/70000959",
+            "play" : "https:\/\/www.netflix.com\/watch\/70004932",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 4157,
+            "seasonsLabel" : "11 Seasons",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/13.jpg",
+            "year" : 2020
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70002877",
+            "kind" : "show",
+            "name" : "Golf Special",
+            "page" : "https:\/\/www.netflix.com\/title\/70002877",
+            "play" : "https:\/\/www.netflix.com\/watch\/70004384",
+            "rating" : null,
+            "resumeSeconds" : 2289,
+            "runtimeSeconds" : 3140,
+            "seasonsLabel" : "9 Episodes",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/15.jpg",
+            "year" : 2026
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70002192",
+            "kind" : "show",
+            "name" : "Delta Show",
+            "page" : "https:\/\/www.netflix.com\/title\/70002192",
+            "play" : "https:\/\/www.netflix.com\/watch\/70002329",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 3818,
+            "seasonsLabel" : "2 Seasons",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/17.jpg",
+            "year" : 2024
+          }
+        ],
+        "totalCount" : 11
+      },
+      {
+        "id" : "netflix-row-3",
+        "kind" : "standard",
+        "title" : "Today's Top Picks for You",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70000685",
+            "kind" : "show",
+            "name" : "SAMPLE LONG-RUNNER",
+            "page" : "https:\/\/www.netflix.com\/title\/70000685",
+            "play" : "https:\/\/www.netflix.com\/watch\/70000822",
+            "rating" : null,
+            "resumeSeconds" : 4,
+            "runtimeSeconds" : 3936,
+            "seasonsLabel" : "2 Seasons",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/19.jpg",
+            "year" : 2023
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70000274",
+            "kind" : "show",
+            "name" : "Sample Long-Runner",
+            "page" : "https:\/\/www.netflix.com\/title\/70000274",
+            "play" : "https:\/\/www.netflix.com\/watch\/70000411",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 1542,
+            "seasonsLabel" : "37 Seasons",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/21.jpg",
+            "year" : 1999
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70004110",
+            "kind" : "show",
+            "name" : "Foxtrot Documentary",
+            "page" : "https:\/\/www.netflix.com\/title\/70004110",
+            "play" : "https:\/\/www.netflix.com\/watch\/70004521",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 3524,
+            "seasonsLabel" : "3 Episodes",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/23.jpg",
+            "year" : 2026
+          }
+        ],
+        "totalCount" : 94
+      },
+      {
+        "id" : "netflix-row-4",
+        "kind" : "standard",
+        "title" : "We Think You’ll Love These",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70005206",
+            "kind" : "show",
+            "name" : "Bravo Show",
+            "page" : "https:\/\/www.netflix.com\/title\/70005206",
+            "play" : "https:\/\/www.netflix.com\/watch\/70005480",
+            "rating" : null,
+            "resumeSeconds" : 2,
+            "runtimeSeconds" : 2522,
+            "seasonsLabel" : "2 Seasons",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/25.jpg",
+            "year" : 2024
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70003562",
+            "kind" : "show",
+            "name" : "Echo Movie",
+            "page" : "https:\/\/www.netflix.com\/title\/70003562",
+            "play" : "https:\/\/www.netflix.com\/watch\/70004658",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 3176,
+            "seasonsLabel" : "6 Episodes",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/27.jpg",
+            "year" : 2026
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70003836",
+            "kind" : "movie",
+            "name" : "Sample Movie",
+            "page" : "https:\/\/www.netflix.com\/title\/70003836",
+            "play" : "https:\/\/www.netflix.com\/watch\/70003836",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 6898,
+            "seasonsLabel" : null,
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/29.jpg",
+            "year" : 2026
+          }
+        ],
+        "totalCount" : 150
+      }
+    ],
+    "serviceID" : "netflix"
+  },
+  {
+    "asksWhoIsWatching" : false,
+    "currentProfileID" : null,
+    "hero" : {
+      "episodeLabel" : null,
+      "heroArt" : "https:\/\/art.invalid\/1.jpg",
+      "id" : "70005069",
+      "kind" : "movie",
+      "name" : "Sample Movie Original Title",
+      "page" : "https:\/\/www.netflix.com\/title\/70005069",
+      "play" : "https:\/\/www.netflix.com\/watch\/70005069",
+      "rating" : "R",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : 5627,
+      "seasonsLabel" : null,
+      "synopsis" : "A small-town hairdresser sets out on a sample adventure.",
+      "tileArt" : null,
+      "year" : 2026
+    },
+    "profiles" : [
+
+    ],
+    "rows" : [
+      {
+        "id" : "netflix-row-1",
+        "kind" : "standard",
+        "title" : "New on Netflix",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70000959",
+            "kind" : "show",
+            "name" : "Sample Series",
+            "page" : "https:\/\/www.netflix.com\/title\/70000959",
+            "play" : "https:\/\/www.netflix.com\/watch\/70004932",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 4157,
+            "seasonsLabel" : "11 Seasons",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/7.jpg",
+            "year" : 2020
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70003288",
+            "kind" : "show",
+            "name" : "Charlie Docuseries",
+            "page" : "https:\/\/www.netflix.com\/title\/70003288",
+            "play" : "https:\/\/www.netflix.com\/watch\/70003973",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 2447,
+            "seasonsLabel" : "3 Episodes",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/9.jpg",
+            "year" : 2026
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70002466",
+            "kind" : "show",
+            "name" : "Alpha Show",
+            "page" : "https:\/\/www.netflix.com\/title\/70002466",
+            "play" : "https:\/\/www.netflix.com\/watch\/70002603",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 3338,
+            "seasonsLabel" : "2 Seasons",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/11.jpg",
+            "year" : 2024
+          }
+        ],
+        "totalCount" : 75
+      },
+      {
+        "id" : "netflix-row-2",
+        "kind" : "continueWatching",
+        "title" : "Continue Watching for Profile 1",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70000959",
+            "kind" : "show",
+            "name" : "Sample Series",
+            "page" : "https:\/\/www.netflix.com\/title\/70000959",
+            "play" : "https:\/\/www.netflix.com\/watch\/70004932",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 4157,
+            "seasonsLabel" : "11 Seasons",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/13.jpg",
+            "year" : 2020
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70002877",
+            "kind" : "show",
+            "name" : "Golf Special",
+            "page" : "https:\/\/www.netflix.com\/title\/70002877",
+            "play" : "https:\/\/www.netflix.com\/watch\/70004384",
+            "rating" : null,
+            "resumeSeconds" : 2289,
+            "runtimeSeconds" : 3140,
+            "seasonsLabel" : "9 Episodes",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/15.jpg",
+            "year" : 2026
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70002192",
+            "kind" : "show",
+            "name" : "Delta Show",
+            "page" : "https:\/\/www.netflix.com\/title\/70002192",
+            "play" : "https:\/\/www.netflix.com\/watch\/70002329",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 3818,
+            "seasonsLabel" : "2 Seasons",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/17.jpg",
+            "year" : 2024
+          }
+        ],
+        "totalCount" : 11
+      },
+      {
+        "id" : "netflix-row-3",
+        "kind" : "standard",
+        "title" : "Today's Top Picks for You",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70000685",
+            "kind" : "show",
+            "name" : "SAMPLE LONG-RUNNER",
+            "page" : "https:\/\/www.netflix.com\/title\/70000685",
+            "play" : "https:\/\/www.netflix.com\/watch\/70000822",
+            "rating" : null,
+            "resumeSeconds" : 4,
+            "runtimeSeconds" : 3936,
+            "seasonsLabel" : "2 Seasons",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/19.jpg",
+            "year" : 2023
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70000274",
+            "kind" : "show",
+            "name" : "Sample Long-Runner",
+            "page" : "https:\/\/www.netflix.com\/title\/70000274",
+            "play" : "https:\/\/www.netflix.com\/watch\/70000411",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 1542,
+            "seasonsLabel" : "37 Seasons",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/21.jpg",
+            "year" : 1999
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70004110",
+            "kind" : "show",
+            "name" : "Foxtrot Documentary",
+            "page" : "https:\/\/www.netflix.com\/title\/70004110",
+            "play" : "https:\/\/www.netflix.com\/watch\/70004521",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 3524,
+            "seasonsLabel" : "3 Episodes",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/23.jpg",
+            "year" : 2026
+          }
+        ],
+        "totalCount" : 94
+      },
+      {
+        "id" : "netflix-row-4",
+        "kind" : "standard",
+        "title" : "We Think You’ll Love These",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70005206",
+            "kind" : "show",
+            "name" : "Bravo Show",
+            "page" : "https:\/\/www.netflix.com\/title\/70005206",
+            "play" : "https:\/\/www.netflix.com\/watch\/70005480",
+            "rating" : null,
+            "resumeSeconds" : 2,
+            "runtimeSeconds" : 2522,
+            "seasonsLabel" : "2 Seasons",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/25.jpg",
+            "year" : 2024
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70003562",
+            "kind" : "show",
+            "name" : "Echo Movie",
+            "page" : "https:\/\/www.netflix.com\/title\/70003562",
+            "play" : "https:\/\/www.netflix.com\/watch\/70004658",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 3176,
+            "seasonsLabel" : "6 Episodes",
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/27.jpg",
+            "year" : 2026
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : null,
+            "id" : "70003836",
+            "kind" : "movie",
+            "name" : "Sample Movie",
+            "page" : "https:\/\/www.netflix.com\/title\/70003836",
+            "play" : "https:\/\/www.netflix.com\/watch\/70003836",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : 6898,
+            "seasonsLabel" : null,
+            "synopsis" : null,
+            "tileArt" : "https:\/\/art.invalid\/29.jpg",
+            "year" : 2026
+          }
+        ],
+        "totalCount" : 150
+      }
+    ],
+    "serviceID" : "netflix"
+  },
+  {
+    "asksWhoIsWatching" : false,
+    "currentProfileID" : "SYNTHPROFILE0000000000000002",
+    "hero" : {
+      "episodeLabel" : null,
+      "heroArt" : "https:\/\/art.invalid\/1.jpg",
+      "id" : "70005069",
+      "kind" : "movie",
+      "name" : "Sample Movie Original Title",
+      "page" : "https:\/\/www.netflix.com\/title\/70005069",
+      "play" : "https:\/\/www.netflix.com\/watch\/70005069",
+      "rating" : "R",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : 5627,
+      "seasonsLabel" : null,
+      "synopsis" : "A small-town hairdresser sets out on a sample adventure.",
+      "tileArt" : null,
+      "year" : 2026
+    },
+    "profiles" : [
+      {
+        "avatar" : null,
+        "id" : "SYNTHPROFILE0000000000000002",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 1"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTHPROFILE0000000000000004",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 2"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTHPROFILE0000000000000005",
+        "isKids" : true,
+        "isLocked" : false,
+        "name" : "Profile 3"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTHPROFILE0000000000000003",
+        "isKids" : true,
+        "isLocked" : false,
+        "name" : "Profile 4"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTHPROFILE0000000000000001",
+        "isKids" : true,
+        "isLocked" : false,
+        "name" : "Profile 5"
+      }
+    ],
+    "rows" : [
+
+    ],
+    "serviceID" : "netflix"
+  },
+  {
+    "asksWhoIsWatching" : false,
+    "currentProfileID" : "SYNTHPROFILE0000000000000002",
+    "hero" : null,
+    "profiles" : [
+      {
+        "avatar" : null,
+        "id" : "SYNTHPROFILE0000000000000002",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 1"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTHPROFILE0000000000000004",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 2"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTHPROFILE0000000000000005",
+        "isKids" : true,
+        "isLocked" : false,
+        "name" : "Profile 3"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTHPROFILE0000000000000003",
+        "isKids" : true,
+        "isLocked" : false,
+        "name" : "Profile 4"
+      },
+      {
+        "avatar" : null,
+        "id" : "SYNTHPROFILE0000000000000001",
+        "isKids" : true,
+        "isLocked" : false,
+        "name" : "Profile 5"
+      }
+    ],
+    "rows" : [
+
+    ],
+    "serviceID" : "netflix"
+  }
+]

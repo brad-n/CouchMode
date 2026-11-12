@@ -1,0 +1,36 @@
+[
+  [
+    {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "umc.cmc.synthsearch1",
+      "kind" : "show",
+      "name" : "Search Show A",
+      "page" : "https:\/\/tv.apple.com\/us\/show\/search-show-a\/umc.cmc.synthsearch1",
+      "play" : "https:\/\/tv.apple.com\/us\/show\/search-show-a\/umc.cmc.synthsearch1",
+      "rating" : "TV-14",
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : null,
+      "synopsis" : null,
+      "tileArt" : "https:\/\/example.invalid\/image\/thumb\/synthsearch1\/640x360.jpg",
+      "year" : 2021
+    },
+    {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "umc.cmc.synthsearch2",
+      "kind" : "movie",
+      "name" : "Search Movie B",
+      "page" : "https:\/\/tv.apple.com\/us\/movie\/search-movie-b\/umc.cmc.synthsearch2",
+      "play" : "https:\/\/tv.apple.com\/us\/movie\/search-movie-b\/umc.cmc.synthsearch2",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : 5700,
+      "seasonsLabel" : null,
+      "synopsis" : null,
+      "tileArt" : null,
+      "year" : 2015
+    }
+  ]
+]

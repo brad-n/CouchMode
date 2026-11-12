@@ -1,0 +1,193 @@
+[
+  {
+    "currentSeasonID" : "umc.cmc.s1",
+    "seasons" : [
+      {
+        "episodes" : [
+
+        ],
+        "id" : "umc.cmc.s1",
+        "name" : "Season 1"
+      }
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "umc.cmc.x1",
+      "kind" : "show",
+      "name" : "X",
+      "page" : "https:\/\/tv.apple.com\/us\/show\/x\/umc.cmc.x1",
+      "play" : "https:\/\/tv.apple.com\/us\/show\/x\/umc.cmc.x1",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : "1 Season",
+      "synopsis" : null,
+      "tileArt" : null,
+      "year" : null
+    }
+  },
+  {
+    "currentSeasonID" : "umc.cmc.s2",
+    "seasons" : [
+      {
+        "episodes" : [
+
+        ],
+        "id" : "umc.cmc.s1",
+        "name" : "One"
+      },
+      {
+        "episodes" : [
+
+        ],
+        "id" : "umc.cmc.s2",
+        "name" : "Season 2"
+      }
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "umc.cmc.x1",
+      "kind" : "show",
+      "name" : "X",
+      "page" : "https:\/\/tv.apple.com\/us\/show\/x\/umc.cmc.x1",
+      "play" : "https:\/\/tv.apple.com\/us\/show\/x\/umc.cmc.x1",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : "2 Seasons",
+      "synopsis" : null,
+      "tileArt" : null,
+      "year" : null
+    }
+  },
+  {
+    "currentSeasonID" : null,
+    "seasons" : [
+      {
+        "episodes" : [
+
+        ],
+        "id" : "umc.cmc.s1",
+        "name" : "One"
+      },
+      {
+        "episodes" : [
+
+        ],
+        "id" : "umc.cmc.s2",
+        "name" : "Two"
+      }
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "umc.cmc.x1",
+      "kind" : "show",
+      "name" : "X",
+      "page" : "https:\/\/tv.apple.com\/us\/show\/x\/umc.cmc.x1",
+      "play" : "https:\/\/tv.apple.com\/us\/show\/x\/umc.cmc.x1",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : "2 Seasons",
+      "synopsis" : null,
+      "tileArt" : null,
+      "year" : null
+    }
+  },
+  {
+    "currentSeasonID" : null,
+    "seasons" : [
+
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "umc.cmc.x1",
+      "kind" : "movie",
+      "name" : "X",
+      "page" : "https:\/\/tv.apple.com\/us\/movie\/x\/umc.cmc.x1",
+      "play" : "https:\/\/tv.apple.com\/us\/movie\/x\/umc.cmc.x1?action=play",
+      "rating" : null,
+      "resumeSeconds" : 30,
+      "runtimeSeconds" : 600,
+      "seasonsLabel" : null,
+      "synopsis" : null,
+      "tileArt" : null,
+      "year" : null
+    }
+  },
+  {
+    "currentSeasonID" : null,
+    "seasons" : [
+
+    ],
+    "title" : {
+      "episodeLabel" : "S1 · E2",
+      "heroArt" : null,
+      "id" : "umc.cmc.x1",
+      "kind" : "show",
+      "name" : "X",
+      "page" : "https:\/\/tv.apple.com\/us\/show\/x\/umc.cmc.x1",
+      "play" : "https:\/\/tv.apple.com\/us\/episode\/e\/umc.cmc.e1?action=play",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : null,
+      "synopsis" : null,
+      "tileArt" : null,
+      "year" : null
+    }
+  },
+  {
+    "currentSeasonID" : null,
+    "seasons" : [
+
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "umc.cmc.x1",
+      "kind" : "show",
+      "name" : "X",
+      "page" : "https:\/\/tv.apple.com\/us\/show\/x\/umc.cmc.x1",
+      "play" : "https:\/\/tv.apple.com\/us\/show\/x\/umc.cmc.x1?action=play",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : null,
+      "synopsis" : null,
+      "tileArt" : null,
+      "year" : null
+    }
+  },
+  {
+    "currentSeasonID" : null,
+    "seasons" : [
+
+    ],
+    "title" : {
+      "episodeLabel" : null,
+      "heroArt" : null,
+      "id" : "umc.cmc.x1",
+      "kind" : "show",
+      "name" : "X",
+      "page" : "https:\/\/tv.apple.com\/us\/show\/x\/umc.cmc.x1",
+      "play" : "https:\/\/tv.apple.com\/us\/show\/x\/umc.cmc.x1",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : null,
+      "synopsis" : null,
+      "tileArt" : "https:\/\/example.invalid\/640x360.jpg",
+      "year" : null
+    }
+  },
+  null,
+  null,
+  null,
+  null,
+  null
+]

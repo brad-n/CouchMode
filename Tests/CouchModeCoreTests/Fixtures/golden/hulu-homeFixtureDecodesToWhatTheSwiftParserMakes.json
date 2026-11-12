@@ -1,0 +1,279 @@
+[
+  {
+    "asksWhoIsWatching" : false,
+    "currentProfileID" : "1001",
+    "hero" : {
+      "episodeLabel" : null,
+      "heroArt" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000001?base_image_bucket_name=image_manager&base_image=art-1&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+      "id" : "00000000-0000-4000-8000-000000000001",
+      "kind" : "movie",
+      "name" : "Movie A",
+      "page" : "https:\/\/www.hulu.com\/movie\/00000000-0000-4000-8000-000000000001",
+      "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000001",
+      "rating" : null,
+      "resumeSeconds" : null,
+      "runtimeSeconds" : null,
+      "seasonsLabel" : null,
+      "synopsis" : "Placeholder synopsis for Movie A.",
+      "tileArt" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000001?base_image_bucket_name=image_manager&base_image=art-1&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+      "year" : null
+    },
+    "profiles" : [
+      {
+        "avatar" : null,
+        "id" : "1001",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 1"
+      },
+      {
+        "avatar" : null,
+        "id" : "1002",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 2"
+      },
+      {
+        "avatar" : null,
+        "id" : "1003",
+        "isKids" : false,
+        "isLocked" : false,
+        "name" : "Profile 3"
+      },
+      {
+        "avatar" : null,
+        "id" : "1004",
+        "isKids" : true,
+        "isLocked" : false,
+        "name" : "Profile 4"
+      }
+    ],
+    "rows" : [
+      {
+        "id" : "hulu-row-47",
+        "kind" : "standard",
+        "title" : "TV for You",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000003?base_image_bucket_name=image_manager&base_image=art-2&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000003",
+            "kind" : "show",
+            "name" : "Show A",
+            "page" : "https:\/\/www.hulu.com\/series\/00000000-0000-4000-8000-000000000003",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000002",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder synopsis for Show A.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000003?base_image_bucket_name=image_manager&base_image=art-2&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000005?base_image_bucket_name=image_manager&base_image=art-3&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000005",
+            "kind" : "show",
+            "name" : "Show B",
+            "page" : "https:\/\/www.hulu.com\/series\/00000000-0000-4000-8000-000000000005",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000004",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder synopsis for Show B.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000005?base_image_bucket_name=image_manager&base_image=art-3&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000007?base_image_bucket_name=image_manager&base_image=art-4&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000007",
+            "kind" : "show",
+            "name" : "Show C",
+            "page" : "https:\/\/www.hulu.com\/series\/00000000-0000-4000-8000-000000000007",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000006",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder synopsis for Show C.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000007?base_image_bucket_name=image_manager&base_image=art-4&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          }
+        ],
+        "totalCount" : null
+      },
+      {
+        "id" : "hulu-row-48",
+        "kind" : "standard",
+        "title" : "Movies for You",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000001?base_image_bucket_name=image_manager&base_image=art-5&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000001",
+            "kind" : "movie",
+            "name" : "Movie A",
+            "page" : "https:\/\/www.hulu.com\/movie\/00000000-0000-4000-8000-000000000001",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000001",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder synopsis for Movie A.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000001?base_image_bucket_name=image_manager&base_image=art-5&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000008?base_image_bucket_name=image_manager&base_image=art-6&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000008",
+            "kind" : "movie",
+            "name" : "Movie B",
+            "page" : "https:\/\/www.hulu.com\/movie\/00000000-0000-4000-8000-000000000008",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000008",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder synopsis for Movie B.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000008?base_image_bucket_name=image_manager&base_image=art-6&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000009?base_image_bucket_name=image_manager&base_image=art-7&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000009",
+            "kind" : "movie",
+            "name" : "Movie C",
+            "page" : "https:\/\/www.hulu.com\/movie\/00000000-0000-4000-8000-000000000009",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000009",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder synopsis for Movie C.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000009?base_image_bucket_name=image_manager&base_image=art-7&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          }
+        ],
+        "totalCount" : null
+      },
+      {
+        "id" : "hulu-row-282",
+        "kind" : "continueWatching",
+        "title" : "Continue Watching",
+        "titles" : [
+          {
+            "episodeLabel" : "S1 · E7",
+            "heroArt" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000011?base_image_bucket_name=image_manager&base_image=art-8&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000011",
+            "kind" : "show",
+            "name" : "Show D",
+            "page" : "https:\/\/www.hulu.com\/series\/00000000-0000-4000-8000-000000000011",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000010",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder synopsis for Show D.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000011?base_image_bucket_name=image_manager&base_image=art-8&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          },
+          {
+            "episodeLabel" : "S1 · E3",
+            "heroArt" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000013?base_image_bucket_name=image_manager&base_image=art-9&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000013",
+            "kind" : "show",
+            "name" : "Show E",
+            "page" : "https:\/\/www.hulu.com\/series\/00000000-0000-4000-8000-000000000013",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000012",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder synopsis for Show E.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000013?base_image_bucket_name=image_manager&base_image=art-9&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          },
+          {
+            "episodeLabel" : "S38 · E3",
+            "heroArt" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000015?base_image_bucket_name=image_manager&base_image=art-10&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000015",
+            "kind" : "show",
+            "name" : "Show F",
+            "page" : "https:\/\/www.hulu.com\/series\/00000000-0000-4000-8000-000000000015",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000014",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder synopsis for Show F.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/user\/v3\/artwork\/00000000-0000-4000-8000-000000000015?base_image_bucket_name=image_manager&base_image=art-10&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          }
+        ],
+        "totalCount" : null
+      },
+      {
+        "id" : "hulu-row-8869",
+        "kind" : "ranked",
+        "title" : "Top 15 Today",
+        "titles" : [
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/img.hulu.invalid\/user\/v3\/editorial\/00000000-0000-4000-8000-000000000020?base_image_bucket_name=vogue&base_image=art-14&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000020",
+            "kind" : "show",
+            "name" : "Show G",
+            "page" : "https:\/\/www.hulu.com\/series\/00000000-0000-4000-8000-000000000020",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000019",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder synopsis for Show G.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/user\/v3\/editorial\/00000000-0000-4000-8000-000000000020?base_image_bucket_name=vogue&base_image=art-14&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/img.hulu.invalid\/user\/v3\/editorial\/00000000-0000-4000-8000-000000000022?base_image_bucket_name=vogue&base_image=art-15&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000022",
+            "kind" : "show",
+            "name" : "Show H",
+            "page" : "https:\/\/www.hulu.com\/series\/00000000-0000-4000-8000-000000000022",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000021",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder synopsis for Show H.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/user\/v3\/editorial\/00000000-0000-4000-8000-000000000022?base_image_bucket_name=vogue&base_image=art-15&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          },
+          {
+            "episodeLabel" : null,
+            "heroArt" : "https:\/\/img.hulu.invalid\/user\/v3\/editorial\/00000000-0000-4000-8000-000000000024?base_image_bucket_name=vogue&base_image=art-16&operations=%5B%7B%22resize%22:%221920x1080%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "id" : "00000000-0000-4000-8000-000000000024",
+            "kind" : "show",
+            "name" : "Show I",
+            "page" : "https:\/\/www.hulu.com\/series\/00000000-0000-4000-8000-000000000024",
+            "play" : "https:\/\/www.hulu.com\/watch\/00000000-0000-4000-8000-000000000023",
+            "rating" : null,
+            "resumeSeconds" : null,
+            "runtimeSeconds" : null,
+            "seasonsLabel" : null,
+            "synopsis" : "Placeholder synopsis for Show I.",
+            "tileArt" : "https:\/\/img.hulu.invalid\/user\/v3\/editorial\/00000000-0000-4000-8000-000000000024?base_image_bucket_name=vogue&base_image=art-16&operations=%5B%7B%22resize%22:%22640x360%7Cmax%22%7D,%7B%22format%22:%22jpeg%22%7D%5D",
+            "year" : null
+          }
+        ],
+        "totalCount" : null
+      }
+    ],
+    "serviceID" : "hulu"
+  }
+]

@@ -10,8 +10,10 @@ final class NetflixPackageParityTests: XCTestCase {
     private var context: JSContext!
     private var decoder: PackageDecoder!
     private var manifest: PackageManifest!
+    private var g: Golden!
 
     override func setUpWithError() throws {
+        g = Golden("netflix", function: name)
         manifest = try PackageManifest.parse(Data(contentsOf: Self.appDirectory.appendingPathComponent("manifest.json")))
         decoder = PackageDecoder(manifest: manifest)
         context = try Self.makeContext()
@@ -54,11 +56,13 @@ final class NetflixPackageParityTests: XCTestCase {
     // MARK: Home (the GraphQL cache)
 
     private func assertHomeParity(_ cache: String, file: StaticString = #filePath, line: UInt = #line) throws {
-        let expected = NetflixHome.parse(graphQLCache: Data(cache.utf8))
+        let expected = try g.next(file: file, line: line)
         let js = build("home", cache)
-        guard let expected, !(expected.rows.isEmpty && expected.hero == nil) else { XCTAssertNil(decoder.home(js, serviceID: "netflix"), cache, file: file, line: line); return }
+        let object = expected as? [String: Any]
+        let empty = (object?["rows"] as? [Any])?.isEmpty == true && object?["hero"] is NSNull
+        guard object != nil, !empty else { XCTAssertNil(decoder.home(js, serviceID: "netflix"), cache, file: file, line: line); return }
         let got = try XCTUnwrap(decoder.home(js, serviceID: "netflix"), "package returned no home", file: file, line: line)
-        XCTAssertEqual(got.home, expected, file: file, line: line)
+        Golden.assertEqual(got.home, expected, file: file, line: line)
         XCTAssertTrue(got.cursors.isEmpty, "Netflix pages nothing", file: file, line: line)
     }
 
@@ -134,20 +138,20 @@ final class NetflixPackageParityTests: XCTestCase {
 
     func testGateFixtureMatches() throws {
         let read = try fixture("netflix-gate-read")
-        let expected = try XCTUnwrap(NetflixGate.parse(read))
+        let expected = try g.next()
+        XCTAssertFalse(expected is NSNull)
         let got = try XCTUnwrap(decoder.home(build("gate", read), serviceID: "netflix")).home
-        XCTAssertEqual(got, expected)
+        Golden.assertEqual(got, expected)
         XCTAssertTrue(got.asksWhoIsWatching)
         XCTAssertEqual(got.profiles.map(\.name), ["Profile 1", "Profile 2", "Profile 3", "Profile 5"])
     }
 
-    func testGateEdgeCasesMatch() {
+    func testGateEdgeCasesMatch() throws {
         let many = (1...30).map { #"{"id":"SYNTH\#($0)","name":"Profile \#($0)"}"# }.joined(separator: ",")
         for read in ["", "{}", #"{"gate":[]}"#, #"{"ROOT_QUERY":{}}"#, #"{"gate":[{"id":"bad id!","name":"Profile 1"}]}"#, #"{"gate":[{"id":"a","name":"  "}]}"#,
                      #"{"gate":[{"id":"locked-2","name":"Locked","locked":true,"avatar":"https://art.invalid/a.png"}]}"#, #"{"gate":[\#(many)]}"#] {
-            let expected = NetflixGate.parse(read)
             let got = decoder.home(build("gate", read), serviceID: "netflix")?.home
-            XCTAssertEqual(got, expected, read)
+            try g.expect(got, read)
         }
     }
 
@@ -155,23 +159,24 @@ final class NetflixPackageParityTests: XCTestCase {
 
     func testSearchFixtureMatches() throws {
         let read = try fixture("netflix-search-read")
-        let expected = NetflixSearch.titles(fromResults: read, play: { NetflixHome.playURL(videoID: $0) }, page: { NetflixHome.pageURL(videoID: $0) })
+        let expected = try g.next()
         let got = try XCTUnwrap(decoder.titles(build("search", read)))
-        XCTAssertEqual(got, expected)
+        Golden.assertEqual(got, expected)
         XCTAssertEqual(got.map(\.id), ["70000548", "70000137", "70000222", "70000333"])
         XCTAssertNil(got[2].tileArt, "plain-http art is dropped")
         let cards = (1...(StreamLimits.maxSearchResults + 10)).map { #"{"id":"\#($0)","name":"T\#($0)"}"# }
         let big = "[" + cards.joined(separator: ",") + "]"
-        XCTAssertEqual(decoder.titles(build("search", big)), NetflixSearch.titles(fromResults: big, play: { NetflixHome.playURL(videoID: $0) }, page: { NetflixHome.pageURL(videoID: $0) }))
+        try g.expect(decoder.titles(build("search", big)))
         XCTAssertEqual(decoder.titles(build("search", "[]")), [])
     }
 
     // MARK: Details and episodes
 
     private func assertDetailsParity(_ read: String, row: StreamTitle, file: StaticString = #filePath, line: UInt = #line) throws {
-        let expected = try XCTUnwrap(NetflixDetails.details(fromRead: read, title: row), file: file, line: line)
+        let expected = try g.next(file: file, line: line)
+        XCTAssertFalse(expected is NSNull, file: file, line: line)
         let got = try XCTUnwrap(decoder.details(build("details", read, extra: ", \(try argument(row))")), "package returned no details", file: file, line: line)
-        XCTAssertEqual(got, expected, read, file: file, line: line)
+        Golden.assertEqual(got, expected, read, file: file, line: line)
     }
 
     func testDetailsFixtureMatches() throws {
@@ -184,7 +189,7 @@ final class NetflixPackageParityTests: XCTestCase {
         XCTAssertEqual(details.seasons.map(\.name), ["S1: Alpha", "S2: Bravo", "S3: Charlie"])
         XCTAssertEqual(details.currentSeasonID, "70001096")
         XCTAssertEqual(details.seasons.first?.episodes.count, 3)
-        XCTAssertEqual(decoder.episodes(build("episodes", read)), NetflixDetails.episodes(fromRead: read))
+        try g.expect(decoder.episodes(build("episodes", read)))
     }
 
     func testDetailsEdgeCasesMatch() throws {
@@ -196,18 +201,18 @@ final class NetflixPackageParityTests: XCTestCase {
                      #"{"seasons":[{"id":1,"name":"Only"}],"episodes":[]}"#, "{}"] {
             for kind in [StreamTitle.Kind.show, .movie, .other] {
                 let row = StreamTitle(id: "70000959", name: "A Show", kind: kind, play: URL(string: "https://www.netflix.com/watch/1")!, page: URL(string: "https://www.netflix.com/title/70000959"))
-                XCTAssertEqual(decoder.details(build("details", read, extra: ", \(try argument(row))")), NetflixDetails.details(fromRead: read, title: row), read)
+                try g.expect(decoder.details(build("details", read, extra: ", \(try argument(row))")), read)
             }
-            XCTAssertEqual(decoder.episodes(build("episodes", read)) ?? [], NetflixDetails.episodes(fromRead: read), read)
+            try g.expect(decoder.episodes(build("episodes", read)) ?? [], read)
         }
         for read in ["", "[]", "nope", "null"] {
             XCTAssertNil(decoder.details(build("details", read, extra: ", {}")))
-            XCTAssertNil(NetflixDetails.details(fromRead: read, title: show))
+            XCTAssertTrue(try g.nextIsNil())
         }
         let many = (0..<130).map { #"{"id":\#(1000 + $0),"name":"E\#($0)"}"# }.joined(separator: ",")
         let big = #"{"currentSeasonId":1,"seasons":[{"id":1,"name":"One"}],"episodes":[\#(many)]}"#
         try assertDetailsParity(big, row: show)
-        XCTAssertEqual(decoder.episodes(build("episodes", big)), NetflixDetails.episodes(fromRead: big))
+        try g.expect(decoder.episodes(build("episodes", big)))
     }
 
     // MARK: Pages
@@ -217,8 +222,7 @@ final class NetflixPackageParityTests: XCTestCase {
         XCTAssertEqual(manifest.url(for: .profile)?.absoluteString, "https://www.netflix.com/browse")
         XCTAssertEqual(manifest.url(for: .details, .init(titlePage: show.page))?.absoluteString, "https://www.netflix.com/title/70000959")
         for query in ["stranger things", "  a   b ", "x&y=z", "café"] {
-            XCTAssertEqual(manifest.url(for: .search, .init(query: query))?.absoluteString,
-                           NetflixSearch.pageURL(query: query)?.absoluteString, query)
+            try g.expect(manifest.url(for: .search, .init(query: query))?.absoluteString, query)
         }
         XCTAssertNil(manifest.pages[.more], "Netflix pages with a persisted query that is not available to us")
         XCTAssertFalse(manifest.definesPlayerShown)
@@ -266,7 +270,7 @@ final class NetflixPackageParityTests: XCTestCase {
         context.evaluateScript("var __answer = 'pending'; reader.home({}).then(v => { __answer = v; });")
         let answer = call("__answer")
         XCTAssertNotEqual(answer, "pending")
-        XCTAssertEqual(decoder.home(answer, serviceID: "netflix")?.home, NetflixHome.parse(graphQLCache: Data(cache.utf8))?.bounded)
+        try g.expect(decoder.home(answer, serviceID: "netflix")?.home)
 
         // The gate: its tiles are the home (profiles, no rows); nothing is pressed by reading.
         setPage(path: "/ProfilesGate", tiles: [("SYNTHPROFILE0001", "Profile 1", false), ("SYNTHPROFILE0002", "Profile 2", true)], gate: true)
@@ -312,8 +316,6 @@ final class NetflixPackageParityTests: XCTestCase {
         XCTAssertEqual(choose("has-dash"), "false", "the Swift switch address takes letters and digits only")
         XCTAssertEqual(call("__nav.length"), "0")
         XCTAssertEqual(call("reader.profileIsCurrent({profileID: 'abc123'})"), "false")
-        XCTAssertEqual(NetflixHome.switchProfileURL(profileID: "has-dash"), nil)
-        XCTAssertEqual(NetflixHome.switchProfileURL(profileID: "abc123")?.absoluteString, "https://www.netflix.com/SwitchProfile?tkn=abc123")
     }
 
     // MARK: The gate's current markup (a button per profile, no link)
@@ -345,11 +347,6 @@ final class NetflixPackageParityTests: XCTestCase {
         return self.call("__answer")
     }
 
-    /// What the Swift gate's own scripts read from the same page, as the app runs them (a function body).
-    private func swiftGateRead() -> String {
-        self.call("(() => { \(NetflixGate.extractScript) })()")
-    }
-
     func testTheCurrentGateMarkupIsReadWithNamesAvatarsLockAndIDs() throws {
         setButtonGate()
         XCTAssertEqual(call("reader.homeReady()"), "true")
@@ -364,14 +361,13 @@ final class NetflixPackageParityTests: XCTestCase {
 
     func testSwiftAndPackageGateParseTheSameCurrentMarkup() throws {
         setButtonGate()
-        let swift = try XCTUnwrap(NetflixGate.parse(swiftGateRead()))
+        let swift = try g.next()
         let package = try XCTUnwrap(decoder.home(readerAnswer("reader.home({})"), serviceID: "netflix")).home
-        XCTAssertEqual(package, swift)
-        XCTAssertEqual(swift.profiles.map(\.isLocked), [false, true, false])
+        Golden.assertEqual(package, swift)
+        XCTAssertEqual(package.profiles.map(\.isLocked), [false, true, false])
         // Same on a title page that is not the gate: neither reads a gate.
         setButtonGate(onGate: false)
-        XCTAssertEqual(swiftGateRead(), "")
-        XCTAssertEqual(call("JSON.stringify(reader.extract.gate())"), "null")
+        try g.expect(call("JSON.stringify(reader.extract.gate())"))
     }
 
     func testEveryReadReportsTheGate() throws {
@@ -399,29 +395,17 @@ final class NetflixPackageParityTests: XCTestCase {
         XCTAssertNotNil(decoder.home(answer, serviceID: "netflix"))
     }
 
-    func testChoosingOnTheCurrentGateFollowsThatProfilesSwitchAddressAndNeverTypesOrOpensALockedOne() {
+    func testChoosingOnTheCurrentGateFollowsThatProfilesSwitchAddressAndNeverTypesOrOpensALockedOne() throws {
         setButtonGate()
         XCTAssertEqual(readerAnswer("reader.chooseProfile({profileID: 'SYNTHPROFILE0000000000000003'})"), "true")
         XCTAssertEqual(call("__nav.join()"), "https://www.netflix.com/SwitchProfile?tkn=SYNTHPROFILE0000000000000003")
         XCTAssertEqual(call("__clicks.length"), "0")
-        // The Swift choose script does the same on the same page.
-        setButtonGate()
-        XCTAssertEqual(call("(() => { \(NetflixGate.chooseScript(profileID: "SYNTHPROFILE0000000000000001")) })()"), "true")
-        XCTAssertEqual(call("__nav.join()"), "https://www.netflix.com/SwitchProfile?tkn=SYNTHPROFILE0000000000000001")
-        // A locked tile is never pressed by the Swift script.
-        setButtonGate()
-        XCTAssertEqual(call("(() => { \(NetflixGate.chooseScript(profileID: "SYNTHPROFILE0000000000000002")) })()"), "false")
-        XCTAssertEqual(call("__nav.length + __clicks.length"), "0")
-    }
-
-    func testSwiftReadyAndReadWrappersEndOnTheGateToo() {
-        setButtonGate()
-        XCTAssertEqual(call("(() => { \(NetflixGate.readyOrGate("return false;")) })()"), "true")
-        XCTAssertEqual(call("(() => { \(NetflixGate.onGateScript) })()"), "true")
-        XCTAssertTrue(NetflixGate.parse(call("(() => { \(NetflixGate.readOrGate("return 'not the gate';")) })()")) != nil)
-        setButtonGate(onGate: false)
-        XCTAssertEqual(call("(() => { \(NetflixGate.readyOrGate("return false;")) })()"), "false")
-        XCTAssertEqual(call("(() => { \(NetflixGate.readOrGate("return 'not the gate';")) })()"), "not the gate")
+        // The Swift choose script did the same on the same page (frozen answers).
+        for id in ["SYNTHPROFILE0000000000000001"] {
+            setButtonGate()
+            let result = readerAnswer("reader.chooseProfile({profileID: '\(id)'})")
+            try g.expect([result, call("__nav.join()"), call("__clicks.length")], id)
+        }
     }
 
     func testNothingIsTypedOrPlayed() throws {
