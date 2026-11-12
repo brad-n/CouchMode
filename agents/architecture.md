@@ -22,6 +22,7 @@ If something can be written as "input in, value out", it belongs in Core.
 | Catalogs and config | `AppCatalog` (parses `apps/catalog.json`), `AppConfig` + `ConfigFile` (a Mac's `config.json`), `Service` and `Consoles` (made from the catalog), `SwitchCatalog`, `BluetoothPane` |
 | Shared streaming vocabulary | `StreamCatalog` (`StreamHome`, `StreamRow`, `StreamTitle`, `StreamTitleDetails`, ..., `StreamLimits`), `StreamJSON` (careful JSON readers, script quoting) |
 | Per-service parsers | `NetflixHome/Details/Search`, `HuluHome/Details/Search`: page data in, shared vocabulary out; also the scripts to run in the page |
+| Reader packages | `PackageManifest` (a package's manifest), `PackageDecoder` (a package's JSON -> the shared vocabulary, with all the id/address/size checks), `ReaderMode` (the `reader` setting) |
 | Player handoff | `PlayerExit`, `PlayNudge`, `ImageRetry` |
 | Plex | `Plex` (JSON parsing, URLs), `PlexInspector`, `PlexHTPCLog` |
 | Debug channel | `HTTPRequest` (bounded parser) |
@@ -36,6 +37,7 @@ If something can be written as "input in, value out", it belongs in Core.
 | Home and games screens | `HomeView`, `ConsoleView`, `AllConsolesView`, `GameDetailView`, `PlexDetailView`, `SettingsView`, `ScreensaverView`, `IntroView`, `Overlays`, `DesignSystem` |
 | Shared streaming screens | `StreamHomeView/Model`, `StreamDetailView/Model`, `StreamSearchView`, `StreamParts` |
 | Readers | `StreamSource` (protocol and a sample reader), `NetflixSource`, `HuluSource`, `PageDriver`, `PageScripts` |
+| Script packages | `ScriptReader` (the generic reader that runs `apps/<id>/reader.js`), `PackageStore` (finds a package) |
 | Web | `WebPlayer` (one WKWebView per service), `WebPage` |
 | Other apps and games | `GameLauncher` (RetroArch and Switch apps), `AppLauncher`, `PlexHTPC`, `PlexClient`, `PlexInspectorClient` |
 | Apps and config | `AppConfigStore` (loads the catalog and config, hides unmet requirements, saves per-app settings), `AppServices` |

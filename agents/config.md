@@ -47,6 +47,11 @@ Retro consoles require RetroArch; Switch does not.
   that order.
 - Settings are plain strings, numbers or booleans. Known ones: a console's
   `gamesFolder` (`~` allowed), Netflix's `netflix51` (`auto`, `on`, `off`).
+  A stream app's `reader` (`builtin`, the default, or `package`) chooses its
+  Swift reader or its script package (`apps/<id>/`, see
+  [add-a-streaming-service.md](add-a-streaming-service.md)); anything else
+  means `builtin`, and a missing or unusable package falls back to it. It is
+  read when the app starts.
 - An id the catalog does not know is ignored but kept when the file is saved.
   An app whose `requires` is not met is hidden (one log line each), not removed.
   A repeated id counts once (the first).
