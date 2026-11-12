@@ -46,7 +46,7 @@ Everything on the screens in this README is **invented sample content**
 
 ### Shared screens, one reader per service
 
-Netflix and Hulu open in CouchMode's *own* TV screens: home rows with a
+Netflix, Hulu and Disney+ open in CouchMode's *own* TV screens: home rows with a
 featured title, a details page with seasons and episodes, search with an
 on-screen keyboard, and a profile picker. Those screens are the same for
 every service (`StreamHomeView`, `StreamDetailView`, `StreamSearchView`),
@@ -55,9 +55,9 @@ and they only know a small, service-neutral vocabulary (`StreamHome`,
 
 A small **reader** per service fills that vocabulary in. A reader is a
 `StreamSource` (`StreamSource.swift`): `home()`, `details(for:)`,
-`episodes(in:of:)`, `search(_:)`, `switchProfile(to:)`. `NetflixSource` and
-`HuluSource` are the two real ones. The parsing of each site's page data is
-pure code in `CouchModeCore` (`NetflixHome`, `HuluHome`, ...), tested against
+`episodes(in:of:)`, `search(_:)`, `switchProfile(to:)`. `NetflixSource`,
+`HuluSource` and `DisneySource` are the real ones. The parsing of each site's page data is
+pure code in `CouchModeCore` (`NetflixHome`, `HuluHome`, `DisneyHome`, ...), tested against
 synthetic fixtures. Services that don't have a reader open their website with
 remote-friendly navigation instead.
 
@@ -175,10 +175,17 @@ taken this way.
 
 ## Limitations
 
-- Only Netflix and Hulu have CouchMode's own screens; the others open their
-  website. Readers depend on each site's page, which can change without
+- Only Netflix, Hulu and Disney+ have CouchMode's own screens; the others open
+  their website. Readers depend on each site's page, which can change without
   notice.
 - "More" in a row is not read yet: a row holds what the home page loaded.
+  On Disney+ only the first rows carry titles (as on the site, later shelves
+  load as they are scrolled to) and the profile list comes from the top bar's
+  menu, so profiles are named, not numbered, and a name two profiles share
+  can't be chosen.
+- Disney+ may show its own "update this profile" or PIN step when a profile is
+  chosen; CouchMode doesn't fill those in, so that switch is reported as
+  failed and the profile is finished on Disney+'s own page.
 - Streaming picture quality is whatever each site gives a Mac web browser;
   for example some sites cap at a lower resolution than their TV apps.
 - Switch games need NX2Apple builds you made yourself; retro games need
