@@ -462,14 +462,17 @@ const reader = (() => {
         return text(build.search(extract.search()));
       } catch (e) { return ""; }
     },
-    // On the gate: follow the unlocked tile's own link (Netflix ignores scripted clicks), a tile without
+    // On the gate: a locked tile is refused; follow the unlocked tile's own link (Netflix ignores scripted clicks), a tile without
     // one is clicked. Elsewhere: Netflix's own profile switch address. Never types anything.
     chooseProfile: async args => {
       try {
         const id = args.profileID;
         if (token(id) === null) return false;
         if (!onGate() && currentProfileID() === id) return true;
-        const hits = gateTiles().filter(a => tileToken(a) === id && !tileLocked(a));
+        const tiles = gateTiles().filter(a => tileToken(a) === id);
+        // A locked (PIN) profile is never opened, by any address.
+        if (tiles.some(tileLocked)) return false;
+        const hits = tiles;
         if (hits.length === 1) {
           const link = hits[0].href ? new URL(hits[0].href, location.href) : null;
           // The tile's own address if it has one; the current tiles are buttons, whose profile's switch

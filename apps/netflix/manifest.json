@@ -1,6 +1,6 @@
 {
   "id": "netflix",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "readerAPI": 1,
   "site": {
     "hosts": ["netflix.com"],

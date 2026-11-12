@@ -303,10 +303,10 @@ final class NetflixPackageParityTests: XCTestCase {
         setPage(path: "/ProfilesGate", tiles: [("SYNTHPROFILE0001", "Profile 1", false), ("SYNTHPROFILE0002", "Profile 2", true)], gate: true)
         XCTAssertEqual(choose("SYNTHPROFILE0001"), "true")
         XCTAssertEqual(call("__nav.join()"), "https://www.netflix.com/SwitchProfile?tkn=SYNTHPROFILE0001", "the tile's own link")
-        // A locked tile is never pressed; Netflix's own switch address is what the former Swift reader fell back to.
+        // A locked (PIN) profile is never opened: refused, nothing navigated or pressed.
         setPage(path: "/ProfilesGate", tiles: [("SYNTHPROFILE0001", "Profile 1", false), ("SYNTHPROFILE0002", "Profile 2", true)], gate: true)
-        XCTAssertEqual(choose("SYNTHPROFILE0002"), "true")
-        XCTAssertEqual(call("__nav.join() + __clicks.length"), "https://www.netflix.com/SwitchProfile?tkn=SYNTHPROFILE00020")
+        XCTAssertEqual(choose("SYNTHPROFILE0002"), "false")
+        XCTAssertEqual(call("__nav.length + '/' + __clicks.length"), "0/0")
         // Off the gate it is the switch address, with the same checks on the id as the Swift one.
         setPage(path: "/browse")
         XCTAssertEqual(choose("abc123"), "true")
