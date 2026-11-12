@@ -8,8 +8,8 @@
 // "hero_immersive" is the billboard, "continue_watching" has progress,
 // "top_ranked" is the Top 10 chart, the rest are standard shelves; a shelf of
 // playlists holds no title pages and is dropped. Only the first N containers
-// carry their items (as on the site, the rest load as they are scrolled to),
-// and "more in a row" isn't read.
+// carry their items (as on the site, the rest load as they are scrolled to);
+// a row the site holds more of notes its total and paging params for DisneyMore.
 // Profiles are not in any request the page makes while browsing: the top bar's
 // profile menu (data-testid dropdown-active-profile) lists the profiles other
 // than the current one (dropdown-profile-<n>, each with the name as its text
@@ -19,7 +19,7 @@
 // its name (a name two profiles share is left out rather than guessed). No I/O here.
 //
 // extractScript's answer, the shape parse(_:) reads:
-// {"rows":[{"id","name","style","items":[card]}], "profiles":[{"name","avatar","current"}]}
+// {"rows":[{"id","name","style","items":[card],"more":{"total","next","q"}|null}], "profiles":[{"name","avatar","current"}]}
 // (card: see DisneyExplore)
 
 import Foundation
@@ -92,9 +92,11 @@ public enum DisneyHome {
       const pageId = findHome((await get("globalNav")).data.nav, 0);
       if (!pageId) return "";
       const page = (await get("page/" + pageId + "?disableSmartFocus=true&enhancedContainersLimit=\#(maxContainers)&limit=\#(maxItems)")).data.page;
+      \#(DisneyMore.noteFunction)
       const rows = (page.containers || []).filter(c => c.type === "set" && c.style && c.items && c.items.length)
         .map(c => ({ id: c.id || null, name: (c.visuals && c.visuals.name) || "", style: c.style.name || "",
-                     items: c.items.slice(0, \#(maxItems)).map(card).filter(Boolean) }))
+                     items: c.items.slice(0, \#(maxItems)).map(card).filter(Boolean),
+                     more: c.pagination && c.pagination.hasMore ? moreNote(c) : null }))
         .filter(r => r.items.length).slice(0, \#(maxRows));
       const profiles = [];
       const current = currentName();
@@ -155,7 +157,8 @@ public enum DisneyHome {
                 continue
             }
             guard !titles.isEmpty, let id = StreamJSON.token(container["id"]) else { continue }
-            rows.append(StreamRow(id: "disney-row-\(id)", title: StreamJSON.string(container["name"]) ?? "", kind: rowKind(style), titles: titles))
+            rows.append(StreamRow(id: "disney-row-\(id)", title: StreamJSON.string(container["name"]) ?? "", kind: rowKind(style), titles: titles,
+                                totalCount: DisneyMore.total(container, loaded: titles.count)))
         }
         let (profiles, currentID) = profiles(from: read["profiles"] as? [[String: Any]] ?? [])
         let home = StreamHome(serviceID: serviceID, profiles: profiles, currentProfileID: currentID, hero: hero, rows: rows).bounded

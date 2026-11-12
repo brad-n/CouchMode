@@ -28,6 +28,8 @@ final class DisneySource: StreamSource {
 
     let service: Service
     private let driver: PageDriver
+    /// Where each row's next batch starts; cleared whenever the home is read again or the profile switches.
+    private var cursors: [String: DisneyMore.Cursor] = [:]
 
     init(service: Service, player: WebPlayer) {
         self.service = service
@@ -35,8 +37,10 @@ final class DisneySource: StreamSource {
     }
 
     func home() async -> StreamHome? {
+        cursors = [:]
         guard let json = await driver.read("home", open: DisneyExplore.sessionPageURL, ready: DisneyHome.readyScript,
                                            script: DisneyHome.extractScript, timeouts: Self.homeRead) else { return nil }
+        cursors = DisneyMore.cursors(fromHome: json)
         return DisneyHome.parse(json)
     }
 
@@ -65,9 +69,19 @@ final class DisneySource: StreamSource {
         return DisneyDetails.episodes(fromSeason: json)
     }
 
-    func more(in row: StreamRow) async -> [StreamTitle]? { nil }
+    func more(in row: StreamRow) async -> [StreamTitle]? {
+        guard let cursor = cursors[row.id], let script = DisneyMore.script(for: cursor) else { return nil }
+        cursors[row.id] = nil   // one request per reach; a successful read puts the next cursor back
+        let action = driver.begin("more")
+        guard await prepare(action),
+              let json = await driver.text(script, for: action, timeout: Self.titleRead.read, what: "more unreadable"),
+              let batch = DisneyMore.titles(fromRead: json, cursor: cursor) else { return nil }
+        cursors[row.id] = batch.cursor
+        return batch.titles
+    }
 
     func switchProfile(to profileID: String) async -> Bool {
+        cursors = [:]
         let action = driver.begin("profile")
         guard await prepare(action),
               await driver.yes(DisneyHome.chooseProfileScript(profileID: profileID), for: action, what: "profile not in Disney+'s menu")

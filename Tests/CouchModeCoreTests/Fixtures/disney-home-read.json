@@ -11,6 +11,7 @@
   },
   {
    "id": "00000000-0000-4000-8000-0000000000a2", "name": "Recommended For You", "style": "poster_vertical",
+   "more": {"total": 50, "next": 30, "q": "setStyle=poster_vertical&setResolutionId=00000000-0000-4000-8000-0000000000c1&pageId=00000000-0000-4000-8000-0000000000d1"},
    "items": [
     {"id": "00000000-0000-4000-8000-000000000103", "name": "Movie C", "desc": "Placeholder.", "year": "2019", "rating": "PG-13", "runtimeMs": 7200000,
      "tile": "00000000-0000-4000-8000-0000000001a3"},
