@@ -1,0 +1,78 @@
+# Releasing
+
+```
+scripts/release.sh 0.2.0 --notes notes.md
+```
+
+Run it on the Mac that holds the signing identity, the Sparkle key and the
+notary key. It builds, notarizes, packages, signs an appcast and creates a
+**draft** GitHub release. It does not publish, push commits or push a tag.
+The working tree must be clean (commit first).
+
+## Steps
+
+1. **Preflight** (fails before the slow build): version format, `gh` login,
+   no existing release `v<version>`, Sparkle key present and matching
+   `SUPublicEDKey`, notary credentials readable.
+2. **Build** with `COUCHMODE_VERSION=<version> COUCHMODE_RELEASE=1
+   scripts/build-app.sh`: hardened runtime, secure timestamps, Sparkle's
+   helpers, then the framework, then the app, each signed separately (no
+   `--deep`).
+3. **Notarize and staple the app** (`xcrun notarytool`, then `stapler`).
+4. **DMG** with `hdiutil`: the app and an Applications symlink, signed,
+   notarized, stapled.
+5. **Appcast**: `sign_update` signs the DMG with the EdDSA key from the login
+   Keychain; `appcast.xml` is written from a template with the release notes.
+   Output is in `dist/release/<version>/`.
+6. **Draft release** `v<version>` with the DMG and `appcast.xml`. A version
+   with a `-` (such as `0.2.0-rc1`) is marked pre-release. The draft targets
+   the commit when `origin/main` has it, otherwise `main`.
+
+Publish after review: `gh release edit v<version> --draft=false`. That creates
+the tag. Installed copies read
+`https://github.com/brad-n/CouchMode/releases/latest/download/appcast.xml`,
+which GitHub points at the latest published, non-pre-release release, so a
+`-rc` release is never offered to existing installs.
+
+## Versions
+
+- `CFBundleShortVersionString`: the release version (`packaging/VERSION` for
+  dev builds, the script argument for releases). Bump `packaging/VERSION`
+  after a release.
+- `CFBundleVersion`: `git rev-list --count HEAD`. Sparkle compares this, so it
+  must only grow: release from a full clone, on the main line.
+- `CouchModeGitSHA`: the short commit. Read this (not `CFBundleVersion`) to
+  confirm which commit is running. Settings > Version shows
+  `0.2.0 (123, abc1234)`; the logic is `AppVersion` in Core.
+
+## One-time setup
+
+Add to `scripts/local.env` (see `scripts/local.env.example`):
+
+- `HTPC_SIGN_IDENTITY`: a `Developer ID Application` identity.
+- `NOTARY_KEYCHAIN_KEY_SERVICE`, `NOTARY_KEYCHAIN_ISSUER_SERVICE`: the
+  Keychain generic-password services holding an App Store Connect API key's
+  `.p8` (PEM or base64 of it) and issuer id. `NOTARY_KEY_ID`: the key id.
+  The script writes the `.p8` to a mode-600 temp file and deletes it on exit.
+
+The Sparkle signing key pair was made once with Sparkle's `generate_keys`
+(from `.build/artifacts/sparkle/Sparkle/bin/`). The private key lives only in
+the login Keychain; the public half is `SUPublicEDKey` in
+`packaging/Info.plist`. `generate_keys -p` prints the public key.
+
+**Back up the private key.** Without it no further update can be signed for
+installed copies. Export it to a file kept somewhere safe and private (a
+password manager, never the repo):
+
+```
+.build/artifacts/sparkle/Sparkle/bin/generate_keys -x ~/some/private/place/couchmode-sparkle.key
+```
+
+Restore on another Mac with `generate_keys -f <file>`. Never print, log or
+commit the key.
+
+## Limits
+
+- Apple Silicon only (arm64), macOS 14+.
+- Sparkle shows its own windows for updates; on a TV without a mouse, update
+  from the desktop, or check from Settings with a keyboard.

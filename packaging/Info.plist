@@ -6,8 +6,16 @@
 <key>CFBundleName</key><string>CouchMode</string>
 <key>CFBundleDisplayName</key><string>CouchMode</string>
 <key>CFBundlePackageType</key><string>APPL</string>
-<key>CFBundleShortVersionString</key><string>0.1</string>
+<!-- Release version (packaging/VERSION or $COUCHMODE_VERSION); build = commit count, so it always increases
+     (Sparkle compares it); the commit hash has its own key. -->
+<key>CFBundleShortVersionString</key><string>__VERSION__</string>
 <key>CFBundleVersion</key><string>__BUILD__</string>
+<key>CouchModeGitSHA</key><string>__SHA__</string>
+<!-- Sparkle self-update. The public key pairs with the private key in the release Mac's login Keychain
+     (see agents/release.md). -->
+<key>SUFeedURL</key><string>https://github.com/brad-n/CouchMode/releases/latest/download/appcast.xml</string>
+<key>SUPublicEDKey</key><string>QDBQXhAV5xXxnbo23fB0TKIPswnru+XMvfnmQJL4d38=</string>
+<key>SUEnableAutomaticChecks</key><true/>
 <key>LSMinimumSystemVersion</key><string>14.0</string>
 <key>NSHighResolutionCapable</key><true/>
 <!-- Browser-style app: let web pages follow plain-http hops (Disney+ uses one)

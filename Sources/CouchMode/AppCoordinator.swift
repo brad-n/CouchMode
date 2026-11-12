@@ -948,7 +948,10 @@ final class AppCoordinator {
             SettingRow(id: "sounds", title: "Interface Sounds", value: Prefs.uiSounds ? "On" : "Off", symbol: "speaker.badge.exclamationmark.fill"),
             SettingRow(id: "screensaver", title: "Screensaver", value: saver == 0 ? "Off" : "After \(saver) min", symbol: "sparkles.tv.fill"),
             SettingRow(id: "storage", title: "Storage", value: demo ? DemoMode.SettingsValue.storage : Self.storageText(), symbol: "internaldrive.fill"),
-            SettingRow(id: "version", title: "Version", value: Self.versionText(), symbol: "info.circle.fill"),
+            // One row for both: the build is the value, pressing it checks for updates (the list fills the screen as is).
+            SettingRow(id: "update", title: "Check for Updates", value: Self.versionText(), symbol: "arrow.down.circle.fill", isAction: true),
+            SettingRow(id: "autoupdate", title: "Automatically Check", value: AppUpdater.shared.automaticallyChecks ? "On" : "Off",
+                       symbol: "clock.arrow.circlepath"),
             SettingRow(id: "sleep", title: "Sleep", value: "Turn off the screen", symbol: "moon.fill", isAction: true),
             SettingRow(id: "restart", title: "Restart", value: pending == "restart" ? "Press again to restart" : "",
                        symbol: "arrow.clockwise", isAction: true),
@@ -973,12 +976,11 @@ final class AppCoordinator {
         return "\(gb(Double(free))) free of \(gb(Double(total)))"
     }
 
-    /// The build the shell is running (its commit, from the bundle).
+    /// The build the shell is running: release version, build count and commit, from the bundle.
     static func versionText() -> String {
         let info = Bundle.main.infoDictionary
-        let short = info?["CFBundleShortVersionString"] as? String ?? "?"
-        let build = info?["CFBundleVersion"] as? String ?? "?"
-        return "\(short) (\(build))"
+        return AppVersion.text(short: info?["CFBundleShortVersionString"] as? String, build: info?["CFBundleVersion"] as? String,
+                               sha: info?["CouchModeGitSHA"] as? String)
     }
 
     private func handleSettings(_ intent: ShellIntent, model: SettingsModel) {
@@ -999,6 +1001,8 @@ final class AppCoordinator {
             case "sounds": Prefs.uiSounds.toggle()
             case "screensaver":
                 Prefs.screensaverMinutes = Cycle.next(after: Prefs.screensaverMinutes, in: Prefs.screensaverChoices) ?? 5
+            case "update": AppUpdater.shared.checkForUpdates()
+            case "autoupdate": AppUpdater.shared.automaticallyChecks.toggle()
             case "sleep": system.sleep()
             case "restart":
                 // A frozen game couldn't answer macOS's quit request and would stall the restart.
