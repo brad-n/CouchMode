@@ -26,7 +26,8 @@ Netflix and Hulu are the worked examples; keep them open while you work:
 
 A reader is a **script package** in `apps/<id>/`, run by one generic reader
 (`ScriptReader`, `Sources/CouchMode/ScriptReader.swift`). Prime Video is the
-worked example (`apps/prime/`); the Swift readers below (Netflix, Hulu,
+worked example (`apps/prime/`; Hulu, `apps/hulu/`, shows a request made from
+the title's page and a typed search); the Swift readers below (Netflix, Hulu,
 Disney+, Apple TV, and Prime's `PrimeSource`) are the older way and stay until
 each service is ported. A Mac chooses per service with the `reader` setting
 (`builtin`, the default, or `package`; see [config.md](config.md)).
@@ -74,6 +75,9 @@ apps/<id>/reader.js       one script: `const reader = ...` with the functions be
   normalized search text, percent-encoded). `ready` names a function in
   `reader.js`. `home` is required; an action with no page is unavailable
   (the screens fall back).
+- `season.open` may also be `{title.page}` (Hulu): the season is a request made
+  from the title's own page, not a page of its own. With `reuseIfOpen` the page
+  is not reopened when it is already showing.
 - `readyRequired: false` makes "never became ready" a valid empty answer
   (search with no results). `reuseIfOpen` (more) skips reopening when the
   service's page is already at that address. `confirmTimeout` (profile) is
@@ -92,8 +96,8 @@ characters, and never throw. Arguments arrive as one object.
 | `homeReady()`, `detailsReady()`, `searchReady()` | none | `true` when the page's data is there |
 | `home()` | none | a **home**, or `""` |
 | `details({title})` | `title` is the row's title (a **title**) | a **details**, or `""` |
-| `season({})` | none (the season page is open) | an array of **episodes** |
-| `search({})` | none (the results page is open) | an array of **titles** |
+| `season({seasonID})` | the season's `id`, exactly as `details()` returned it (the season's page is open) | an array of **episodes** |
+| `search({query})` | the normalized search text (the search page is open) | an array of **titles** |
 | `more({cursor})` | the row's cursor, exactly as `home()` returned it | `{"titles": [title], "cursor": opaque or null}` |
 | `chooseProfile({profileID})` | a profile `id` from the home | `true` when the page's own control was pressed (or already current) |
 | `profileIsCurrent({profileID})` | same | `true` once that profile is current |
@@ -115,6 +119,13 @@ The vocabulary is `StreamCatalog.swift` as JSON; leave a missing value `null`:
   (`id`, `name`, `episodes`: only the open season has them), `currentSeasonID`.
 - **episode**: `id`, `name`, `number`, `synopsis`, `runtimeSeconds`,
   `resumeSeconds`, `play`, `art`.
+
+A season `id` may also hold colons (Hulu's `<series>::<n>`); it only goes back
+to the script as `seasonID`. `search` may do more than read: Hulu's types
+`query` into the page's own search box, waits (bounded) for the list, and reads
+it (nothing listed in time is `[]`, a box it can't type into is `""`). These
+are additions to API v1 (an older package that ignores the arguments still
+works), so v1 stays 1.
 
 Prime's `reader.js` splits each function in two so the second half can be
 tested without a page: `extract.*` reads the page into a small "read", and

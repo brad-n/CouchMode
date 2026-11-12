@@ -50,19 +50,27 @@ final class ScriptReader: StreamSource {
     }
 
     func episodes(in season: StreamSeason, of title: StreamTitle) async -> [StreamEpisode]? {
-        guard let json = await read("episodes", .season, .init(seasonID: season.id), call: "season") else { return nil }
+        guard let page = manifest.pages[.season], let url = manifest.url(for: .season, .init(titlePage: title.page, seasonID: season.id)) else { return nil }
+        let action = driver.begin("episodes")
+        // A season that is a request from the title's own page (not a page of its own) reuses that page when it is showing.
+        if !(page.reuseIfOpen && isOpen(url)) {
+            guard await driver.open(url, for: action, timeout: manifest.loadTimeout) else { return nil }
+        }
+        guard await driver.waitFor(readyBody(page.ready), for: action, timeout: page.readyTimeout ?? manifest.readyTimeout, what: "never ready"),
+              let json = await driver.text(body(call: "reader.season(\(argument(["seasonID": season.id])))"), for: action,
+                                           timeout: manifest.readTimeout, what: "unreadable") else { return nil }
         return decoder.episodes(json) ?? failed("episodes", "answer not usable")
     }
 
     func search(_ query: String) async -> [StreamTitle]? {
         guard let page = manifest.pages[.search] else { return nil }
-        guard let url = manifest.url(for: .search, .init(query: query)) else { return [] }
+        guard let text = StreamSearch.normalized(query), let url = manifest.url(for: .search, .init(query: text)) else { return [] }
         let action = driver.begin("search")
         guard await driver.open(url, for: action, timeout: manifest.loadTimeout) else { return nil }
         // A search with no matches is a valid answer ([]), not a failure, when the manifest says readiness is optional.
         guard await driver.waitFor(readyBody(page.ready), for: action, timeout: page.readyTimeout ?? manifest.readyTimeout, what: "results",
                                    required: page.readyRequired) else { return driver.isCurrent(action) && !page.readyRequired ? [] : nil }
-        guard let json = await driver.text(body(call: "reader.search()"), for: action, timeout: manifest.readTimeout, what: "results unreadable")
+        guard let json = await driver.text(body(call: "reader.search(\(argument(["query": text])))"), for: action, timeout: manifest.readTimeout, what: "results unreadable")
         else { return nil }
         return decoder.titles(json) ?? failed("search", "answer not usable")
     }

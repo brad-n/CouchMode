@@ -58,10 +58,10 @@ public struct PackageDecoder: Sendable {
         var seen = Set<String>()
         var seasons: [StreamSeason] = []
         for entry in read["seasons"] as? [[String: Any]] ?? [] {
-            guard let id = Self.id(entry["id"]), seen.insert(id).inserted, let name = text(entry["name"], max: 100) else { continue }
+            guard let id = Self.seasonID(entry["id"]), seen.insert(id).inserted, let name = text(entry["name"], max: 100) else { continue }
             seasons.append(StreamSeason(id: id, name: name, episodes: episodes(entry["episodes"] as? [Any] ?? [])))
         }
-        let current = Self.id(read["currentSeasonID"]).flatMap { id in seasons.contains { $0.id == id } ? id : nil }
+        let current = Self.seasonID(read["currentSeasonID"]).flatMap { id in seasons.contains { $0.id == id } ? id : nil }
         return StreamTitleDetails(title: t, seasons: seasons, currentSeasonID: current).bounded
     }
 
@@ -135,6 +135,13 @@ public struct PackageDecoder: Sendable {
     /// An id: 1 to 64 ASCII letters, digits, dashes or underscores.
     static func id(_ value: Any?) -> String? {
         guard let s = value as? String, (1...64).contains(s.count), s.allSatisfy({ $0.isASCII && ($0.isLetter || $0.isNumber || $0 == "-" || $0 == "_") })
+        else { return nil }
+        return s
+    }
+
+    /// A season id: an id that may also hold colons (Hulu's "<series>::<n>"). It only goes back to the script, never into an address.
+    static func seasonID(_ value: Any?) -> String? {
+        guard let s = value as? String, (1...64).contains(s.count), s.allSatisfy({ $0.isASCII && ($0.isLetter || $0.isNumber || $0 == "-" || $0 == "_" || $0 == ":") })
         else { return nil }
         return s
     }

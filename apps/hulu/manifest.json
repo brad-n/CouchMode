@@ -1,0 +1,18 @@
+{
+  "id": "hulu",
+  "version": "1.0.0",
+  "readerAPI": 1,
+  "site": {
+    "hosts": ["hulu.com"],
+    "imageHosts": ["hulu.com", "hulustream.com", "huluim.com", "hulu.invalid"]
+  },
+  "timeouts": { "load": 20, "ready": 10, "read": 12 },
+  "pages": {
+    "home": { "open": "https://www.hulu.com/hub/home", "ready": "homeReady" },
+    "details": { "open": "{title.page}", "ready": "detailsReady" },
+    "season": { "open": "{title.page}", "ready": "detailsReady", "reuseIfOpen": true },
+    "search": { "open": "https://www.hulu.com/search", "ready": "searchReady" },
+    "profile": { "open": "https://www.hulu.com/hub/home", "ready": "profileListReady", "confirmTimeout": 10 }
+  },
+  "playerShown": false
+}
