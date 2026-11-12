@@ -1,0 +1,24 @@
+{"rows":[
+ {"id":"uts.col.synth_stage","name":"","type":"epicStage","items":[
+  {"id":"umc.cmc.synthstage1","kind":"show","name":"Stage Show","page":"https://tv.apple.com/us/show/stage-show/umc.cmc.synthstage1","year":2024,"rating":"TV-MA","canPlay":false,
+   "wide":{"u":"https://example.invalid/image/thumb/synthstage/{w}x{h}.{f}","w":4320,"h":3240}}]},
+ {"id":"uts.col.UpNext","name":"Continue Watching","type":"upNextLockup","items":[
+  {"id":"umc.cmc.synthshow1","kind":"show","name":"Synthetic Series","page":"https://tv.apple.com/us/show/synthetic-series/umc.cmc.synthshow1",
+   "episodeURL":"https://tv.apple.com/us/episode/pilot/umc.cmc.synthep0001?showId=umc.cmc.synthshow1","season":2,"episode":3,
+   "runtime":3000,"resume":750,"canPlay":true,
+   "tile":{"u":"https://example.invalid/image/thumb/synthtile1/{w}x{h}KF.TVALC03.{f}?color=C78469","w":1920,"h":1080}},
+  {"id":"umc.cmc.synthmovie1","kind":"movie","name":"Synthetic Movie","page":"https://tv.apple.com/us/movie/synthetic-movie/umc.cmc.synthmovie1",
+   "year":2019,"runtime":6000,"resume":6000,"canPlay":true,"tile":null},
+  {"id":"umc.cmc.synthshow2","kind":"show","name":"Next Episode Show","page":"https://tv.apple.com/us/show/next-episode-show/umc.cmc.synthshow2",
+   "episodeURL":"https://tv.apple.com/us/episode/two/umc.cmc.synthep0002?showId=umc.cmc.synthshow2","season":1,"episode":2,"runtime":2400,"resume":null,"canPlay":true},
+  {"id":"umc.cmc.synthrent1","kind":"movie","name":"Rent This One","page":"https://tv.apple.com/us/movie/rent-this-one/umc.cmc.synthrent1","runtime":5400,"canPlay":false},
+  {"id":"bad id","kind":"movie","name":"Bad Id","page":"https://tv.apple.com/us/movie/bad/umc.cmc.bad"},
+  {"id":"umc.cmc.synthnopage","kind":"movie","name":"Off Site","page":"https://example.com/elsewhere"}]},
+ {"id":"uts.col.ChartsShows.synth","name":"Top 10 Shows","type":"chart","items":[
+  {"id":"umc.cmc.synthchart1","kind":"show","name":"Chart One","page":"https://tv.apple.com/us/show/chart-one/umc.cmc.synthchart1","canPlay":false,
+   "tile":{"u":"https://example.invalid/image/thumb/synthchart1/{w}x{h}.{f}","w":4320,"h":3240}},
+  {"id":"umc.cmc.synthchart2","kind":"show","name":"Chart Two","page":"https://tv.apple.com/us/show/chart-two/umc.cmc.synthchart2"}]},
+ {"id":"uts.col.synth-empty","name":"Nothing Here","type":"lockup","items":[]},
+ {"id":"uts.col.synth-new","name":"New Releases","type":"lockup","items":[
+  {"id":"umc.cmc.synthnew1","kind":"show","name":"New One","page":"https://tv.apple.com/us/show/new-one/umc.cmc.synthnew1","year":2026}]}
+]}
