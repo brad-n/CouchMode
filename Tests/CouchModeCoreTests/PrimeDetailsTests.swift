@@ -26,12 +26,14 @@ final class PrimeDetailsTests: XCTestCase {
         XCTAssertEqual(details.seasons.map(\.name), ["Season 1", "Season 2"], "a repeated or odd season id is dropped")
         XCTAssertEqual(details.currentSeasonID, "S2season02")
         XCTAssertTrue(details.seasons[0].episodes.isEmpty, "other seasons load when opened")
-        XCTAssertEqual(details.seasons[1].episodes.count, 3)
+        XCTAssertEqual(details.seasons[1].episodes.count, 4)
     }
 
     func testEpisodesCarryNumberPlayAddressAndProgress() throws {
         let episodes = PrimeDetails.episodes(fromRead: try fixture("prime-details-show-read"))
-        XCTAssertEqual(episodes.map(\.number), [1, 2, 3], "an episode with no player address is left out")
+        XCTAssertEqual(episodes.map(\.number), [1, 2, 3, 4])
+        XCTAssertEqual(episodes[3].play.absoluteString, "https://www.primevideo.com/detail/S2ep000004", "no playback: Play opens the episode's page")
+        XCTAssertNil(episodes[3].resumeSeconds)
         XCTAssertEqual(episodes[0].name, "First Period")
         XCTAssertEqual(episodes[0].play.absoluteString, "https://www.primevideo.com/detail/S2ep000001?autoplay=1")
         XCTAssertEqual(episodes[0].runtimeSeconds, 2903)

@@ -134,15 +134,15 @@ public enum PrimeDetails {
     }
 
     /// Just the episodes from readScript's answer: each with a plain id and a player
-    /// address, once, at most maxEpisodesPerSeason.
+    /// address (its page where there is no playback), once, at most maxEpisodesPerSeason.
     public static func episodes(fromRead json: String) -> [StreamEpisode] {
         var seen = Set<String>()
         var list: [StreamEpisode] = []
         for entry in (StreamJSON.object(json)?["episodes"] as? [[String: Any]]) ?? [] {
             let resume = StreamJSON.int(entry["resume"]).flatMap { $0 > 0 ? $0 : nil }
-            guard list.count < maxEpisodes, let id = entry["id"] as? String, PrimeSite.pageURL(id: id) != nil,
-                  let play = (entry["playId"] as? String).flatMap({ PrimeSite.playURL(id: $0, resumeSeconds: resume) }),
-                  seen.insert(id).inserted else { continue }
+            // An episode Prime offers no playback for (to buy or rent) opens its page instead of a player.
+            guard list.count < maxEpisodes, let id = entry["id"] as? String, let page = PrimeSite.pageURL(id: id), seen.insert(id).inserted else { continue }
+            let play = (entry["playId"] as? String).flatMap { PrimeSite.playURL(id: $0, resumeSeconds: resume) } ?? page
             let number = StreamJSON.numericID(entry["number"]).flatMap { Int($0) }
             let run = StreamJSON.int(entry["run"]).flatMap { $0 > 0 ? $0 : nil }
             list.append(StreamEpisode(id: id, name: StreamJSON.string(entry["name"]) ?? number.map { "Episode \($0)" } ?? "Episode",
