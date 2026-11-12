@@ -176,7 +176,8 @@ enum ServiceLook {
 @MainActor
 enum HomeLayout {
     static func consoleColors(_ console: Console) -> [Color] {
-        let i = ConsoleCatalog.all.firstIndex(of: console) ?? 0
+        // Colors follow the catalog's order, so reordering Home doesn't recolor the cards.
+        let i = ConsoleCatalog.make(from: AppConfigStore.shared.catalog.apps).firstIndex(of: console) ?? 0
         return Theme.consoleCards[i % Theme.consoleCards.count]
     }
 
@@ -184,7 +185,7 @@ enum HomeLayout {
         HomeItem(id: "console-" + console.id, title: console.name, subtitle: GameLibrary.countLabel(count),
                  symbol: "gamecontroller.fill", colors: consoleColors(console), action: .console(console),
                  artwork: Artwork.exists(console.id) ? console.id : nil,
-                 tagline: count > 0 ? "Pick up where you left off" : "Add games to ~/Games/\(console.folder)")
+                 tagline: count > 0 ? "Pick up where you left off" : "Add games to \(AppConfigStore.shared.gamesFolderText(for: console))")
     }
 
     /// Consoles that have games, then a card for the full list.
@@ -218,17 +219,24 @@ enum HomeLayout {
         })
     }
 
-    static func rows(services: [Service], consoles: [(Console, Int)], continueWatching: [ContinueEntry] = [],
+    /// `apps` are the config's apps in order (streams, native apps, Settings); `consoles` the config's consoles in order.
+    static func rows(apps shown: [CatalogApp], services: [Service], consoles: [(Console, Int)], continueWatching: [ContinueEntry] = [],
                      recentGames: [RecentGame] = []) -> [HomeRow] {
-        let apps = services.map { s in
-            HomeItem(id: s.id, title: s.name, subtitle: "",
-                     symbol: ServiceLook.symbol(s.id), colors: ServiceLook.colors(s.id),
-                     style: .app, action: .stream(s), tagline: ServiceLook.tagline(s.id))
-        } + [
-            HomeItem(id: "settings", title: "Settings", subtitle: "",
-                     symbol: "gearshape.fill", colors: [Color(white: 0.34), Color(white: 0.16)],
-                     style: .app, action: .settings, tagline: "Sound, controllers, start-up and power"),
-        ]
+        let apps = shown.compactMap { app -> HomeItem? in
+            switch app.kind {
+            case .stream, .native:
+                guard let s = services.first(where: { $0.id == app.id }) else { return nil }
+                return HomeItem(id: s.id, title: s.name, subtitle: "",
+                                symbol: ServiceLook.symbol(s.id), colors: ServiceLook.colors(s.id),
+                                style: .app, action: .stream(s), tagline: ServiceLook.tagline(s.id))
+            case .system where app.id == "settings":
+                return HomeItem(id: "settings", title: "Settings", subtitle: "",
+                                symbol: "gearshape.fill", colors: [Color(white: 0.34), Color(white: 0.16)],
+                                style: .app, action: .settings, tagline: "Sound, controllers, start-up and power")
+            default:
+                return nil
+            }
+        }
         return [
             continueRow(continueWatching),
             jumpBackRow(recentGames),

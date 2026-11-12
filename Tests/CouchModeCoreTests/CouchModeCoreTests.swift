@@ -26,8 +26,8 @@ final class FocusGridTests: XCTestCase {
 }
 
 final class PlayerInputTests: XCTestCase {
-    private let netflix = ServiceCatalog.all.first { $0.id == "netflix" }!
-    private let youtube = ServiceCatalog.all.first { $0.id == "youtube" }!
+    private let netflix = TestCatalog.services.first { $0.id == "netflix" }!
+    private let youtube = TestCatalog.services.first { $0.id == "youtube" }!
 
     func testHomeAlwaysReturnsToShell() {
         XCTAssertEqual(PlayerInput.command(for: .home, service: netflix), .returnHome)
@@ -45,7 +45,7 @@ final class PlayerInputTests: XCTestCase {
     }
 
     func testCatalogIdsAreUnique() {
-        let ids = ServiceCatalog.all.map(\.id)
+        let ids = TestCatalog.services.map(\.id)
         XCTAssertEqual(Set(ids).count, ids.count)
     }
 }
@@ -100,7 +100,7 @@ final class ConfirmGateTests: XCTestCase {
 }
 
 final class GameLibraryTests: XCTestCase {
-    private let nes = ConsoleCatalog.all.first { $0.id == "nes" }!
+    private let nes = TestCatalog.consoles.first { $0.id == "nes" }!
 
     func testKeepsMatchingExtensionsCaseInsensitiveSkipsHiddenAndSorts() {
         let games = GameLibrary.games(fileNames: ["zelda.NES", ".hidden.nes", "readme.txt", "Alter Ego.nes"], for: nes)
@@ -115,8 +115,8 @@ final class GameLibraryTests: XCTestCase {
     }
 
     func testConsoleIdsAndFoldersAreUnique() {
-        XCTAssertEqual(Set(ConsoleCatalog.all.map(\.id)).count, ConsoleCatalog.all.count)
-        XCTAssertEqual(Set(ConsoleCatalog.all.map(\.folder)).count, ConsoleCatalog.all.count)
+        XCTAssertEqual(Set(TestCatalog.consoles.map(\.id)).count, TestCatalog.consoles.count)
+        XCTAssertEqual(Set(TestCatalog.consoles.map(\.defaultFolder)).count, TestCatalog.consoles.count)
     }
 }
 
@@ -183,7 +183,7 @@ final class PlexParsingTests: XCTestCase {
 
 final class GameSizeTests: XCTestCase {
     func testSizesAttachToMatchingFiles() {
-        let nes = ConsoleCatalog.all.first { $0.id == "nes" }!
+        let nes = TestCatalog.consoles.first { $0.id == "nes" }!
         let games = GameLibrary.games(fileNames: ["a.nes", "b.nes"], for: nes, sizes: ["a.nes": 262_160])
         XCTAssertEqual(games.first { $0.fileName == "a.nes" }?.sizeBytes, 262_160)
         XCTAssertNil(games.first { $0.fileName == "b.nes" }?.sizeBytes)
@@ -208,9 +208,9 @@ final class PlexServersTests: XCTestCase {
 
 final class SwitchConsoleTests: XCTestCase {
     func testSwitchGamesAreAppBundles() {
-        let sw = ConsoleCatalog.all.first { $0.id == "switch" }!
+        let sw = TestCatalog.consoles.first { $0.id == "switch" }!
         XCTAssertTrue(sw.gamesAreApps)
-        XCTAssertFalse(ConsoleCatalog.all.first { $0.id == "nes" }!.gamesAreApps)
+        XCTAssertFalse(TestCatalog.consoles.first { $0.id == "nes" }!.gamesAreApps)
         let games = GameLibrary.games(fileNames: ["Kirby.app", "notes.txt", "Mario Kart 8 Deluxe.app"], for: sw)
         XCTAssertEqual(games.map(\.title), ["Kirby", "Mario Kart 8 Deluxe"])
     }
@@ -285,7 +285,7 @@ final class PlexBackdropTests: XCTestCase {
 
 final class InfoIntentTests: XCTestCase {
     func testInfoIsPlayPauseOnSites() {
-        let netflix = ServiceCatalog.all.first { $0.id == "netflix" }!
+        let netflix = TestCatalog.services.first { $0.id == "netflix" }!
         XCTAssertEqual(PlayerInput.command(for: .info, service: netflix), .press(.space))
     }
 

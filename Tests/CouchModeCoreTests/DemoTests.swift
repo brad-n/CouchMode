@@ -151,7 +151,7 @@ final class DemoCatalogTests: XCTestCase {
 
     func testGamesExistOnlyForSampleConsolesAndFileNamesRoundTrip() {
         for id in DemoCatalog.gameConsoleIDs {
-            let console = ConsoleCatalog.all.first { $0.id == id }!
+            let console = TestCatalog.consoles.first { $0.id == id }!
             let games = DemoCatalog.games(forConsole: id)
             XCTAssertFalse(games.isEmpty, id)
             let names = games.map { DemoCatalog.fileName($0, console: console) }

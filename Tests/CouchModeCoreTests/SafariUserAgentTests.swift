@@ -28,7 +28,7 @@ final class SafariUserAgentTests: XCTestCase {
 
     func testCatalogUsesGivenAgentExceptYouTube() {
         let ua = SafariUserAgent.string(forVersion: "27.2")
-        let services = ServiceCatalog.make(safariUserAgent: ua)
+        let services = ServiceCatalog.make(from: TestCatalog.catalog.apps, safariUserAgent: ua)
         XCTAssertEqual(services.first { $0.id == "netflix" }?.userAgent, ua)
         XCTAssertEqual(services.first { $0.id == "youtube" }?.userAgent, UserAgents.smartTV)
     }

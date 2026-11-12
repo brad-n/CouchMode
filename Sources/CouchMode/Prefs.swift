@@ -1,4 +1,5 @@
-// Owns: the shell's own user preferences (UserDefaults), with defaults.
+// Owns: the shell's global user preferences (UserDefaults), with defaults:
+// sounds and screensaver. Per-app settings live in the config (AppConfigStore).
 
 import Foundation
 import CouchModeCore
@@ -20,9 +21,10 @@ enum Prefs {
     }
 
     /// Netflix 5.1 audio: auto (follow the output's channel count), on, or off.
-    static var netflix51: Netflix51 {
-        get { Netflix51(stored: UserDefaults.standard.string(forKey: "netflix51")) }
-        set { UserDefaults.standard.set(newValue.rawValue, forKey: "netflix51") }
+    /// Per app, so it lives in the machine's config (the Netflix entry), not here.
+    @MainActor static var netflix51: Netflix51 {
+        get { Netflix51(stored: AppConfigStore.shared.setting("netflix51", for: "netflix")?.string) }
+        set { AppConfigStore.shared.set("netflix51", .string(newValue.rawValue), for: "netflix") }
     }
 
     static let screensaverChoices = [2, 5, 10, 20, 0]

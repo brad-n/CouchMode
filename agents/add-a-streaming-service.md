@@ -50,8 +50,10 @@ action and step.
 
 ### 1. Add the service
 
-If it isn't in `ServiceCatalog` (`Sources/CouchModeCore/Service.swift`), add
-a `Service` with its id, name, home address and user agent. The id is what the
+If it isn't in `apps/catalog.json` (see [config.md](config.md)), add a
+`stream` entry with its id, name, home address and user agent; a Mac's
+`config.json` lists the apps it shows, so add the id there too to see it
+(a fresh config includes every default app). The id is what the
 reader's constants use (`NetflixHome.serviceID`). Add its tile look in
 `ServiceLook` (`HomeView.swift`): a generic SF Symbol and colors. Do not use a
 service's logo.
@@ -171,7 +173,7 @@ func home() async -> StreamHome? {
 In `main.swift`, next to Netflix and Hulu:
 
 ```swift
-if let service = ServiceCatalog.all.first(where: { $0.id == <Service>Home.serviceID }) {
+if let service = AppServices.all.first(where: { $0.id == <Service>Home.serviceID }) {
     coordinator.registerStreamSource(<Service>Source(service: service, player: player))
 }
 ```

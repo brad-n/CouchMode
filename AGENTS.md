@@ -48,6 +48,7 @@ effect of docs, demo or tooling work; keep `scripts/check.sh` green.
 | [agents/conventions.md](agents/conventions.md) | Before writing code: headers, naming, bounds, tests, commits. |
 | [agents/build-test-deploy.md](agents/build-test-deploy.md) | Building, running the checks, deploying to a media Mac. |
 | [agents/add-a-streaming-service.md](agents/add-a-streaming-service.md) | Adding a service reader (Netflix and Hulu are the worked examples). |
+| [agents/config.md](agents/config.md) | The app catalog and a Mac's `config.json`: which apps Home shows, their order, per-app settings. |
 | [agents/release.md](agents/release.md) | Cutting a release: notarized DMG, Sparkle appcast, GitHub draft. |
 | [agents/debug-channel.md](agents/debug-channel.md) | Driving and inspecting the running app remotely. |
 | [agents/demo-mode.md](agents/demo-mode.md) | Screenshots and trials with invented content only. |

@@ -1,0 +1,525 @@
+{
+  "version": 1,
+  "apps": [
+    {
+      "id": "plex",
+      "name": "Plex",
+      "kind": "native",
+      "site": {
+        "url": "https://app.plex.tv/desktop",
+        "userAgent": "safari",
+        "tvInterface": false
+      },
+      "native": {
+        "bundleId": "tv.plex.htpc"
+      }
+    },
+    {
+      "id": "appletv",
+      "name": "Apple TV",
+      "kind": "stream",
+      "site": {
+        "url": "https://tv.apple.com/",
+        "userAgent": "safari",
+        "tvInterface": false
+      }
+    },
+    {
+      "id": "netflix",
+      "name": "Netflix",
+      "kind": "stream",
+      "site": {
+        "url": "https://www.netflix.com/browse",
+        "userAgent": "safari",
+        "tvInterface": false
+      }
+    },
+    {
+      "id": "youtube",
+      "name": "YouTube",
+      "kind": "stream",
+      "site": {
+        "url": "https://www.youtube.com/tv",
+        "userAgent": "smartTV",
+        "tvInterface": true
+      }
+    },
+    {
+      "id": "disney",
+      "name": "Disney+",
+      "kind": "stream",
+      "site": {
+        "url": "https://www.disneyplus.com/",
+        "userAgent": "safari",
+        "tvInterface": false
+      }
+    },
+    {
+      "id": "hulu",
+      "name": "Hulu",
+      "kind": "stream",
+      "site": {
+        "url": "https://www.hulu.com/hub/home",
+        "userAgent": "safari",
+        "tvInterface": false
+      }
+    },
+    {
+      "id": "max",
+      "name": "Max",
+      "kind": "stream",
+      "site": {
+        "url": "https://play.max.com/",
+        "userAgent": "safari",
+        "tvInterface": false
+      }
+    },
+    {
+      "id": "prime",
+      "name": "Prime Video",
+      "kind": "stream",
+      "site": {
+        "url": "https://www.primevideo.com/",
+        "userAgent": "safari",
+        "tvInterface": false,
+        "navigationSkip": "button[aria-label^=\"Move back to title\"],button[aria-label^=\"Move forward to title\"],button[aria-label^=\"next \"][aria-label$=\" titles\"],button[aria-label^=\"previous \"][aria-label$=\" titles\"]"
+      }
+    },
+    {
+      "id": "settings",
+      "name": "Settings",
+      "kind": "system"
+    },
+    {
+      "id": "switch",
+      "name": "Nintendo Switch",
+      "kind": "console",
+      "console": {
+        "emulator": "app",
+        "extensions": [
+          "app"
+        ],
+        "defaultFolder": "~/Games/switch"
+      }
+    },
+    {
+      "id": "nes",
+      "name": "NES",
+      "kind": "console",
+      "console": {
+        "emulator": "retroarch",
+        "extensions": [
+          "nes"
+        ],
+        "defaultFolder": "~/Games/nes",
+        "core": "nestopia_libretro.dylib"
+      },
+      "requires": [
+        {
+          "label": "RetroArch installed",
+          "bundleId": "com.libretro.dist.RetroArch",
+          "appPaths": [
+            "~/Applications/RetroArch.app",
+            "/Applications/RetroArch.app"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "snes",
+      "name": "Super Nintendo",
+      "kind": "console",
+      "console": {
+        "emulator": "retroarch",
+        "extensions": [
+          "sfc",
+          "smc"
+        ],
+        "defaultFolder": "~/Games/snes",
+        "core": "snes9x_libretro.dylib"
+      },
+      "requires": [
+        {
+          "label": "RetroArch installed",
+          "bundleId": "com.libretro.dist.RetroArch",
+          "appPaths": [
+            "~/Applications/RetroArch.app",
+            "/Applications/RetroArch.app"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "n64",
+      "name": "Nintendo 64",
+      "kind": "console",
+      "console": {
+        "emulator": "retroarch",
+        "extensions": [
+          "n64",
+          "z64",
+          "v64"
+        ],
+        "defaultFolder": "~/Games/n64",
+        "core": "mupen64plus_next_libretro.dylib"
+      },
+      "requires": [
+        {
+          "label": "RetroArch installed",
+          "bundleId": "com.libretro.dist.RetroArch",
+          "appPaths": [
+            "~/Applications/RetroArch.app",
+            "/Applications/RetroArch.app"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gamecube",
+      "name": "GameCube & Wii",
+      "kind": "console",
+      "console": {
+        "emulator": "retroarch",
+        "extensions": [
+          "iso",
+          "rvz",
+          "gcm",
+          "wbfs",
+          "ciso"
+        ],
+        "defaultFolder": "~/Games/gamecube",
+        "core": "dolphin_libretro.dylib"
+      },
+      "requires": [
+        {
+          "label": "RetroArch installed",
+          "bundleId": "com.libretro.dist.RetroArch",
+          "appPaths": [
+            "~/Applications/RetroArch.app",
+            "/Applications/RetroArch.app"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gameboy",
+      "name": "Game Boy",
+      "kind": "console",
+      "console": {
+        "emulator": "retroarch",
+        "extensions": [
+          "gb",
+          "gbc",
+          "gba"
+        ],
+        "defaultFolder": "~/Games/gameboy",
+        "core": "mgba_libretro.dylib"
+      },
+      "requires": [
+        {
+          "label": "RetroArch installed",
+          "bundleId": "com.libretro.dist.RetroArch",
+          "appPaths": [
+            "~/Applications/RetroArch.app",
+            "/Applications/RetroArch.app"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ds",
+      "name": "Nintendo DS",
+      "kind": "console",
+      "console": {
+        "emulator": "retroarch",
+        "extensions": [
+          "nds"
+        ],
+        "defaultFolder": "~/Games/ds",
+        "core": "melonds_libretro.dylib"
+      },
+      "requires": [
+        {
+          "label": "RetroArch installed",
+          "bundleId": "com.libretro.dist.RetroArch",
+          "appPaths": [
+            "~/Applications/RetroArch.app",
+            "/Applications/RetroArch.app"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "psx",
+      "name": "PlayStation",
+      "kind": "console",
+      "console": {
+        "emulator": "retroarch",
+        "extensions": [
+          "cue",
+          "chd",
+          "pbp",
+          "m3u"
+        ],
+        "defaultFolder": "~/Games/psx",
+        "core": "pcsx_rearmed_libretro.dylib"
+      },
+      "requires": [
+        {
+          "label": "RetroArch installed",
+          "bundleId": "com.libretro.dist.RetroArch",
+          "appPaths": [
+            "~/Applications/RetroArch.app",
+            "/Applications/RetroArch.app"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ps2",
+      "name": "PlayStation 2",
+      "kind": "console",
+      "console": {
+        "emulator": "retroarch",
+        "extensions": [
+          "iso",
+          "chd"
+        ],
+        "defaultFolder": "~/Games/ps2",
+        "core": "pcsx2_libretro.dylib"
+      },
+      "requires": [
+        {
+          "label": "RetroArch installed",
+          "bundleId": "com.libretro.dist.RetroArch",
+          "appPaths": [
+            "~/Applications/RetroArch.app",
+            "/Applications/RetroArch.app"
+          ]
+        }
+      ],
+      "note": "Needs the console's own BIOS in RetroArch's system folder."
+    },
+    {
+      "id": "psp",
+      "name": "PSP",
+      "kind": "console",
+      "console": {
+        "emulator": "retroarch",
+        "extensions": [
+          "iso",
+          "cso",
+          "pbp",
+          "chd"
+        ],
+        "defaultFolder": "~/Games/psp",
+        "core": "ppsspp_libretro.dylib"
+      },
+      "requires": [
+        {
+          "label": "RetroArch installed",
+          "bundleId": "com.libretro.dist.RetroArch",
+          "appPaths": [
+            "~/Applications/RetroArch.app",
+            "/Applications/RetroArch.app"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mastersystem",
+      "name": "Master System & Game Gear",
+      "kind": "console",
+      "console": {
+        "emulator": "retroarch",
+        "extensions": [
+          "sms",
+          "gg"
+        ],
+        "defaultFolder": "~/Games/mastersystem",
+        "core": "genesis_plus_gx_libretro.dylib"
+      },
+      "requires": [
+        {
+          "label": "RetroArch installed",
+          "bundleId": "com.libretro.dist.RetroArch",
+          "appPaths": [
+            "~/Applications/RetroArch.app",
+            "/Applications/RetroArch.app"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "genesis",
+      "name": "Genesis",
+      "kind": "console",
+      "console": {
+        "emulator": "retroarch",
+        "extensions": [
+          "md",
+          "gen",
+          "bin"
+        ],
+        "defaultFolder": "~/Games/genesis",
+        "core": "genesis_plus_gx_libretro.dylib"
+      },
+      "requires": [
+        {
+          "label": "RetroArch installed",
+          "bundleId": "com.libretro.dist.RetroArch",
+          "appPaths": [
+            "~/Applications/RetroArch.app",
+            "/Applications/RetroArch.app"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "segacd",
+      "name": "Sega CD & 32X",
+      "kind": "console",
+      "console": {
+        "emulator": "retroarch",
+        "extensions": [
+          "cue",
+          "chd",
+          "32x"
+        ],
+        "defaultFolder": "~/Games/segacd",
+        "core": "picodrive_libretro.dylib"
+      },
+      "requires": [
+        {
+          "label": "RetroArch installed",
+          "bundleId": "com.libretro.dist.RetroArch",
+          "appPaths": [
+            "~/Applications/RetroArch.app",
+            "/Applications/RetroArch.app"
+          ]
+        }
+      ],
+      "note": "Needs the console's own BIOS in RetroArch's system folder."
+    },
+    {
+      "id": "saturn",
+      "name": "Saturn",
+      "kind": "console",
+      "console": {
+        "emulator": "retroarch",
+        "extensions": [
+          "cue",
+          "chd"
+        ],
+        "defaultFolder": "~/Games/saturn",
+        "core": "mednafen_saturn_libretro.dylib"
+      },
+      "requires": [
+        {
+          "label": "RetroArch installed",
+          "bundleId": "com.libretro.dist.RetroArch",
+          "appPaths": [
+            "~/Applications/RetroArch.app",
+            "/Applications/RetroArch.app"
+          ]
+        }
+      ],
+      "note": "Needs the console's own BIOS in RetroArch's system folder."
+    },
+    {
+      "id": "dreamcast",
+      "name": "Dreamcast",
+      "kind": "console",
+      "console": {
+        "emulator": "retroarch",
+        "extensions": [
+          "gdi",
+          "chd",
+          "cdi"
+        ],
+        "defaultFolder": "~/Games/dreamcast",
+        "core": "flycast_libretro.dylib"
+      },
+      "requires": [
+        {
+          "label": "RetroArch installed",
+          "bundleId": "com.libretro.dist.RetroArch",
+          "appPaths": [
+            "~/Applications/RetroArch.app",
+            "/Applications/RetroArch.app"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tg16",
+      "name": "TurboGrafx-16",
+      "kind": "console",
+      "console": {
+        "emulator": "retroarch",
+        "extensions": [
+          "pce"
+        ],
+        "defaultFolder": "~/Games/tg16",
+        "core": "mednafen_pce_fast_libretro.dylib"
+      },
+      "requires": [
+        {
+          "label": "RetroArch installed",
+          "bundleId": "com.libretro.dist.RetroArch",
+          "appPaths": [
+            "~/Applications/RetroArch.app",
+            "/Applications/RetroArch.app"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "atari2600",
+      "name": "Atari 2600",
+      "kind": "console",
+      "console": {
+        "emulator": "retroarch",
+        "extensions": [
+          "a26",
+          "bin"
+        ],
+        "defaultFolder": "~/Games/atari2600",
+        "core": "stella_libretro.dylib"
+      },
+      "requires": [
+        {
+          "label": "RetroArch installed",
+          "bundleId": "com.libretro.dist.RetroArch",
+          "appPaths": [
+            "~/Applications/RetroArch.app",
+            "/Applications/RetroArch.app"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "arcade",
+      "name": "Arcade & Neo Geo",
+      "kind": "console",
+      "console": {
+        "emulator": "retroarch",
+        "extensions": [
+          "zip"
+        ],
+        "defaultFolder": "~/Games/arcade",
+        "core": "fbneo_libretro.dylib"
+      },
+      "requires": [
+        {
+          "label": "RetroArch installed",
+          "bundleId": "com.libretro.dist.RetroArch",
+          "appPaths": [
+            "~/Applications/RetroArch.app",
+            "/Applications/RetroArch.app"
+          ]
+        }
+      ]
+    }
+  ]
+}
