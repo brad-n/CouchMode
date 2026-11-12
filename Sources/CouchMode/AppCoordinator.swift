@@ -940,9 +940,8 @@ final class AppCoordinator {
             SettingRow(id: "sounds", title: "Interface Sounds", value: Prefs.uiSounds ? "On" : "Off", symbol: "speaker.badge.exclamationmark.fill"),
             SettingRow(id: "screensaver", title: "Screensaver", value: saver == 0 ? "Off" : "After \(saver) min", symbol: "sparkles.tv.fill"),
             SettingRow(id: "storage", title: "Storage", value: demo ? DemoMode.SettingsValue.storage : Self.storageText(), symbol: "internaldrive.fill"),
-            SettingRow(id: "version", title: "Version", value: Self.versionText(), symbol: "info.circle.fill"),
-            SettingRow(id: "update", title: "Check for Updates", value: AppUpdater.shared.isAvailable ? "" : "Not in this build",
-                       symbol: "arrow.down.circle.fill", isAction: true),
+            // One row for both: the build is the value, pressing it checks for updates (the list fills the screen as is).
+            SettingRow(id: "update", title: "Check for Updates", value: Self.versionText(), symbol: "arrow.down.circle.fill", isAction: true),
             SettingRow(id: "autoupdate", title: "Automatically Check", value: AppUpdater.shared.automaticallyChecks ? "On" : "Off",
                        symbol: "clock.arrow.circlepath"),
             SettingRow(id: "sleep", title: "Sleep", value: "Turn off the screen", symbol: "moon.fill", isAction: true),
