@@ -41,7 +41,7 @@ public enum NetflixGate {
       const gate = found.map((a, i) => {
         const nameEl = a.querySelector('.profile-name');
         const name = ((nameEl && nameEl.textContent) || a.getAttribute("aria-label") || a.textContent || "").trim().slice(0, 64);
-        const icon = a.querySelector('.profile-icon, [class*="avatar" i]');
+        const icon = a.querySelector('.profile-icon') || a.querySelector('[class*="avatar" i]');
         const bg = icon ? (getComputedStyle(icon).backgroundImage || "") : "";
         const m = /url\(["']?([^"')]+)["']?\)/.exec(bg);
         const isLocked = locked(a);
@@ -62,7 +62,11 @@ public enum NetflixGate {
         const id = \#(StreamJSON.jsString(profileID));
         const hits = tiles().filter(a => token(a) === id && !locked(a));
         if (hits.length !== 1) return false;
-        hits[0].click();
+        // Netflix ignores scripted clicks on its pages, so the press is following the tile's own link
+        // (its SwitchProfile address on netflix.com); a tile without one is clicked.
+        const link = hits[0].href ? new URL(hits[0].href, location.href) : null;
+        if (link && link.origin === location.origin && link.pathname.toLowerCase() === "/switchprofile") { location.assign(link.href); }
+        else { hits[0].click(); }
         return true;
         """#
     }
