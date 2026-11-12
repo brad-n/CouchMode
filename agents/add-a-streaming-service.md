@@ -28,7 +28,7 @@ A reader is a **script package** in `apps/<id>/`, run by one generic reader
 (`ScriptReader`, `Sources/CouchMode/ScriptReader.swift`). Prime Video is the
 worked example (`apps/prime/`; Apple TV, `apps/appletv/`, reads from one quiet page with `reuseSitePage`; Hulu, `apps/hulu/`, shows a request made from
 the title's page and a typed search; Disney+, `apps/disney/`, shows API requests
-made from any signed-in page, profile forms and a restore step); the Swift readers below (Netflix, Hulu,
+made from any signed-in page, profile forms and a restore step; Netflix, `apps/netflix/`, reads the page's own GraphQL cache and details panel, with no API additions: the "Who's watching?" gate is a home with `asksWhoIsWatching`, a season is chosen in the page's own picker by the name its option carries, and a profile switch follows the tile's or Netflix's own `/SwitchProfile?tkn=` link; Netflix 5.1 stays an app-installed page script, not part of the package); the Swift readers below (Netflix, Hulu,
 Disney+, Apple TV, and Prime's `PrimeSource`) are the older way and stay until
 each service is ported. A Mac chooses per service with the `reader` setting
 (`builtin`, the default, or `package`; see [config.md](config.md)).

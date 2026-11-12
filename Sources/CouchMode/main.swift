@@ -37,7 +37,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         self.coordinator = coordinator
         // Services with the shell's own screens: their reader drives the service's own page (a proxy).
         if let netflix = AppServices.all.first(where: { $0.id == NetflixHome.serviceID }) {
-            coordinator.registerStreamSource(NetflixSource(service: netflix, player: player))
+            coordinator.registerStreamSource(Self.reader(for: netflix, player: player, builtin: { NetflixSource(service: netflix, player: player) }))
         }
         if let hulu = AppServices.all.first(where: { $0.id == HuluHome.serviceID }) {
             coordinator.registerStreamSource(Self.reader(for: hulu, player: player, builtin: { HuluSource(service: hulu, player: player) }))

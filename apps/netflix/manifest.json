@@ -1,0 +1,19 @@
+{
+  "id": "netflix",
+  "version": "1.0.0",
+  "readerAPI": 1,
+  "site": {
+    "hosts": ["netflix.com"],
+    "imageHosts": ["nflximg.net", "nflximg.com", "nflxso.net", "nflxext.com", "netflix.com", "example.invalid", "art.invalid"],
+    "playerPaths": ["watch"]
+  },
+  "timeouts": { "load": 20, "ready": 10, "read": 12 },
+  "pages": {
+    "home": { "open": "https://www.netflix.com/browse", "ready": "homeReady" },
+    "details": { "open": "{title.page}", "ready": "detailsReady", "readTimeout": 10 },
+    "season": { "open": "{title.page}", "ready": "detailsReady", "reuseIfOpen": true, "readTimeout": 25 },
+    "search": { "open": "https://www.netflix.com/search?q={query}", "ready": "searchReady", "readyRequired": false, "readyTimeout": 8 },
+    "profile": { "open": "https://www.netflix.com/browse", "ready": "homeReady", "reuseSitePage": true, "confirmTimeout": 15 }
+  },
+  "playerShown": false
+}

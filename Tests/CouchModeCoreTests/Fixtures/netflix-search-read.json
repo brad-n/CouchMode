@@ -1,0 +1,10 @@
+[
+ {"id":"70000548","name":"Sample Search","art":"https://art.invalid/search-1.jpg"},
+ {"id":"70000137","name":"  Sample Search Result  ","art":null},
+ {"id":null,"name":"No id","art":"https://art.invalid/x.jpg"},
+ {"id":"12a","name":"Bad id"},
+ {"id":"70000999","name":"   "},
+ {"id":"70000548","name":"Sample Search again"},
+ {"id":"70000222","name":"Plain http art","art":"http://art.invalid/plain.jpg"},
+ {"id":"70000333","name":"Third","art":"https://art.invalid/search-3.jpg"}
+]
