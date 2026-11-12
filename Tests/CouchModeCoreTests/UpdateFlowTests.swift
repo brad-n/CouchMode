@@ -212,6 +212,7 @@ final class UpdateFlowTests: XCTestCase {
 final class UpdateFailureTests: XCTestCase {
     func testMissingFeedAndNetworkErrorsAreUnreachable() {
         XCTAssertEqual(UpdateFailure.classify(domain: "SUSparkleErrorDomain", code: 1002, message: "x"), .unreachable)
+        XCTAssertEqual(UpdateFailure.classify(domain: "SUSparkleErrorDomain", code: 2001, message: "x"), .unreachable)
         XCTAssertEqual(UpdateFailure.classify(domain: "SUSparkleErrorDomain", code: 1000, message: "x"), .unreachable)
         XCTAssertEqual(UpdateFailure.classify(domain: "NSURLErrorDomain", code: -1009, message: "offline"), .unreachable)
         XCTAssertEqual(UpdateFailure.classify(domain: "NSURLErrorDomain", code: -1001, message: "timeout"), .unreachable)

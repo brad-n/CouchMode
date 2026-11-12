@@ -183,11 +183,11 @@ public enum UpdateFailure: Equatable, Sendable {
     static let sparkleDomain = "SUSparkleErrorDomain"
     static let generic = "The update didn\u{2019}t finish."
 
-    /// A missing or unreadable feed (404 before the first release, no network,
+    /// A missing or unreadable feed (404 before the first release shows as 2001, no network,
     /// a timeout) is `unreachable`. Anything else keeps a short message.
     public static func classify(domain: String, code: Int, message: String) -> UpdateFailure {
         if domain == NSURLErrorDomain { return .unreachable }
-        if domain == sparkleDomain, code == 1000 || code == 1002 { return .unreachable }
+        if domain == sparkleDomain, code == 1000 || code == 1002 || code == 2001 { return .unreachable }
         let trimmed = message.trimmingCharacters(in: .whitespacesAndNewlines)
         if trimmed.isEmpty { return .other(generic) }
         return .other(trimmed.count > maxMessage ? String(trimmed.prefix(maxMessage - 1)) + "\u{2026}" : trimmed)
