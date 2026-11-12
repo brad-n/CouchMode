@@ -313,7 +313,7 @@ private struct HeroInfo: View {
         if let text = info?.metaText, !text.isEmpty { parts.append(text) }
         if let size = SizeText.of(game.sizeBytes) { parts.append(size) }
         if model.pausedGame == game.fileName {
-            parts.append("Paused \u{2014} press Play to resume")
+            parts.append("Paused \u{2014} Play resumes, X closes")
         } else if let played = model.lastPlayed[game.fileName] {
             parts.append("Played " + played.formatted(.relative(presentation: .named)))
         } else if info == nil {

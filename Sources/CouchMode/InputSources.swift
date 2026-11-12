@@ -7,19 +7,22 @@ import CouchModeCore
 
 typealias IntentSink = @MainActor (ShellIntent) -> Void
 
-/// Keyboard: ⌘⌫ is Home everywhere. Other keys become intents only on the
+/// Keyboard: ⌘⌫ is Home everywhere (a game in front: GameKeyboardExit). Other keys become intents only on the
 /// shell's own screens; on a streaming site the real keys go to the site.
 @MainActor
 final class KeyboardInput {
     private var monitor: Any?
 
     func start(wantsIntents: @escaping @MainActor () -> Bool, interceptsBack: @escaping @MainActor () -> Bool,
-               signingIn: @escaping @MainActor () -> Bool, sink: @escaping IntentSink) {
+               signingIn: @escaping @MainActor () -> Bool, closeGame: @escaping @MainActor () -> Bool, sink: @escaping IntentSink) {
         monitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
             let deleteKey: UInt16 = 51
             if event.modifierFlags.contains(.command) && event.keyCode == deleteKey {
                 sink(.home); return nil
             }
+            // X or Delete on a paused game's tile: Close Game (asks again to confirm). Anywhere else the key is left alone.
+            if wantsIntents(), CloseGameFlow.isCloseKey(keyCode: event.keyCode, command: event.modifierFlags.contains(.command)),
+               closeGame() { return nil }
             // A handed-off title: Escape and Delete are Back for the shell; other keys stay the player's.
             if PlayerBackKey.isBack(keyCode: event.keyCode, handedOffTitleShowing: interceptsBack()) {
                 sink(.back); return nil
@@ -62,6 +65,8 @@ final class ControllerInput {
 
     private var sink: IntentSink?
     private var onHome: (@MainActor (HomeSource) -> Void)?
+    /// X on a game controller: Close Game on a paused game's tile (set by main).
+    var onClose: (@MainActor () -> Void)?
     /// Types a key into the app in front (Apple TV remote driving Plex HTPC etc.).
     private var passthrough: (@MainActor (Key) -> Void)?
     /// Where a controller's presses go right now (ControllerRouting), set by main.
@@ -121,6 +126,9 @@ final class ControllerInput {
         }
         pad.buttonMenu.pressedChangedHandler = { [weak self] _, _, pressed in
             MainActor.assumeIsolated { self?.menu(pressed: pressed) }
+        }
+        pad.buttonX.pressedChangedHandler = { [weak self] _, _, pressed in
+            MainActor.assumeIsolated { if pressed, self?.target == .shell { self?.onClose?() } }
         }
         pad.buttonY.pressedChangedHandler = { [weak self] _, _, pressed in
             MainActor.assumeIsolated { if pressed { self?.controllerPress(.info) } }

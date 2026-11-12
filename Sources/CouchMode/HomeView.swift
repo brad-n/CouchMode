@@ -214,7 +214,7 @@ enum HomeLayout {
     static func jumpBackRow(_ recent: [RecentGame]) -> HomeRow {
         HomeRow(id: "jump", title: "Jump Back In", items: recent.map { r in
             HomeItem(id: "game-\(r.console.id)-\(r.game.fileName)", title: r.title,
-                     subtitle: r.console.name + " · " + (r.paused ? "Paused" : r.played.formatted(.relative(presentation: .named))),
+                     subtitle: r.console.name + " · " + (r.paused ? "Paused \u{00B7} X to close" : r.played.formatted(.relative(presentation: .named))),
                      symbol: "gamecontroller.fill", colors: consoleColors(r.console), action: .game(r.console, r.game),
                      artwork: Artwork.exists(r.console.id) ? r.console.id : nil, cue: r.paused ? "Resume" : "Play",
                      tagline: r.tagline, cardImage: r.card, heroImage: r.hero)

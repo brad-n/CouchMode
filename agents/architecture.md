@@ -102,7 +102,9 @@ full-bleed background, else a system-style tile. `ServiceIcons` caches each for 
 install and command line, and the NX2Apple front-end contract. `HomeRouting`
 (Core) decides what Home does for the app in front: a streaming app closes, a
 retro game saves its state and quits, a Switch game is paused (SIGSTOP) and
-resumed by Play.
+resumed by Play. From the keyboard, a game in front returns to the shell with ⌘⌫ or a held Escape
+(`KeyboardHome`, `EscapeHold`; `GameKeyboardExit` watches the keys). A paused game's tile has Close Game
+(X / Delete, press again: `CloseGameFlow`).
 
 ## Threading
 

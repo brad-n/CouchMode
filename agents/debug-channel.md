@@ -44,7 +44,7 @@ All `GET` unless noted. Replies are JSON of strings unless noted.
 | `/peek?service=<id>` (POST) | Run a JS function body in that service's page *even behind a stream screen*. This is how readers are built. |
 | `/media?service=<id>[&suspend=1\|0]` | WebKit's media state for a service's page (`none`, `playing`, `paused`, `suspended`); optionally suspend or resume it first. Plain `/media` only reads. `suspend=1\|0` goes through the shell's own idempotent quiet/unquiet, so repeating it never stacks WebKit's counted suspensions and `suspend=0` leaves the page in the normal state. |
 | `/plexlink?id=plex://...` | Open a title in a running Plex HTPC by its Plex id and fix its window. |
-| `/inject?key=up\|down\|left\|right\|return\|esc\|space` | Type a key into the app in front, as the remote would. |
+| `/inject?key=up\|down\|left\|right\|return\|esc\|space\|delete\|x[&flags=cmd][&hold=ms]` | Type a key into the app in front, as the remote would. `flags=cmd` adds Command (⌘⌫ is `key=delete&flags=cmd`); `hold` keeps the key down that many ms (max 5000) with auto-repeat, e.g. a held Escape. |
 | `/accessibility` | Show macOS's Accessibility prompt; says whether it is granted. |
 | `/ax?bundle=<bundle id>` | Another app's interface as Accessibility sees it (bounded text listing), to learn its layout. |
 | `/bt?do=scan\|open\|menu\|hover[&name=...]` | The shell's view of the Bluetooth pane (`menu` and `hover` only read; nothing is pressed). |

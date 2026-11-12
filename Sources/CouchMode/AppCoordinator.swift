@@ -68,6 +68,7 @@ final class AppCoordinator {
     private var playerShownTask: Task<Void, Never>?
     private let streamLog = Logger(subsystem: "local.brad.htpcshell", category: "stream")
     private var confirm = ConfirmGate()
+    private var closeFlow = CloseGameFlow()
     private var checkingPackages = false
     /// Builds a reader for a service that has one (set by main.swift); nil for the rest.
     var makeStreamSource: ((Service) -> StreamSource?)?
@@ -173,6 +174,20 @@ final class AppCoordinator {
             returnToShell()
         }
     }
+
+    /// A game is in front and the keyboard's Home shortcuts (⌘⌫, held Escape) apply to it.
+    func keyboardHomeApplies() -> Bool { KeyboardHome.appliesTo(front: frontApp().0) }
+
+    /// Home from the keyboard. ⌘⌫ reaches us by two routes (the hot key and the key watcher), so a second
+    /// request right behind the first is the same press.
+    func keyboardHomeRequested() {
+        let now = Date()
+        if let last = lastKeyboardHome, now.timeIntervalSince(last) < Self.keyboardHomeDedupe { return }
+        lastKeyboardHome = now
+        homeRequested(.remoteOrKeyboard)
+    }
+    private var lastKeyboardHome: Date?
+    private static let keyboardHomeDedupe: TimeInterval = 0.8
 
     /// Where a game controller's presses go now (ControllerRouting).
     func controllerTarget() -> ControllerTarget {
@@ -392,7 +407,7 @@ final class AppCoordinator {
 
     private func handleHome(_ intent: ShellIntent) {
         switch intent {
-        case .move(let d): homeModel.move(d)
+        case .move(let d): closeFlow.disarm(); homeModel.move(d)
         case .select: open(homeModel.focusedItem.action)
         case .info:
             // Details for a Jump Back In game or a Continue Watching item.
@@ -725,7 +740,7 @@ final class AppCoordinator {
     private func handleConsole(_ intent: ShellIntent, model: ConsoleModel) {
         guard !games.isRunningRetroArch else { return }
         switch intent {
-        case .move(let d): model.move(d)
+        case .move(let d): closeFlow.disarm(); model.move(d)
         case .back, .home: goHome()
         case .select:
             guard let game = model.selected else { return }
@@ -793,6 +808,48 @@ final class AppCoordinator {
                             folderURL: games.folder(for: c), colors: HomeLayout.consoleColors(c),
                             lastPlayed: games.lastPlayed(for: c),
                             pausedGame: list.first { games.isOpen($0, on: c) }?.fileName)
+    }
+
+    /// Close Game from the focused tile on Home or a console screen (X, Delete, a controller's X): only a paused Switch
+    /// game has it. Press again to confirm, then the game quits and its paused state clears. True when the key was used.
+    func closeFocusedGame() -> Bool {
+        guard !games.isRunningRetroArch else { return false }
+        let target: (Game, Console, @MainActor (String?) -> Void)
+        switch screen {
+        case .home:
+            guard case .game(let c, let g) = homeModel.focusedItem.action else { return false }
+            target = (g, c, { [homeModel] in homeModel.notice = $0 })
+        case .console(let model):
+            guard let g = model.selected else { return false }
+            target = (g, model.console, { [weak model] in model?.message = $0 })
+        default: return false
+        }
+        let (game, console, say) = target
+        lastInput = Date()
+        log.info("close game key on \(game.fileName, privacy: .public) paused=\(self.games.isOpen(game, on: console))")
+        let url = games.folder(for: console).appendingPathComponent(game.fileName)
+        let title = GameArt.info(url)?.name ?? game.title
+        switch closeFlow.press(game: game.fileName, isPaused: games.isOpen(game, on: console), now: Date()) {
+        case .nothing:
+            return false
+        case .askToConfirm:
+            sounds.play(.select)
+            say("Press again to close \(title). Progress it hasn't saved will be lost.")
+            DispatchQueue.main.asyncAfter(deadline: .now() + ConfirmGate.window + 0.1) { [weak self] in
+                guard let self, self.closeFlow.pending(now: Date()) != game.fileName else { return }
+                say(nil)
+            }
+        case .close:
+            say("Closing \(title)\u{2026}")
+            games.closeAppGame { [weak self] in
+                guard let self else { return }
+                say(nil)
+                if case .console(let shown) = self.screen { shown.message = nil }
+                self.homeModel.notice = nil
+                self.redrawGameScreens()
+            }
+        }
+        return true
     }
 
     /// Close Game on a paused game's details: press again to confirm (its

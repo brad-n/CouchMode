@@ -8,7 +8,7 @@
 //   GET  /intent?i=up|down|left|right|select|back|home|info
 //   GET  /homehold                  -> same as holding the controller's Menu button
 //   GET  /accessibility             -> request the Accessibility permission (remote in other apps)
-//   GET  /inject?key=up|down|left|right|return|esc|space -> type a key into the app in front
+//   GET  /inject?key=up|down|left|right|return|esc|space|delete|x[&flags=cmd][&hold=ms] -> type a key into the app in front
 //   GET  /open?service=<id>         -> open a service directly
 //   GET  /stream?service=<id>&sample=1 -> the shell's own stream screens on built-in sample data
 //   GET  /snapshot                 -> PNG of what the shell is drawing
@@ -114,10 +114,12 @@ final class DebugServer {
             replyJSON(conn, ["allowed": "\(KeyInjector.requestPermission())"])
         case ("GET", "/inject"):
             // Types a key into the app in front, as the remote would.
-            let keys: [String: Key] = ["up": .up, "down": .down, "left": .left, "right": .right,
-                                       "return": .enter, "esc": .escape, "space": .space]
-            guard let key = keys[req.query["key"] ?? ""] else { return reply(conn, 400, "unknown key") }
-            KeyInjector.press(key)
+            // key=<name>[&flags=cmd][&hold=<ms>]: a held key (key repeats included) or a chord.
+            let codes: [String: UInt16] = ["up": 126, "down": 125, "left": 123, "right": 124, "return": 36, "esc": 53,
+                                           "space": 49, "delete": 51, "x": 7]
+            guard let code = codes[req.query["key"] ?? ""] else { return reply(conn, 400, "unknown key") }
+            let hold = min(max(Int(req.query["hold"] ?? "") ?? 0, 0), KeyInjector.maxHoldMilliseconds)
+            KeyInjector.press(code: code, command: req.query["flags"] == "cmd", holdMilliseconds: hold)
             replyJSON(conn, ["allowed": "\(KeyInjector.isAllowed)"])
         case ("GET", "/ax"):
             // Another app's interface as Accessibility sees it (bounded), to

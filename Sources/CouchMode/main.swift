@@ -11,6 +11,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let keyboard = KeyboardInput()
     private let controllers = ControllerInput()
     private let hotKeys = GlobalHotKeys()
+    private let gameExit = GameKeyboardExit()
     private let hidPads = HIDGamepads()
     private let debugServer = DebugServer()
 
@@ -42,10 +43,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 coordinator.registerStreamSource(DemoStreamSource(service: service))
             }
         }
-        keyboard.start(wantsIntents: { coordinator.wantsKeyboardIntents }, interceptsBack: { coordinator.interceptsBackKey }, signingIn: { coordinator.isSigningIn }, sink: { coordinator.handle($0) })
+        keyboard.start(wantsIntents: { coordinator.wantsKeyboardIntents }, interceptsBack: { coordinator.interceptsBackKey }, signingIn: { coordinator.isSigningIn }, closeGame: { coordinator.closeFocusedGame() }, sink: { coordinator.handle($0) })
         controllers.start(sink: { coordinator.handle($0) }, onHome: { coordinator.homeRequested($0) },
                           passthrough: { KeyInjector.press($0) })
-        hotKeys.register(onHome: { coordinator.homeRequested(.remoteOrKeyboard) })
+        hotKeys.register(onHome: { coordinator.keyboardHomeRequested() })
+        gameExit.start(inGame: { coordinator.keyboardHomeApplies() }, home: { coordinator.keyboardHomeRequested() })
+        controllers.onClose = { _ = coordinator.closeFocusedGame() }
         controllers.controllerTarget = { coordinator.controllerTarget() }
         hidPads.onButton = { [controllers] in controllers.hidButton($0, pressed: $1) }
         hidPads.onDirection = { [controllers] in controllers.hidDirection(x: $0, y: $1, stick: $2) }
