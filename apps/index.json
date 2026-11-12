@@ -38,12 +38,12 @@
     },
     {
       "files" : [
-        { "name" : "manifest.json", "sha256" : "591fb0118d46218af64107c05f34e4916cd679d2cd746f4ad5f92ca5dc7364bd" },
-        { "name" : "reader.js", "sha256" : "70b5472f021156c508f928fcd036ead7f7ec73fcd8e85d094a84f6895969f92f" }
+        { "name" : "manifest.json", "sha256" : "b9299c533cc6066c526ef7b12639abb4e89fd463e9ac864c626a5fe2cac5c9ac" },
+        { "name" : "reader.js", "sha256" : "f9378d2acb348dc0ecba58211bc9b402700d7150962a567cd1aab3e22f4fb503" }
       ],
       "id" : "prime",
       "readerAPI" : 1,
-      "version" : "1.0.0"
+      "version" : "1.0.1"
     }
   ],
   "version" : 1

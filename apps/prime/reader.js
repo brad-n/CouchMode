@@ -1,4 +1,5 @@
 // Prime Video reader package (reader API 1). Runs only inside www.primevideo.com's own page.
+// 1.0.1: no behavior change; the first package published to test CouchMode's download-and-verify update path.
 // It reads the page's own data (the hydration script tag), never requests anything the page
 // would not (except the one paginateCollection call the page itself makes at the end of a row),
 // never plays anything, and returns data in CouchMode's shared vocabulary as JSON text.
