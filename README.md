@@ -46,7 +46,7 @@ Everything on the screens in this README is **invented sample content**
 
 ### Shared screens, one reader per service
 
-Netflix, Hulu, Disney+ and Prime Video open in CouchMode's *own* TV screens: home rows with a
+Netflix, Hulu, Disney+, Prime Video and Apple TV open in CouchMode's *own* TV screens: home rows with a
 featured title, a details page with seasons and episodes, search with an
 on-screen keyboard, and a profile picker. Those screens are the same for
 every service (`StreamHomeView`, `StreamDetailView`, `StreamSearchView`),
@@ -175,7 +175,7 @@ taken this way.
 
 ## Limitations
 
-- Only Netflix, Hulu, Disney+ and Prime Video have CouchMode's own screens; the others open
+- Only Netflix, Hulu, Disney+, Prime Video and Apple TV have CouchMode's own screens; the others open
   their website. Readers depend on each site's page, which can change without
   notice.
 - "More in a row" (reaching the end of a row loads the next batch, one request each
@@ -202,6 +202,16 @@ taken this way.
   A season's episodes come from the season's own page, one page of them (Prime
   pages long seasons); a profile's id is its name, and a PIN or profile form is
   finished on Prime's own page.
+- Apple TV's home is its Apple TV+ channel (Up Next with where you stopped, charts and
+  rows); the reader works from the site's own signed-in API for the US storefront, and
+  the page's tokens stay inside the page's scripts. Apple TV has no profiles on the web,
+  so there is one. "More in a row" isn't read. The API answers a season's episodes in
+  windows of about ten, so CouchMode asks for at most six windows per season and a very
+  long season is cut short. Titles you must rent, buy or get on another service appear
+  with their details, and Play opens Apple's own page for them. Apple's player opens as
+  a dialog over the title's page, so CouchMode asks the page once a second whether it is
+  showing. Apple TV's own pages autoplay previews, so the reader works from the search
+  page, which plays nothing.
 - Streaming picture quality is whatever each site gives a Mac web browser;
   for example some sites cap at a lower resolution than their TV apps.
 - Switch games need NX2Apple builds you made yourself; retro games need

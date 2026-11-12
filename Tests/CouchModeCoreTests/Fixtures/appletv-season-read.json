@@ -1,0 +1,12 @@
+{"episodes":[
+ {"id":"umc.cmc.synthep0001","name":"Pilot","number":1,"desc":"The first episode.","runtime":2700,"resume":null,
+  "url":"https://tv.apple.com/us/episode/pilot/umc.cmc.synthep0001?showId=umc.cmc.synthshow1","canPlay":true,
+  "art":{"u":"https://example.invalid/image/thumb/synthep1/{w}x{h}.{f}","w":1920,"h":1080}},
+ {"id":"umc.cmc.synthep0002","name":"Second","number":2,"runtime":2700,"resume":900,
+  "url":"https://tv.apple.com/us/episode/second/umc.cmc.synthep0002?showId=umc.cmc.synthshow1","canPlay":true},
+ {"id":"umc.cmc.synthep0003","name":"Locked","number":3,"runtime":2700,
+  "url":"https://tv.apple.com/us/episode/locked/umc.cmc.synthep0003?showId=umc.cmc.synthshow1","canPlay":false},
+ {"id":"umc.cmc.synthep0002","name":"Duplicate","number":2,"url":"https://tv.apple.com/us/episode/second/umc.cmc.synthep0002"},
+ {"id":"umc.cmc.synthep0004","name":"No page","number":4,"url":"https://example.com/x"},
+ {"id":"umc.cmc.synthep0005","name":null,"number":5,"url":"https://tv.apple.com/us/episode/five/umc.cmc.synthep0005?showId=umc.cmc.synthshow1"}
+]}

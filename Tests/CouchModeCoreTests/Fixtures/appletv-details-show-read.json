@@ -1,0 +1,6 @@
+{"id":"umc.cmc.synthshow1","kind":"show","name":"Synthetic Series","desc":"A synthetic description of a made-up show.","year":2022,"rating":"TV-MA",
+ "runtime":3000,"resume":750,"canPlay":true,"page":"https://tv.apple.com/us/show/synthetic-series/umc.cmc.synthshow1",
+ "episodeURL":"https://tv.apple.com/us/episode/pilot/umc.cmc.synthep0001?showId=umc.cmc.synthshow1","season":2,"episode":3,
+ "wide":{"u":"https://example.invalid/image/thumb/synthwide/{w}x{h}.{f}","w":3840,"h":2160},
+ "currentSeasonId":"umc.cmc.synthseason2",
+ "seasons":[{"id":"umc.cmc.synthseason1","name":"Season 1"},{"id":"umc.cmc.synthseason2","name":"Season 2"},{"id":"bad id","name":"Broken"},{"id":"umc.cmc.synthseason1","name":"Repeat"}]}

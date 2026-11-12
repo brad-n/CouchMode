@@ -1,0 +1,6 @@
+[
+ {"id":"umc.cmc.synthsearch1","kind":"show","name":"Search Show A","page":"https://tv.apple.com/us/show/search-show-a/umc.cmc.synthsearch1","year":2021,"rating":"TV-14",
+  "tile":{"u":"https://example.invalid/image/thumb/synthsearch1/{w}x{h}.{f}","w":3840,"h":2160}},
+ {"id":"umc.cmc.synthsearch2","kind":"movie","name":"Search Movie B","page":"https://tv.apple.com/us/movie/search-movie-b/umc.cmc.synthsearch2","year":2015,"runtime":5700,"canPlay":false},
+ {"id":"umc.cmc.synthsearch1","kind":"show","name":"Search Show A Again","page":"https://tv.apple.com/us/show/search-show-a/umc.cmc.synthsearch1"}
+]
