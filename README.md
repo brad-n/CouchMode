@@ -178,9 +178,13 @@ taken this way.
 - Only Netflix, Hulu, Disney+ and Prime Video have CouchMode's own screens; the others open
   their website. Readers depend on each site's page, which can change without
   notice.
-- "More" in a row is not read yet: a row holds what the home page loaded.
-  On Disney+ only the first rows carry titles (as on the site, later shelves
-  load as they are scrolled to) and the profile list comes from the top bar's
+- "More in a row" (reaching the end of a row loads the next batch, one request each
+  time, up to 40 titles a row) works on Disney+ and Prime Video, using the same paging
+  request each site's own page makes. Hulu's home already returns a row's first 50 titles,
+  more than a row holds, so there is nothing further to load. Netflix pages its rows with a
+  persisted GraphQL query whose id is not in the page's data, so its rows stay at what the
+  home page loaded. On Disney+ only the first rows carry titles (as on the site, later
+  shelves load as they are scrolled to) and the profile list comes from the top bar's
   menu, so profiles are named, not numbered, and a name two profiles share
   can't be chosen.
 - Disney+ may show its own "update this profile" or PIN step when a profile is

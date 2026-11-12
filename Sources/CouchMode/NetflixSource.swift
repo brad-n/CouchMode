@@ -6,7 +6,11 @@
 //   details  -> the title's page, its details panel (NetflixDetails)
 //   episodes -> pick the season in that panel's own season picker, read again
 //   profile  -> its profile switch address, so the next home is that profile's
-// "More in a row" isn't read yet (nil): rows hold what the home page loaded.
+// "More in a row" is nil on purpose: the page's rows are Pinot carousels with a total and an
+// endCursor, but the page pages them with a persisted GraphQL query (its id lives in the page's
+// script bundle, not in the page's data), and a row is only drawn when the page's UI is, so there
+// is no request this reader can make as the page makes it. (The row total is still set; the
+// screens ask once, get nothing, and stop.)
 
 import Foundation
 import CouchModeCore

@@ -6,7 +6,9 @@
 //   details  -> the title's page: the hub request the page makes (HuluDetails)
 //   episodes -> the season request the page's season picker makes, read again
 //   profile  -> the top bar's own "switch profile" choice, in place
-// "More in a row" isn't read yet (nil): rows hold what the home loaded.
+// "More in a row" is nil on purpose: the home request already returns up to 50 titles for a row
+// the discover service pages (a pagination.next link past that), and a row is capped at
+// StreamLimits.maxTitlesPerRow (40), so a next page could never add a title the screens keep.
 
 import Foundation
 import CouchModeCore
