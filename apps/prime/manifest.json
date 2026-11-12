@@ -1,0 +1,19 @@
+{
+  "id": "prime",
+  "version": "1.0.0",
+  "readerAPI": 1,
+  "site": {
+    "hosts": ["primevideo.com"],
+    "imageHosts": ["media-amazon.com", "ssl-images-amazon.com", "example.invalid"]
+  },
+  "timeouts": { "load": 20, "ready": 10, "read": 12 },
+  "pages": {
+    "home": { "open": "https://www.primevideo.com/", "ready": "homeReady" },
+    "details": { "open": "{title.page}", "ready": "detailsReady" },
+    "season": { "open": "https://www.primevideo.com/detail/{season.id}", "ready": "detailsReady" },
+    "search": { "open": "https://www.primevideo.com/search/?phrase={query}", "ready": "searchReady", "readyRequired": false, "readyTimeout": 8 },
+    "more": { "open": "https://www.primevideo.com/", "ready": "homeReady", "reuseIfOpen": true },
+    "profile": { "open": "https://www.primevideo.com/", "ready": "homeReady", "confirmTimeout": 15 }
+  },
+  "playerShown": true
+}
