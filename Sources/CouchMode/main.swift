@@ -14,30 +14,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let hidPads = HIDGamepads()
     private let debugServer = DebugServer()
 
-    /// The reader for a service: its script package when the Mac's config says `reader: package` (or says nothing and the
-    /// service has a package) and the package loads, else the built-in Swift reader.
-    private static func reader(for service: Service, player: WebPlayer, builtin: () -> StreamSource) -> StreamSource {
-        let store = AppConfigStore.shared
-        let package = LayeredPackageStore().package(for: service.id)
-        guard ReaderMode.from(store.setting(ReaderMode.settingKey, for: service.id), catalogDefault: store.catalog.app(id: service.id)?.reader,
-                              packagePresent: package != nil) == .package else { return builtin() }
-        guard let package else {
-            Logger(subsystem: "local.brad.htpcshell", category: "package").error("\(service.id, privacy: .public): reader is package but none loaded; using the built-in reader")
-            return builtin()
-        }
-        return ScriptReader(service: service, player: player, package: package)
-    }
-
-    /// The reader for a service that has one. nil for the rest.
+    /// The reader for a service: its script package (bundled or downloaded) when it has one. nil for the rest, which open
+    /// their website.
     private static func makeSource(for service: Service, player: WebPlayer) -> StreamSource? {
-        switch service.id {
-        case NetflixHome.serviceID: return reader(for: service, player: player, builtin: { NetflixSource(service: service, player: player) })
-        case HuluHome.serviceID: return reader(for: service, player: player, builtin: { HuluSource(service: service, player: player) })
-        case DisneyHome.serviceID: return reader(for: service, player: player, builtin: { DisneySource(service: service, player: player) })
-        case PrimeHome.serviceID: return reader(for: service, player: player, builtin: { PrimeSource(service: service, player: player) })
-        case AppleTVHome.serviceID: return reader(for: service, player: player, builtin: { AppleTVSource(service: service, player: player) })
-        default: return nil
-        }
+        guard let package = LayeredPackageStore().package(for: service.id) else { return nil }
+        return ScriptReader(service: service, player: player, package: package)
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {

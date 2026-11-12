@@ -64,8 +64,6 @@ public struct CatalogApp: Codable, Equatable, Sendable, Identifiable {
     /// Added to a fresh config. Apps that are not default are only added by the user.
     public var defaultEnabled: Bool = true
     public var note: String? = nil
-    /// A stream's default reader (`builtin` or `package`) when a Mac's config has no `reader` setting.
-    public var reader: String? = nil
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: Keys.self)
@@ -78,9 +76,8 @@ public struct CatalogApp: Codable, Equatable, Sendable, Identifiable {
         requires = try c.decodeIfPresent([AppRequirement].self, forKey: .requires) ?? []
         defaultEnabled = try c.decodeIfPresent(Bool.self, forKey: .defaultEnabled) ?? true
         note = try c.decodeIfPresent(String.self, forKey: .note)
-        reader = try c.decodeIfPresent(String.self, forKey: .reader)
     }
-    private enum Keys: String, CodingKey { case id, name, kind, site, native, console, requires, defaultEnabled, note, reader }
+    private enum Keys: String, CodingKey { case id, name, kind, site, native, console, requires, defaultEnabled, note }
 }
 
 public enum AppCatalogError: Error, Equatable, CustomStringConvertible {

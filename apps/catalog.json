@@ -78,7 +78,6 @@
       "id": "prime",
       "name": "Prime Video",
       "kind": "stream",
-      "reader": "package",
       "site": {
         "url": "https://www.primevideo.com/",
         "userAgent": "safari",

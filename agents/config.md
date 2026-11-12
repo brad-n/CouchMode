@@ -23,7 +23,6 @@ preferences (interface sounds, screensaver minutes) stay in `Prefs`
 | `console` | `emulator` (`retroarch` with a `core`, or `app` when each game is its own Mac app), `extensions`, `defaultFolder`. |
 | `requires` | Conditions to show the app: `{label, bundleId?, appPaths?}`. Met when the bundle id is installed or any path exists. |
 | `defaultEnabled` | Added to a fresh config (default true). |
-| `reader` | A stream's default reader, `builtin` or `package`, used when the Mac's config has no `reader` setting (Prime: `package`). |
 
 Plex has no `requires`: it opens its website when Plex HTPC is not installed.
 Retro consoles require RetroArch; Switch does not.
@@ -48,12 +47,11 @@ Retro consoles require RetroArch; Switch does not.
   that order.
 - Settings are plain strings, numbers or booleans. Known ones: a console's
   `gamesFolder` (`~` allowed), Netflix's `netflix51` (`auto`, `on`, `off`).
-  A stream app's `reader` (`builtin`, the default, or `package`) chooses its
-  Swift reader or its script package (`apps/<id>/`, see
-  [add-a-streaming-service.md](add-a-streaming-service.md)). A missing setting uses the catalog's `reader`; with
-  none of those, a service uses its package as soon as one is present (bundled or downloaded), else `builtin`.
-  Anything else means `builtin`, and a missing or unusable package falls back to it. It is read when the app
-  starts, and again for a service when its package is updated or the app is added.
+  A stream app always uses its script package (`apps/<id>/`, bundled or downloaded; see
+  [add-a-streaming-service.md](add-a-streaming-service.md)) when it has one, else it opens its website. The old
+  `reader` setting (`builtin` or `package`) and the catalog's old `reader` field are **ignored**: configs and
+  catalogs that still contain them load, keep them when saved, and behave as if they were absent. The package is
+  chosen when the app starts, and again for a service when its package is updated or the app is added.
 - `packageRef` (top level, optional): the branch, tag or commit in the GitHub repo that app packages are fetched
   from; `main` when absent. Letters, digits and `. _ - /` only; anything else is ignored.
 - An id the catalog does not know is ignored but kept when the file is saved.

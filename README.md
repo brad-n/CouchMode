@@ -55,10 +55,10 @@ and they only know a small, service-neutral vocabulary (`StreamHome`,
 
 A small **reader** per service fills that vocabulary in. A reader is a
 `StreamSource` (`StreamSource.swift`): `home()`, `details(for:)`,
-`episodes(in:of:)`, `search(_:)`, `switchProfile(to:)`. `NetflixSource`,
-`HuluSource`, `DisneySource` and `PrimeSource` are the real ones. The parsing of each site's page data is
-pure code in `CouchModeCore` (`NetflixHome`, `HuluHome`, `DisneyHome`, `PrimeHome`, ...), tested against
-synthetic fixtures. Services that don't have a reader open their website with
+`episodes(in:of:)`, `search(_:)`, `switchProfile(to:)`. Every real reader is a **script package** (`apps/<id>/`:
+a manifest and a `reader.js`) run by one generic `ScriptReader`; Netflix, Hulu, Disney+, Prime Video and Apple TV
+each have one. What a package returns is validated by `PackageDecoder` in `CouchModeCore` and tested against
+synthetic fixtures and golden outputs. Services that don't have a package open their website with
 remote-friendly navigation instead.
 
 ### The proxy rule

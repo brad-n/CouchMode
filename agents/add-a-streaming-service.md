@@ -1,4 +1,4 @@
-# Add a streaming service (a reader)
+# Add a streaming service (a reader package)
 
 A **reader** makes a service appear in CouchMode's own TV screens (home rows,
 details, search, profile picker) instead of the plain website. It is a proxy:
@@ -11,27 +11,21 @@ DRM circumvention (a reader never plays anything), one site action per user
 action (no crawling, no prefetching), synthetic fixtures only, everything
 bounded.
 
-Netflix and Hulu are the worked examples; keep them open while you work:
-
-| Piece | Netflix | Hulu |
-|---|---|---|
-| Reader (app) | `Sources/CouchMode/NetflixSource.swift` | `Sources/CouchMode/HuluSource.swift` |
-| Home parser (Core) | `NetflixHome.swift` | `HuluHome.swift` |
-| Details parser | `NetflixDetails.swift` | `HuluDetails.swift` |
-| Search parser | `NetflixSearch.swift` | `HuluSearch.swift` |
-| Tests | `Netflix*Tests.swift` | `Hulu*Tests.swift` |
-| Fixtures | `Fixtures/netflix-*.json` | `Fixtures/hulu-*.json` |
-
-## A new service is a package
-
 A reader is a **script package** in `apps/<id>/`, run by one generic reader
-(`ScriptReader`, `Sources/CouchMode/ScriptReader.swift`). Prime Video is the
-worked example (`apps/prime/`; Apple TV, `apps/appletv/`, reads from one quiet page with `reuseSitePage`; Hulu, `apps/hulu/`, shows a request made from
-the title's page and a typed search; Disney+, `apps/disney/`, shows API requests
-made from any signed-in page, profile forms and a restore step; Netflix, `apps/netflix/`, reads the page's own GraphQL cache and details panel, with no API additions: the "Who's watching?" gate is a home with `asksWhoIsWatching`, a season is chosen in the page's own picker by the name its option carries, and a profile switch follows the tile's or Netflix's own `/SwitchProfile?tkn=` link; Netflix 5.1 stays an app-installed page script, not part of the package); the Swift readers below (Netflix, Hulu,
-Disney+, Apple TV, and Prime's `PrimeSource`) are the older way and stay until
-each service is ported. A Mac chooses per service with the `reader` setting
-(`builtin`, the default, or `package`; see [config.md](config.md)).
+(`ScriptReader`, `Sources/CouchMode/ScriptReader.swift`). Packages are the only
+way to add a reader: the app has no built-in per-service Swift readers. Five
+packages are the worked examples; keep the closest one open while you work:
+
+- Prime Video, `apps/prime/`: reads the page's hydration data; pages more rows.
+- Apple TV, `apps/appletv/`: reads from one quiet page with `reuseSitePage`.
+- Hulu, `apps/hulu/`: a request made from the title's page and a typed search.
+- Disney+, `apps/disney/`: API requests made from any signed-in page, profile forms and a restore step.
+- Netflix, `apps/netflix/`: reads the page's own GraphQL cache and details panel, with no API additions. The "Who's
+  watching?" gate is a home with `asksWhoIsWatching`, a season is chosen in the page's own picker by the name its
+  option carries, and a profile switch follows the tile's or Netflix's own `/SwitchProfile?tkn=` link. Netflix 5.1
+  stays an app-installed page script (`Netflix51`), not part of the package.
+
+A service with no package opens its website. The `reader` config setting is ignored (see [config.md](config.md)).
 
 ```
 apps/<id>/manifest.json   id, version, reader API, hosts, time limits, the page each action opens
@@ -195,50 +189,26 @@ tested without a page: `extract.*` reads the page into a small "read", and
 
 ### Rules for a package
 
-Same ground rules as the Swift readers, and they bind the script: it runs
+The ground rules in [AGENTS.md](../AGENTS.md) bind the script: it runs
 only in the service's page, makes at most the one request the page itself
 would make for that action (Prime's `more`; each of Disney+'s explore requests), reads and
 returns no token, cookie or account data, and **never plays anything** (it
 returns the title's `play` address; `AppCoordinator.playStream` hands it to
 the service's player).
 
-### Porting and testing a service
+### Testing a package
 
-1. Learn where the page keeps its data (steps 2 and 4 below apply as they are:
-   peek with the debug channel; synthetic fixtures only).
-2. Write `apps/<id>/manifest.json` and `reader.js`. Port the parsing from the
-   existing Swift parser rather than redesigning it.
-3. **Parity test** (`PrimePackageParityTests.swift` and `DisneyPackageParityTests.swift`
-   in `Tests/CouchModeCoreTests/` are the patterns): load `reader.js` in JavaScriptCore, run `reader.build.*` on
-   each of the service's existing fixtures, decode with `PackageDecoder`, and
-   assert it equals what the Swift parser makes from the same fixture. Add a
-   test that runs `extract.*` against a small stand-in page.
-4. Set `"reader": "package"` for the service in a test Mac's `config.json`
-   and compare both readers on the device (step 7) before changing a default.
-
-## The shape (the Swift reader, still used by the services not yet ported)
-
-```
-StreamSource (protocol, StreamSource.swift)
-  home()                       -> StreamHome?
-  details(for: StreamTitle)    -> StreamTitleDetails?
-  episodes(in:of:)             -> [StreamEpisode]?
-  search(_:)                   -> [StreamTitle]?
-  more(in: StreamRow)          -> [StreamTitle]?     (nil is fine: not read yet)
-  switchProfile(to:)           -> Bool
-```
-
-`nil` means "couldn't read": the screens fall back (home -> the website). The
-shared screens never learn which service they are showing. The vocabulary
-they use is in `Sources/CouchModeCore/StreamCatalog.swift`, with caps in
-`StreamLimits`.
-
-A reader holds a `PageDriver` (`PageDriver.swift`), which does one action at a
-time in the service's own page: `open` an address, `waitFor` a script to say
-yes, read a script's answer as `text`, or the whole `read(open:ready:script:)`.
-A newer action supersedes an older one (latest wins), every step is bounded
-by `PageDriver.Timeouts`, and a real failure is logged once with service,
-action and step.
+1. Learn where the page keeps its data (see "Find where the page keeps its data" below: peek with the debug
+   channel; synthetic fixtures only).
+2. Write `apps/<id>/manifest.json` and `reader.js`, with the `extract.*` / `build.*` split.
+3. **Parity test** (`PrimePackageParityTests.swift`, `DisneyPackageParityTests.swift` and the others in
+   `Tests/CouchModeCoreTests/` are the patterns): load `reader.js` in JavaScriptCore, run `reader.build.*` on
+   each of the service's fixtures, decode with `PackageDecoder`, and compare with the **golden** JSON in
+   `Tests/CouchModeCoreTests/Fixtures/golden/<service>-<what>.json` (`Golden.swift` reads it; one entry per
+   comparison, in order). For a new service the golden files are the expected output you write down and check by
+   hand (synthetic content only); they were first produced by the Swift parsers the packages replaced. Add a test
+   that runs `extract.*` against a small stand-in page.
+4. Verify on a device (below).
 
 ## Steps
 
@@ -247,9 +217,8 @@ action and step.
 If it isn't in `apps/catalog.json` (see [config.md](config.md)), add a
 `stream` entry with its id, name, home address and user agent; a Mac's
 `config.json` lists the apps it shows, so add the id there too to see it
-(a fresh config includes every default app). The id is what the
-reader's constants use (`NetflixHome.serviceID`). Add its tile look in
-`ServiceLook` (`HomeView.swift`): a generic SF Symbol and colors. Do not use a
+(a fresh config includes every default app). The id is also the package's folder and manifest `id`.
+Add its tile look in `ServiceLook` (`HomeView.swift`): a generic SF Symbol and colors. Do not use a
 service's logo.
 
 ### 2. Find where the page keeps its data
@@ -284,34 +253,7 @@ To explore without rebuilding, use the [debug channel](debug-channel.md):
 
 Never copy a real response into the repo.
 
-### 3. Write the pure parser in Core, test first
-
-Create `<Service>Home.swift` (and `Details`/`Search` as needed) in
-`Sources/CouchModeCore`, each starting with an `// Owns:` header. Pure: strings
-and data in, `StreamHome` / `StreamTitleDetails` / `[StreamTitle]` out. No I/O.
-
-Typical contents of `<Service>Home`:
-
-- `serviceID`, and address builders: `playURL(...)`, `pageURL(...)`,
-  `switchProfileURL(...)`, image address builders.
-- `readyScript`: a JS function body returning true when the data exists.
-- `extractScript`: a JS function body returning a **JSON string** of just
-  what you need, `""` when absent, too long or on error. Cap its size
-  (`maxCacheBytes` style) and wrap in `try/catch`. Quote any text you put
-  into a script with `StreamJSON.jsString`.
-- `parse(...) -> StreamHome?`: use the careful readers in `StreamJSON`
-  (`object`, `objects`, `string`, `int`, `numericID`, `token`, `httpsURL`),
-  which refuse odd ids and non-https addresses in one place. Build rows with
-  the right `StreamRow.Kind` (`continueWatching`, `ranked`, `standard`), drop
-  empty rows, and respect `StreamLimits` (`StreamHome.bounded`).
-
-Write the tests *first* against a fixture (step 4). Assert: profiles and the
-current one; row order and kinds; title facts (name, year, rating, progress
-and "left" text); that bounds hold; that malformed or missing data returns
-`nil` or an empty result rather than crashing; that play and page addresses
-point at the service.
-
-### 4. Make a public-safe, synthetic fixture
+### 3. Make a public-safe, synthetic fixture
 
 Put fixtures in `Tests/CouchModeCoreTests/Fixtures/`, named
 `<service>-<what>.json` (see the existing ones). The rules:
@@ -326,56 +268,27 @@ Put fixtures in `Tests/CouchModeCoreTests/Fixtures/`, named
   title without art, a numeric id as a string, an unknown record type, a kids
   profile, a title that is partly watched.
 - Image addresses: use `https://example.invalid/...`.
-- Load with `Bundle.module.url(forResource: "Fixtures/<name>", withExtension: "json")`
-  (see `NetflixHomeTests.swift`). The test target copies the folder as a
+- Load with `Bundle.module.url(forResource: name, withExtension: "json", subdirectory: "Fixtures")`
+  (see `NetflixPackageParityTests.swift`). The test target copies the folder as a
   resource.
 
-### 5. Write the reader (app target)
+### 4. Write the package
 
-Create `Sources/CouchMode/<Service>Source.swift`, `@MainActor final class
-<Service>Source: StreamSource`, holding a `PageDriver(service:player:)`.
-Each method is **one proxy action**:
+Write `manifest.json` and `reader.js` as described above, then `scripts/package-index.sh` to refresh `apps/index.json`.
+Each action is **one proxy action**: search opens the service's search address (or types into its own search box)
+and reads the result cards (no results is a valid answer: `[]`); details open the title's own page and read its
+panel; a season is chosen the way the page's own picker does; a profile switch uses the service's own address or
+control; `more` only if the page itself loads more when a person reaches the end of a row. Do not loop, retry in the
+background, or touch more than the one page the person's action needs. A reader never calls anything that plays.
+Playing is `AppCoordinator.playStream` handing the title's `play` address to the service's own player.
 
-```swift
-func home() async -> StreamHome? {
-    guard let json = await driver.read("home", open: Self.homeURL, ready: <Service>Home.readyScript,
-                                       script: <Service>Home.extractScript) else { return nil }
-    return <Service>Home.parse(json)
-}
-```
+### 5. Registration
 
-- `search(_:)`: open the service's search address (or type into its own
-  search box), wait for results with `required: false` (no results is a valid
-  answer: return `[]`, not `nil`), read the result cards.
-- `details(for:)`: open the title's own page (`title.page`) and read its
-  panel; for a show, include the seasons and the current one.
-- `episodes(in:of:)`: choose the season the way the page's own picker does,
-  then read again.
-- `switchProfile(to:)`: the service's own profile-switch address or control;
-  the next `home()` is that profile's.
-- `more(in:)`: return `nil` unless the page itself loads more when a person
-  reaches the end of a row (one action, no paging ahead).
-- Use `driver.begin(...)`, and give a longer `Timeouts` only where a page
-  needs it. Do not loop, retry in the background, or touch more than the one
-  page the person's action needs.
-- A reader never calls anything that plays. Playing is
-  `AppCoordinator.playStream` handing the title's `play` address to the
-  service's own player.
+There is none. `makeSource` (in `main.swift`) runs `ScriptReader` for any service that has a package (bundled or
+downloaded). Opening that service then shows the shared screens (`showStreamHome`), and falls back to its website if
+`home()` returns nothing.
 
-### 6. Register it
-
-In `main.swift`, next to Netflix and Hulu:
-
-```swift
-if let service = AppServices.all.first(where: { $0.id == <Service>Home.serviceID }) {
-    coordinator.registerStreamSource(<Service>Source(service: service, player: player))
-}
-```
-
-Opening that service then shows the shared screens (`showStreamHome`), and
-falls back to its website if `home()` returns `nil`.
-
-### 7. Verify on a device
+### 6. Verify on a device
 
 Unit tests can't see a real site. On a Mac that has the service signed in:
 
@@ -397,10 +310,9 @@ Unit tests can't see a real site. On a Mac that has the service signed in:
 If a screenshot will be published, use [demo mode](demo-mode.md); never
 publish a screenshot of a real account.
 
-### 8. Finish
+### 7. Finish
 
 - `scripts/check.sh` passes.
-- The reader's header lists, as Netflix's does, which of the service's own
-  pages each action opens and reads.
+- The package's `reader.js` header lists which of the service's own pages each action opens and reads.
 - Update README's limitations if the reader doesn't cover something (for
   example "More in a row").

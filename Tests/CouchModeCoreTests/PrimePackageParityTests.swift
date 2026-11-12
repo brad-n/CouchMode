@@ -2,8 +2,8 @@ import XCTest
 import JavaScriptCore
 @testable import CouchModeCore
 
-/// The Prime package (apps/prime) against the built-in Swift reader: for every Prime fixture the package's
-/// output, decoded the way the app decodes it, must equal what the Swift parser produces. The JS runs in
+/// The Prime package (apps/prime) against the frozen outputs of the former built-in Swift reader (Fixtures/golden): for every Prime fixture the package's
+/// output, decoded the way the app decodes it, must equal what was frozen. The JS runs in
 /// JavaScriptCore; its page-reading half is exercised against a tiny stand-in page.
 final class PrimePackageParityTests: XCTestCase {
     private var context: JSContext!

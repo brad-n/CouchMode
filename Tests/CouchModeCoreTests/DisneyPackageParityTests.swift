@@ -2,8 +2,8 @@ import XCTest
 import JavaScriptCore
 @testable import CouchModeCore
 
-/// The Disney+ package (apps/disney) against the built-in Swift reader: for every Disney fixture the package's
-/// output, decoded the way the app decodes it, must equal what the Swift parser produces, including the "more"
+/// The Disney+ package (apps/disney) against the frozen outputs of the former built-in Swift reader (Fixtures/golden): for every Disney fixture the package's
+/// output, decoded the way the app decodes it, must equal what was frozen, including the "more"
 /// cursors. The JS runs in JavaScriptCore; its page-reading half runs against a stand-in page and a stand-in fetch.
 final class DisneyPackageParityTests: XCTestCase {
     private var context: JSContext!

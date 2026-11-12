@@ -21,8 +21,8 @@ If something can be written as "input in, value out", it belongs in Core.
 | Focus and layout rules | `FocusGrid`, `RowSlide`, `DetailFocus`, `StreamFocus`, `StreamKeyboard`, `Cycle` |
 | Catalogs and config | `AppCatalog` (parses `apps/catalog.json`), `AppConfig` + `ConfigFile` (a Mac's `config.json`), `Service` and `Consoles` (made from the catalog), `SwitchCatalog`, `BluetoothPane` |
 | Shared streaming vocabulary | `StreamCatalog` (`StreamHome`, `StreamRow`, `StreamTitle`, `StreamTitleDetails`, ..., `StreamLimits`), `StreamJSON` (careful JSON readers, script quoting) |
-| Per-service parsers | `NetflixHome/Details/Search`, `HuluHome/Details/Search`: page data in, shared vocabulary out; also the scripts to run in the page |
-| Reader packages | `PackageManifest` (a package's manifest), `PackageDecoder` (a package's JSON -> the shared vocabulary, with all the id/address/size checks), `ReaderMode` (the `reader` setting) |
+| Reader packages | `PackageManifest` (a package's manifest), `PackageDecoder` (a package's JSON -> the shared vocabulary, with all the id/address/size checks), `PackageIndex` (the published package list). There are no per-service parsers in Core: each service's parsing lives in its package (`apps/<id>/reader.js`). |
+| Page scripts | `Netflix51` (the app-installed Netflix 5.1 page script, not a reader), `ProfileSwitch` / `UnfinishedSwitch` |
 | Player handoff | `PlayerExit`, `PlayNudge`, `ImageRetry` |
 | Plex | `Plex` (JSON parsing, URLs), `PlexInspector`, `PlexHTPCLog` |
 | Debug channel | `HTTPRequest` (bounded parser) |
@@ -36,8 +36,8 @@ If something can be written as "input in, value out", it belongs in Core.
 | Which screen shows, what each input does | `AppCoordinator` (the single entry point for all input) |
 | Home and games screens | `HomeView`, `ConsoleView`, `AllConsolesView`, `GameDetailView`, `PlexDetailView`, `SettingsView`, `ScreensaverView`, `IntroView`, `Overlays`, `DesignSystem` |
 | Shared streaming screens | `StreamHomeView/Model`, `StreamDetailView/Model`, `StreamSearchView`, `StreamParts` |
-| Readers | `StreamSource` (protocol and a sample reader), `NetflixSource`, `HuluSource`, `PageDriver`, `PageScripts` |
-| Script packages | `ScriptReader` (the generic reader that runs `apps/<id>/reader.js`), `PackageStore` (finds a package) |
+| Readers | `StreamSource` (the protocol), `PageDriver`, `PageScripts` |
+| Script packages | `ScriptReader` (the generic reader that runs `apps/<id>/reader.js`; the only reader), `PackageStore` / `PackageUpdater` (find and update packages) |
 | Web | `WebPlayer` (one WKWebView per service), `WebPage` |
 | Other apps and games | `GameLauncher` (RetroArch and Switch apps), `AppLauncher`, `PlexHTPC`, `PlexClient`, `PlexInspectorClient` |
 | Apps and config | `AppConfigStore` (loads the catalog and config, hides unmet requirements, saves per-app settings), `AppServices` |
@@ -62,7 +62,7 @@ If something can be written as "input in, value out", it belongs in Core.
 ```
  StreamHomeView / StreamDetailView / StreamSearchView   (shared, service-neutral)
                     |  StreamHome, StreamTitle, ...   (Core: StreamCatalog)
-              StreamSource   <- NetflixSource, HuluSource   (one reader per service)
+              StreamSource   <- ScriptReader + the service's package (apps/<id>/)
                     |  one action at a time
                PageDriver      (open, wait, read; bounded; newest action wins)
                     |
@@ -80,7 +80,7 @@ If something can be written as "input in, value out", it belongs in Core.
   arrow, the end of an episode) and `endStreamPlayback` returns to the screen
   you came from. `PlayerBackKey` makes Escape and Delete mean "back" while a
   handed-off title is showing. A source call never plays anything.
-- A service without a reader opens its website (`showWeb`) with remote
+- A service without a package opens its website (`showWeb`) with remote
   navigation, or a native app (`nativeAppBundleID`, e.g. Plex HTPC).
 
 ## Plex
@@ -109,5 +109,5 @@ debug server uses `Network.framework` on the main queue and never blocks.
 
 - A new screen: a model + a view + a case in `AppCoordinator.Screen`, with the
   focus rules in Core.
-- A new service reader: [add-a-streaming-service.md](add-a-streaming-service.md).
+- A new service reader (a script package): [add-a-streaming-service.md](add-a-streaming-service.md).
 - A new console: one entry in `apps/catalog.json` (see [config.md](config.md)) and a test.

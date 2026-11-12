@@ -1,6 +1,6 @@
 // Owns: tests for editing a Mac's app list (add, remove, move), what can be
 // added and its requirement status, the package ref in the config, and the
-// default reader once a package is present.
+// leftover `reader` setting that is ignored.
 
 import XCTest
 @testable import CouchModeCore
@@ -88,12 +88,14 @@ final class AppListEditTests: XCTestCase {
         XCTAssertNil(try AppConfig.parse(bad).packageRef)
     }
 
-    func testReaderDefaultsToPackageOncePresent() {
-        XCTAssertEqual(ReaderMode.from(nil, packagePresent: true), .package)
-        XCTAssertEqual(ReaderMode.from(nil, packagePresent: false), .builtin)
-        XCTAssertEqual(ReaderMode.from(.string("builtin"), packagePresent: true), .builtin, "explicit setting wins")
-        XCTAssertEqual(ReaderMode.from(.string("package"), packagePresent: false), .package)
-        XCTAssertEqual(ReaderMode.from(nil, catalogDefault: "builtin", packagePresent: true), .builtin, "catalog default wins")
-        XCTAssertEqual(ReaderMode.from(.number(3), packagePresent: true), .builtin, "anything odd is builtin")
+    /// The `reader` setting (builtin or package) no longer does anything. Configs and catalogs that still carry it load,
+    /// keep it when saved, and are otherwise unchanged.
+    func testALeftoverReaderSettingIsIgnoredButKept() throws {
+        let c = try AppConfig.parse(Data(#"{"version":1,"apps":[{"id":"a","settings":{"reader":"builtin","other":"x"}}]}"#.utf8))
+        XCTAssertEqual(c.setting("reader", for: "a"), .string("builtin"))
+        let again = try AppConfig.parse(c.encoded())
+        XCTAssertEqual(again.setting("reader", for: "a"), .string("builtin"))
+        XCTAssertEqual(again.setting("other", for: "a"), .string("x"))
+        XCTAssertEqual(try catalog().app(id: "c")?.name, "C", "a catalog entry with a reader field still loads")
     }
 }

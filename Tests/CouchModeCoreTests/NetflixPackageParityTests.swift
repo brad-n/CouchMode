@@ -2,9 +2,9 @@ import XCTest
 import JavaScriptCore
 @testable import CouchModeCore
 
-/// The Netflix package (apps/netflix) against the built-in Swift reader: for every Netflix fixture (the browse
+/// The Netflix package (apps/netflix) against the frozen outputs of the former built-in Swift reader (Fixtures/golden): for every Netflix fixture (the browse
 /// GraphQL cache, the details read, the search cards, the gate's tiles) the package's output, decoded the way the app
-/// decodes it, must equal what the Swift parser produces. The JS runs in JavaScriptCore; its page-reading half runs
+/// decodes it, must equal what was frozen. The JS runs in JavaScriptCore; its page-reading half runs
 /// against a small stand-in page. Netflix 5.1 is not part of the reader and not covered here.
 final class NetflixPackageParityTests: XCTestCase {
     private var context: JSContext!
@@ -303,7 +303,7 @@ final class NetflixPackageParityTests: XCTestCase {
         setPage(path: "/ProfilesGate", tiles: [("SYNTHPROFILE0001", "Profile 1", false), ("SYNTHPROFILE0002", "Profile 2", true)], gate: true)
         XCTAssertEqual(choose("SYNTHPROFILE0001"), "true")
         XCTAssertEqual(call("__nav.join()"), "https://www.netflix.com/SwitchProfile?tkn=SYNTHPROFILE0001", "the tile's own link")
-        // A locked tile is never pressed; Netflix's own switch address is what the Swift reader falls back to.
+        // A locked tile is never pressed; Netflix's own switch address is what the former Swift reader fell back to.
         setPage(path: "/ProfilesGate", tiles: [("SYNTHPROFILE0001", "Profile 1", false), ("SYNTHPROFILE0002", "Profile 2", true)], gate: true)
         XCTAssertEqual(choose("SYNTHPROFILE0002"), "true")
         XCTAssertEqual(call("__nav.join() + __clicks.length"), "https://www.netflix.com/SwitchProfile?tkn=SYNTHPROFILE00020")
