@@ -260,6 +260,8 @@ final class HomeModel: ObservableObject {
     @Published var devices: [InputDevice] = []
     /// A short line over the bottom of the screen, e.g. "press again to…".
     @Published var notice: String?
+    /// Quiet "Update available" line (UpdateNotice decides when); never a modal.
+    @Published var updateNotice: String?
 
     init(rows: [HomeRow]) {
         let kept = rows.filter { !$0.items.isEmpty }
@@ -330,8 +332,19 @@ struct HomeView: View {
                         .frame(width: geo.size.width, height: geo.size.height - 56 * s, alignment: .bottom)
                         .transition(.opacity.combined(with: .move(edge: .bottom)))
                 }
+                if let line = model.updateNotice {
+                    Text(line)
+                        .font(DS.ui(18, s, .semibold)).foregroundStyle(DS.text2)
+                        .padding(.horizontal, 22 * s).padding(.vertical, 10 * s)
+                        .background(.ultraThinMaterial, in: Capsule())
+                        .overlay(Capsule().strokeBorder(.white.opacity(0.14), lineWidth: 1))
+                        .frame(width: geo.size.width - 2 * DS.page * s, height: geo.size.height - 56 * s, alignment: .bottomTrailing)
+                        .padding(.leading, DS.page * s)
+                        .transition(.opacity)
+                }
             }
             .animation(DS.fade, value: model.notice)
+            .animation(DS.fade, value: model.updateNotice)
             .frame(width: geo.size.width, height: geo.size.height, alignment: .topLeading)
             .clipped()
         }

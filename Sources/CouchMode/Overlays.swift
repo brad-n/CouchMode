@@ -18,8 +18,33 @@ struct InterstitialView: View {
     /// Draws the shared header (the clock) over the card, as a stream screen's
     /// loading state does; launch cards cover the whole screen without it.
     var header: ScreenKind? = nil
+    /// 0...1 fills the bar (a download); nil keeps the sweeping indeterminate bar.
+    var progress: Double? = nil
+    /// Result screens (an answer, not work in progress) leave the bar out.
+    var showsBar = true
+    /// A few short lines under the subtitle (an update's notes).
+    var detail: String? = nil
+    /// Remote-driven buttons under the card, `focusedButton` highlighted.
+    var buttons: [String] = []
+    var focusedButton = 0
 
     @State private var phase: CGFloat = -1
+
+    /// A hairline track: a sweeping segment while the wait has no end in sight, a fill once progress is known.
+    private func bar(s: CGFloat) -> some View {
+        ZStack(alignment: .leading) {
+            Capsule().fill(.white.opacity(0.14))
+            if let progress {
+                Capsule().fill(.white.opacity(0.9)).frame(width: 320 * s * max(0.02, min(1, progress)))
+            } else {
+                Capsule().fill(.white.opacity(0.9))
+                    .frame(width: 90 * s)
+                    .offset(x: (phase + 1) / 2 * (320 - 90) * s)
+            }
+        }
+        .frame(width: 320 * s, height: 4 * s)
+        .clipShape(Capsule())
+    }
 
     var body: some View {
         GeometryReader { geo in
@@ -43,16 +68,26 @@ struct InterstitialView: View {
                     Text(title).font(DS.display(64, s)).foregroundStyle(DS.text)
                         .multilineTextAlignment(.center).lineLimit(2).padding(.horizontal, 120 * s)
                     Text(subtitle).font(DS.ui(22, s, .medium)).foregroundStyle(DS.text2)
-                    // Indeterminate progress: a bright segment sweeping a hairline track.
-                    ZStack(alignment: .leading) {
-                        Capsule().fill(.white.opacity(0.14))
-                        Capsule().fill(.white.opacity(0.9))
-                            .frame(width: 90 * s)
-                            .offset(x: (phase + 1) / 2 * (320 - 90) * s)
+                    if let detail, !detail.isEmpty {
+                        Text(detail).font(DS.ui(24, s, .medium)).foregroundStyle(DS.text)
+                            .multilineTextAlignment(.center).lineLimit(6)
+                            .frame(maxWidth: 900 * s).padding(.top, 8 * s)
                     }
-                    .frame(width: 320 * s, height: 4 * s)
-                    .clipShape(Capsule())
-                    .padding(.top, 14 * s)
+                    if showsBar { bar(s: s).padding(.top, 14 * s) }
+                    if !buttons.isEmpty {
+                        HStack(spacing: 24 * s) {
+                            ForEach(Array(buttons.enumerated()), id: \.offset) { i, label in
+                                let focused = i == focusedButton
+                                Text(label).font(DS.ui(28, s, .bold))
+                                    .foregroundStyle(focused ? Color.black : DS.text)
+                                    .padding(.horizontal, 48 * s).padding(.vertical, 18 * s)
+                                    .background(Capsule().fill(focused ? Color.white : DS.surfaceStrong))
+                                    .scaleEffect(focused ? 1.08 : 1)
+                                    .animation(DS.focusSpring, value: focusedButton)
+                            }
+                        }
+                        .padding(.top, 20 * s)
+                    }
                 }
                 if let header { ScreenHeader(header, s: s).pinnedToTop() }
             }

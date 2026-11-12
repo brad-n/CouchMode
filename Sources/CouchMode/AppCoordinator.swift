@@ -19,6 +19,7 @@ final class AppCoordinator {
     private enum Screen {
         case home, service(Service), console(ConsoleModel), allConsoles(AllConsolesModel), settings(SettingsModel)
         case bluetooth(SettingsModel)
+        case update
         case detail(GameDetailModel)
         case plexDetail(ContinueEntry)
         case streamHome(StreamHomeModel), streamDetail(StreamDetailModel)
@@ -103,6 +104,7 @@ final class AppCoordinator {
             }
         }
         games.onExit = { [weak self] in self?.gameDidExit() }
+        AppUpdater.shared.onChange = { [weak self] in self?.updateFlowChanged() }
         // A game left open by an earlier run of the shell (e.g. paused, then
         // the shell restarted) is still Home's and Play's to manage.
         games.adoptOpenAppGame()
@@ -355,6 +357,7 @@ final class AppCoordinator {
         case .allConsoles(let model): handleAllConsoles(intent, model: model)
         case .settings(let model): handleSettings(intent, model: model)
         case .bluetooth(let model): handleBluetooth(intent, model: model)
+        case .update: AppUpdater.shared.press(intent)
         case .detail(let model): handleDetail(intent, model: model)
         case .plexDetail(let entry): handlePlexDetail(intent, entry: entry)
         case .streamHome(let model): handleStreamHome(intent, model: model)
@@ -1002,7 +1005,7 @@ final class AppCoordinator {
             case "sounds": Prefs.uiSounds.toggle()
             case "screensaver":
                 Prefs.screensaverMinutes = Cycle.next(after: Prefs.screensaverMinutes, in: Prefs.screensaverChoices) ?? 5
-            case "update": AppUpdater.shared.checkForUpdates()
+            case "update": openUpdate(); return
             case "autoupdate": AppUpdater.shared.automaticallyChecks.toggle()
             case "sleep": system.sleep()
             case "restart":
@@ -1115,6 +1118,44 @@ final class AppCoordinator {
         install(homeView)
         screen = .home
         window.makeFirstResponder(homeView)
+        refreshUpdateNotice()
+    }
+
+    // MARK: Software update
+
+    /// Settings > Check for Updates: Sparkle's moments show on our own screen, driven by the remote.
+    private func openUpdate() {
+        let updater = AppUpdater.shared
+        show(NSHostingView(rootView: UpdateView(updater: updater)))
+        screen = .update
+        updater.beginUserCheck()
+    }
+
+    /// Back to Settings once the update flow has nothing left to show.
+    private func closeUpdate() {
+        let model = SettingsModel(rows: settingRows())
+        model.select(id: "update")
+        show(NSHostingView(rootView: SettingsView(model: model)))
+        screen = .settings(model)
+    }
+
+    /// The flow changed: leave the update screen when it is done, and keep the Home notice current.
+    private func updateFlowChanged() {
+        if case .update = screen, AppUpdater.shared.flow.phase == .idle { closeUpdate() }
+        refreshUpdateNotice()
+    }
+
+    /// The quiet Home line: only on Home, never over playback or a game (UpdateNotice).
+    private func refreshUpdateNotice() {
+        var playing = false
+        if case .service = screen { playing = true }
+        var onHome = false
+        if case .home = screen { onHome = true }
+        var updateOpen = false
+        if case .update = screen { updateOpen = true }
+        let context = UpdateNotice.context(onHome: onHome, gameRunning: games.isRunningGame, servicePlaying: playing,
+                                           updateScreenOpen: updateOpen)
+        homeModel.updateNotice = UpdateNotice.line(pending: AppUpdater.shared.pendingVersion, context: context)
     }
 
     /// Shows a service's website in the shell (never its native app).
@@ -1265,9 +1306,13 @@ extension AppCoordinator: DebugControllable {
         switch screen {
         case .home:
             return ["screen": "home", "focused": homeModel.focusedItem.id, "plex": plex.status,
+                    "updateNotice": homeModel.updateNotice ?? "",
                     "continueWatching": "\(continueWatching.count)"]
         case .settings(let model):
             return ["screen": "settings", "selected": model.selected?.id ?? ""]
+        case .update:
+            let flow = AppUpdater.shared.flow
+            return ["screen": "update", "phase": "\(flow.phase)", "focus": flow.focused?.label ?? ""]
         case .bluetooth(let model):
             return ["screen": "bluetooth", "selected": model.selected?.id ?? "", "rows": "\(model.rows.count)",
                     "footer": model.footer ?? ""]
@@ -1348,6 +1393,13 @@ extension AppCoordinator: DebugControllable {
     }
 
     /// Switches a debug-only flag; a flag that changes a service's scripts reloads that service.
+    func debugFakeUpdate(state: String) -> Bool {
+        show(NSHostingView(rootView: UpdateView(updater: AppUpdater.shared)))
+        screen = .update
+        guard AppUpdater.shared.debugShow(state) else { goHome(); return false }
+        return true
+    }
+
     func debugFlag(name: String, on: Bool) -> Bool {
         guard let flag = DebugFlag(name: name) else { return false }
         DebugFlags.set(flag, on)

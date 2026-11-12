@@ -15,6 +15,7 @@
 //   GET  /screen                    -> PNG of the real screen (needs Screen Recording permission)
 //   GET  /media-formats?service=<id> -> media probe record (codecs, audio channels, video size)
 //   GET  /debug-flag?name=mediaprobe&on=1 -> debug-only flag (off at launch)
+//   GET  /fakeupdate?state=available -> the update screen with made-up content
 //   POST /eval  (body = JS function body; use `return`) -> JSON result
 //   POST /peek?service=<id> (body = JS function body) -> JSON result, in that
 //        service's own page even behind a stream screen (for building readers)
@@ -44,6 +45,7 @@ protocol DebugControllable: AnyObject {
     func debugMedia(serviceId: String, suspend: Bool?, _ done: @escaping @MainActor (String) -> Void)
     func debugMediaFormats(serviceId: String, _ done: @escaping @MainActor (String) -> Void)
     func debugFlag(name: String, on: Bool) -> Bool
+    func debugFakeUpdate(state: String) -> Bool
 }
 
 @MainActor
@@ -220,6 +222,10 @@ final class DebugServer {
             target.debugMediaFormats(serviceId: req.query["service"] ?? "") { [weak self] json in
                 self?.send(conn, 200, "application/json", Data(json.utf8))
             }
+        case ("GET", "/fakeupdate"):
+            // A made-up update on the update screen: /fakeupdate?state=available|checking|downloading|installing|uptodate|unreachable|failed
+            guard target.debugFakeUpdate(state: req.query["state"] ?? "") else { return reply(conn, 404, "unknown state") }
+            replyJSON(conn, target.debugState())
         case ("GET", "/debug-flag"):
             // Debug-only experiment flags, off at every launch: /debug-flag?name=mediaprobe&on=1
             guard let name = req.query["name"], let on = req.query["on"], on == "0" || on == "1" else {

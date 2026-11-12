@@ -74,5 +74,9 @@ commit the key.
 ## Limits
 
 - Apple Silicon only (arm64), macOS 14+.
-- Sparkle shows its own windows for updates; on a TV without a mouse, update
-  from the desktop, or check from Settings with a keyboard.
+- Updates show on CouchMode's own screens, driven by the remote (`UpdateDriver`
+  is a custom Sparkle user driver; the state machine is `UpdateFlow` in Core).
+  Settings > Check for Updates opens the flow: Install now / Later, progress,
+  restart. An automatic check that finds an update only puts a quiet notice
+  on Home. Before the first release is published the feed is a 404, which
+  shows "Can't reach updates", not an error.
