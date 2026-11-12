@@ -46,7 +46,7 @@ Everything on the screens in this README is **invented sample content**
 
 ### Shared screens, one reader per service
 
-Netflix, Hulu and Disney+ open in CouchMode's *own* TV screens: home rows with a
+Netflix, Hulu, Disney+ and Prime Video open in CouchMode's *own* TV screens: home rows with a
 featured title, a details page with seasons and episodes, search with an
 on-screen keyboard, and a profile picker. Those screens are the same for
 every service (`StreamHomeView`, `StreamDetailView`, `StreamSearchView`),
@@ -56,8 +56,8 @@ and they only know a small, service-neutral vocabulary (`StreamHome`,
 A small **reader** per service fills that vocabulary in. A reader is a
 `StreamSource` (`StreamSource.swift`): `home()`, `details(for:)`,
 `episodes(in:of:)`, `search(_:)`, `switchProfile(to:)`. `NetflixSource`,
-`HuluSource` and `DisneySource` are the real ones. The parsing of each site's page data is
-pure code in `CouchModeCore` (`NetflixHome`, `HuluHome`, `DisneyHome`, ...), tested against
+`HuluSource`, `DisneySource` and `PrimeSource` are the real ones. The parsing of each site's page data is
+pure code in `CouchModeCore` (`NetflixHome`, `HuluHome`, `DisneyHome`, `PrimeHome`, ...), tested against
 synthetic fixtures. Services that don't have a reader open their website with
 remote-friendly navigation instead.
 
@@ -175,7 +175,7 @@ taken this way.
 
 ## Limitations
 
-- Only Netflix, Hulu and Disney+ have CouchMode's own screens; the others open
+- Only Netflix, Hulu, Disney+ and Prime Video have CouchMode's own screens; the others open
   their website. Readers depend on each site's page, which can change without
   notice.
 - "More" in a row is not read yet: a row holds what the home page loaded.
@@ -186,6 +186,18 @@ taken this way.
 - Disney+ may show its own "update this profile" or PIN step when a profile is
   chosen; CouchMode doesn't fill those in, so that switch is reported as
   failed and the profile is finished on Disney+'s own page.
+- Prime Video's player opens over the title's page rather than as a page of its
+  own, so CouchMode asks the page once a second whether the player is showing to
+  know when you have left it (other services are detected by their address).
+  Prime's home and details pages autoplay trailers; turn off "Autoplay video and
+  live events" in Prime Video's playback settings (it is per profile), otherwise
+  a trailer is started in the page behind CouchMode's screens (kept silent while
+  it is out of view). Next-episode autoplay is a separate setting and is left alone.
+- Prime Video lists titles you must rent, buy or get through a channel: they
+  appear with their art and details, and Play opens Prime's own page for them.
+  A season's episodes come from the season's own page, one page of them (Prime
+  pages long seasons); a profile's id is its name, and a PIN or profile form is
+  finished on Prime's own page.
 - Streaming picture quality is whatever each site gives a Mac web browser;
   for example some sites cap at a lower resolution than their TV apps.
 - Switch games need NX2Apple builds you made yourself; retro games need
