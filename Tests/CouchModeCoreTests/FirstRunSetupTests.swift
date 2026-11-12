@@ -43,6 +43,10 @@ final class FirstRunSetupTests: XCTestCase {
         XCTAssertFalse(c.canToggle)
     }
 
+    func testServicesAreListedBeforeNativeApps() throws {
+        XCTAssertEqual(try setup().apps.map(\.app.id), ["a", "b", "c", "plex"])
+    }
+
     func testPlexIsOnOnlyWhenItsAppIsInstalled() throws {
         XCTAssertFalse(try setup().isOn("plex"))
         XCTAssertEqual(try setup().apps.first { $0.app.id == "plex" }?.note, "not installed, opens its website")

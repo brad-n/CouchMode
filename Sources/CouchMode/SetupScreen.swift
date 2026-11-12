@@ -180,6 +180,7 @@ final class SetupScreen: ObservableObject {
                      "chosen": session.chosen.sorted().joined(separator: ","), "first": "\(isFirstRun)",
                      "signingIn": signingIn?.id ?? "", "footer": model.footer ?? ""]
         state["signIn"] = session.chosenStreams.map { "\($0.app.id)=\(session.status(of: $0.app.id).label)" }.joined(separator: ",")
+        state["list"] = model.rows.map { "\($0.id)=\($0.value)" }.joined(separator: "|")
         state["order"] = session.result().apps.map(\.id).joined(separator: ",")
         return state
     }

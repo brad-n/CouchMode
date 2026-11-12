@@ -90,7 +90,9 @@ public struct FirstRunSetup: Equatable, Sendable {
         self.catalog = catalog
         self.existing = existing
         self.migrated = migrated
-        apps = catalog.apps.filter { $0.kind == .stream || $0.kind == .native }.map { app in
+        // Streaming services first, then native apps, as Home shows them.
+        let offered = catalog.apps.filter { $0.kind == .stream || $0.kind == .native }
+        apps = (offered.filter { $0.kind == .stream } + offered.filter { $0.kind == .native }).map { app in
             SetupApp(app: app, unmet: app.requires.first { !requirementMet($0) }?.label,
                      notInstalled: app.kind == .native && !nativeInstalled(app))
         }
