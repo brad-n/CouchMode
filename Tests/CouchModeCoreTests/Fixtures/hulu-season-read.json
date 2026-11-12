@@ -1,0 +1,58 @@
+{
+ "episodes": [
+  {
+   "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000001?base_image_bucket_name=image_manager&base_image=art-1",
+   "duration": 1535,
+   "id": "00000000-0000-4000-8000-000000000001",
+   "name": "Episode 1",
+   "number": "1",
+   "progress": null,
+   "synopsis": "Placeholder synopsis for episode 1."
+  },
+  {
+   "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000002?base_image_bucket_name=image_manager&base_image=art-2",
+   "duration": 1345,
+   "id": "00000000-0000-4000-8000-000000000002",
+   "name": "Episode 2",
+   "number": "2",
+   "progress": null,
+   "synopsis": "Placeholder synopsis for episode 2."
+  },
+  {
+   "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000003?base_image_bucket_name=image_manager&base_image=art-3",
+   "duration": 1434,
+   "id": "00000000-0000-4000-8000-000000000003",
+   "name": "Episode 3",
+   "number": "3",
+   "progress": null,
+   "synopsis": "Placeholder synopsis for episode 3."
+  },
+  {
+   "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000004?base_image_bucket_name=image_manager&base_image=art-4",
+   "duration": 1518,
+   "id": "00000000-0000-4000-8000-000000000004",
+   "name": "Episode 4",
+   "number": "4",
+   "progress": null,
+   "synopsis": "Placeholder synopsis for episode 4."
+  },
+  {
+   "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000005?base_image_bucket_name=image_manager&base_image=art-5",
+   "duration": 1589,
+   "id": "00000000-0000-4000-8000-000000000005",
+   "name": "Episode 5",
+   "number": "5",
+   "progress": null,
+   "synopsis": "Placeholder synopsis for episode 5."
+  },
+  {
+   "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000006?base_image_bucket_name=image_manager&base_image=art-6",
+   "duration": 1281,
+   "id": "00000000-0000-4000-8000-000000000006",
+   "name": "Episode 6",
+   "number": "6",
+   "progress": null,
+   "synopsis": "Placeholder synopsis for episode 6."
+  }
+ ]
+}

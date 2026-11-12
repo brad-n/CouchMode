@@ -1,0 +1,120 @@
+{
+ "currentSeasonId": "00000000-0000-4000-8000-000000000001::1",
+ "description": "Placeholder synopsis for Show A.",
+ "duration": 1434,
+ "genres": [
+  "Genre"
+ ],
+ "name": "Show A",
+ "playId": "00000000-0000-4000-8000-000000000004",
+ "playNumber": "3",
+ "playSeason": "S1",
+ "premiere": "2020-01-01T00:00:00Z",
+ "rating": "TVMA",
+ "seasons": [
+  {
+   "count": 10,
+   "episodes": null,
+   "id": "00000000-0000-4000-8000-000000000001::1",
+   "name": "Season 1"
+  },
+  {
+   "count": 6,
+   "episodes": null,
+   "id": "00000000-0000-4000-8000-000000000001::2",
+   "name": "Season 2"
+  }
+ ],
+ "shownEpisodes": [
+  {
+   "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000002?base_image_bucket_name=image_manager&base_image=art-1",
+   "duration": 1594,
+   "id": "00000000-0000-4000-8000-000000000002",
+   "name": "Episode 1",
+   "number": "1",
+   "progress": null,
+   "synopsis": "Placeholder synopsis for episode 1."
+  },
+  {
+   "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000003?base_image_bucket_name=image_manager&base_image=art-2",
+   "duration": 1451,
+   "id": "00000000-0000-4000-8000-000000000003",
+   "name": "Episode 2",
+   "number": "2",
+   "progress": null,
+   "synopsis": "Placeholder synopsis for episode 2."
+  },
+  {
+   "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000004?base_image_bucket_name=image_manager&base_image=art-3",
+   "duration": 1434,
+   "id": "00000000-0000-4000-8000-000000000004",
+   "name": "Episode 3",
+   "number": "3",
+   "progress": 40,
+   "synopsis": "Placeholder synopsis for episode 3."
+  },
+  {
+   "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000005?base_image_bucket_name=image_manager&base_image=art-4",
+   "duration": 1541,
+   "id": "00000000-0000-4000-8000-000000000005",
+   "name": "Episode 4",
+   "number": "4",
+   "progress": null,
+   "synopsis": "Placeholder synopsis for episode 4."
+  },
+  {
+   "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000006?base_image_bucket_name=image_manager&base_image=art-5",
+   "duration": 1337,
+   "id": "00000000-0000-4000-8000-000000000006",
+   "name": "Episode 5",
+   "number": "5",
+   "progress": null,
+   "synopsis": "Placeholder synopsis for episode 5."
+  },
+  {
+   "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000007?base_image_bucket_name=image_manager&base_image=art-6",
+   "duration": 1269,
+   "id": "00000000-0000-4000-8000-000000000007",
+   "name": "Episode 6",
+   "number": "6",
+   "progress": null,
+   "synopsis": "Placeholder synopsis for episode 6."
+  },
+  {
+   "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000008?base_image_bucket_name=image_manager&base_image=art-7",
+   "duration": 1327,
+   "id": "00000000-0000-4000-8000-000000000008",
+   "name": "Episode 7",
+   "number": "7",
+   "progress": null,
+   "synopsis": "Placeholder synopsis for episode 7."
+  },
+  {
+   "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000009?base_image_bucket_name=image_manager&base_image=art-8",
+   "duration": 1267,
+   "id": "00000000-0000-4000-8000-000000000009",
+   "name": "Episode 8",
+   "number": "8",
+   "progress": null,
+   "synopsis": "Placeholder synopsis for episode 8."
+  },
+  {
+   "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000010?base_image_bucket_name=image_manager&base_image=art-9",
+   "duration": 1258,
+   "id": "00000000-0000-4000-8000-000000000010",
+   "name": "Episode 9",
+   "number": "9",
+   "progress": null,
+   "synopsis": "Placeholder synopsis for episode 9."
+  },
+  {
+   "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000011?base_image_bucket_name=image_manager&base_image=art-10",
+   "duration": 1544,
+   "id": "00000000-0000-4000-8000-000000000011",
+   "name": "Episode 10",
+   "number": "10",
+   "progress": null,
+   "synopsis": "Placeholder synopsis for episode 10."
+  }
+ ]
+}

@@ -1,0 +1,52 @@
+{
+ "currentSeasonId": 70001096,
+ "episodes": [
+  {
+   "art": "https://art.invalid/ep-1.jpg",
+   "id": 70001233,
+   "name": "Episode One Title",
+   "number": 1,
+   "resume": 26,
+   "runtime": 3533,
+   "synopsis": "Synopsis for episode 1."
+  },
+  {
+   "art": "https://art.invalid/ep-2.jpg",
+   "id": 70001370,
+   "name": "Episode Two Title",
+   "number": 2,
+   "resume": null,
+   "runtime": 3617,
+   "synopsis": "Synopsis for episode 2."
+  },
+  {
+   "art": "https://art.invalid/ep-3.jpg",
+   "id": 70001507,
+   "name": "Episode Three Title",
+   "number": 3,
+   "resume": 3129,
+   "runtime": 3237,
+   "synopsis": "Synopsis for episode 3."
+  }
+ ],
+ "seasonLabel": "S1: Alpha",
+ "seasons": [
+  {
+   "count": 14,
+   "id": 70001096,
+   "name": "S1: Alpha"
+  },
+  {
+   "count": 14,
+   "id": 70001781,
+   "name": "S2: Bravo"
+  },
+  {
+   "count": 15,
+   "id": 70001918,
+   "name": "S3: Charlie"
+  },
+  {}
+ ],
+ "synopsis": "Show synopsis."
+}

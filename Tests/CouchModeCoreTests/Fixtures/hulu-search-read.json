@@ -1,0 +1,32 @@
+[
+ {
+  "href": "/series/00000000-0000-4000-8000-000000000001",
+  "name": "Show A",
+  "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000001?base_image_bucket_name=image_manager&base_image=art-1"
+ },
+ {
+  "href": "/series/00000000-0000-4000-8000-000000000002",
+  "name": "Show B",
+  "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000002?base_image_bucket_name=image_manager&base_image=art-2"
+ },
+ {
+  "href": "/series/00000000-0000-4000-8000-000000000003",
+  "name": "Show C",
+  "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000003?base_image_bucket_name=image_manager&base_image=art-3"
+ },
+ {
+  "href": "/series/00000000-0000-4000-8000-000000000004",
+  "name": "Show D",
+  "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000004?base_image_bucket_name=image_manager&base_image=art-4"
+ },
+ {
+  "href": "/series/00000000-0000-4000-8000-000000000005",
+  "name": "Show E",
+  "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000005?base_image_bucket_name=image_manager&base_image=art-5"
+ },
+ {
+  "href": "/movie/00000000-0000-4000-8000-000000000006",
+  "name": "Movie A",
+  "art": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000006?base_image_bucket_name=image_manager&base_image=art-6"
+ }
+]

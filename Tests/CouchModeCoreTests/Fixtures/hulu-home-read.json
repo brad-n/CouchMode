@@ -1,0 +1,239 @@
+{
+ "currentProfileId": "1001",
+ "profiles": [
+  {
+   "id": "1001",
+   "kids": false,
+   "name": "Profile 1"
+  },
+  {
+   "id": "1002",
+   "kids": false,
+   "name": "Profile 2"
+  },
+  {
+   "id": "1003",
+   "kids": false,
+   "name": "Profile 3"
+  },
+  {
+   "id": "1004",
+   "kids": true,
+   "name": "Profile 4"
+  }
+ ],
+ "rows": [
+  {
+   "id": "4101",
+   "items": [
+    {
+     "action": "Watch Movie",
+     "body": "Placeholder synopsis for Movie A.",
+     "eab": "EAB::00000000-0000-4000-8000-000000000001::100000001::100000002",
+     "id": "00000000-0000-4000-8000-000000000001",
+     "name": "Movie A",
+     "subtitle": null,
+     "tile": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000001?base_image_bucket_name=image_manager&base_image=art-1",
+     "type": "movie",
+     "wide": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000001?base_image_bucket_name=image_manager&base_image=art-1"
+    }
+   ],
+   "name": "Spotlight"
+  },
+  {
+   "id": "47",
+   "items": [
+    {
+     "action": "Start Watching",
+     "body": "Placeholder synopsis for Show A.",
+     "eab": "EAB::00000000-0000-4000-8000-000000000002::100000003::100000004",
+     "id": "00000000-0000-4000-8000-000000000003",
+     "name": "Show A",
+     "subtitle": "S1 E1 - Episode 1",
+     "tile": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000003?base_image_bucket_name=image_manager&base_image=art-2",
+     "type": "series",
+     "wide": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000003?base_image_bucket_name=image_manager&base_image=art-2"
+    },
+    {
+     "action": "Watch Latest Season",
+     "body": "Placeholder synopsis for Show B.",
+     "eab": "EAB::00000000-0000-4000-8000-000000000004::100000005::100000006",
+     "id": "00000000-0000-4000-8000-000000000005",
+     "name": "Show B",
+     "subtitle": "S23 E1 - Episode 1",
+     "tile": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000005?base_image_bucket_name=image_manager&base_image=art-3",
+     "type": "series",
+     "wide": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000005?base_image_bucket_name=image_manager&base_image=art-3"
+    },
+    {
+     "action": "Start Watching",
+     "body": "Placeholder synopsis for Show C.",
+     "eab": "EAB::00000000-0000-4000-8000-000000000006::100000007::100000008",
+     "id": "00000000-0000-4000-8000-000000000007",
+     "name": "Show C",
+     "subtitle": "S1 E1 - Episode 1",
+     "tile": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000007?base_image_bucket_name=image_manager&base_image=art-4",
+     "type": "series",
+     "wide": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000007?base_image_bucket_name=image_manager&base_image=art-4"
+    }
+   ],
+   "name": "TV for You"
+  },
+  {
+   "id": "48",
+   "items": [
+    {
+     "action": "Watch Movie",
+     "body": "Placeholder synopsis for Movie A.",
+     "eab": "EAB::00000000-0000-4000-8000-000000000001::100000001::100000002",
+     "id": "00000000-0000-4000-8000-000000000001",
+     "name": "Movie A",
+     "subtitle": null,
+     "tile": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000001?base_image_bucket_name=image_manager&base_image=art-5",
+     "type": "movie",
+     "wide": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000001?base_image_bucket_name=image_manager&base_image=art-5"
+    },
+    {
+     "action": "Watch Movie",
+     "body": "Placeholder synopsis for Movie B.",
+     "eab": "EAB::00000000-0000-4000-8000-000000000008::100000009::100000010",
+     "id": "00000000-0000-4000-8000-000000000008",
+     "name": "Movie B",
+     "subtitle": null,
+     "tile": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000008?base_image_bucket_name=image_manager&base_image=art-6",
+     "type": "movie",
+     "wide": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000008?base_image_bucket_name=image_manager&base_image=art-6"
+    },
+    {
+     "action": "Watch Movie",
+     "body": "Placeholder synopsis for Movie C.",
+     "eab": "EAB::00000000-0000-4000-8000-000000000009::100000011::100000012",
+     "id": "00000000-0000-4000-8000-000000000009",
+     "name": "Movie C",
+     "subtitle": null,
+     "tile": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000009?base_image_bucket_name=image_manager&base_image=art-7",
+     "type": "movie",
+     "wide": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000009?base_image_bucket_name=image_manager&base_image=art-7"
+    }
+   ],
+   "name": "Movies for You"
+  },
+  {
+   "id": "282",
+   "items": [
+    {
+     "action": "Resume Episode",
+     "body": "Placeholder synopsis for Show D.",
+     "eab": "EAB::00000000-0000-4000-8000-000000000010::100000013::100000014",
+     "id": "00000000-0000-4000-8000-000000000011",
+     "name": "Show D",
+     "subtitle": "S1 E7 - Episode 7",
+     "tile": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000011?base_image_bucket_name=image_manager&base_image=art-8",
+     "type": "series",
+     "wide": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000011?base_image_bucket_name=image_manager&base_image=art-8"
+    },
+    {
+     "action": "Resume Episode",
+     "body": "Placeholder synopsis for Show E.",
+     "eab": "EAB::00000000-0000-4000-8000-000000000012::100000015::100000016",
+     "id": "00000000-0000-4000-8000-000000000013",
+     "name": "Show E",
+     "subtitle": "S1 E3 - Episode 3",
+     "tile": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000013?base_image_bucket_name=image_manager&base_image=art-9",
+     "type": "series",
+     "wide": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000013?base_image_bucket_name=image_manager&base_image=art-9"
+    },
+    {
+     "action": "Resume Episode",
+     "body": "Placeholder synopsis for Show F.",
+     "eab": "EAB::00000000-0000-4000-8000-000000000014::100000017::100000018",
+     "id": "00000000-0000-4000-8000-000000000015",
+     "name": "Show F",
+     "subtitle": "S38 E3 - Episode 3",
+     "tile": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000015?base_image_bucket_name=image_manager&base_image=art-10",
+     "type": "series",
+     "wide": "https://img.hulu.invalid/user/v3/artwork/00000000-0000-4000-8000-000000000015?base_image_bucket_name=image_manager&base_image=art-10"
+    }
+   ],
+   "name": "Continue Watching"
+  },
+  {
+   "id": "11091",
+   "items": [
+    {
+     "action": "Details",
+     "body": null,
+     "eab": "EAB::00000000-0000-4000-8000-000000000016::NULL::NULL",
+     "id": "00000000-0000-4000-8000-000000000016",
+     "name": "Network A",
+     "subtitle": "Network A",
+     "tile": "https://img.hulu.invalid/user/v3/artwork/daypart?base_image_bucket_name=client&base_image=art-11",
+     "type": "network",
+     "wide": "https://img.hulu.invalid/user/v3/artwork/daypart?base_image_bucket_name=client&base_image=art-11"
+    },
+    {
+     "action": "Browse the content",
+     "body": null,
+     "eab": "EAB::00000000-0000-4000-8000-000000000017::NULL::NULL",
+     "id": "00000000-0000-4000-8000-000000000017",
+     "name": "Network B",
+     "subtitle": "Network B",
+     "tile": "https://img.hulu.invalid/user/v3/artwork/daypart?base_image_bucket_name=client&base_image=art-12",
+     "type": "network",
+     "wide": "https://img.hulu.invalid/user/v3/artwork/daypart?base_image_bucket_name=client&base_image=art-12"
+    },
+    {
+     "action": "Browse the content",
+     "body": null,
+     "eab": "EAB::00000000-0000-4000-8000-000000000018::NULL::NULL",
+     "id": "00000000-0000-4000-8000-000000000018",
+     "name": "Network C",
+     "subtitle": "Network C",
+     "tile": "https://img.hulu.invalid/user/v3/artwork/daypart?base_image_bucket_name=client&base_image=art-13",
+     "type": "network",
+     "wide": "https://img.hulu.invalid/user/v3/artwork/daypart?base_image_bucket_name=client&base_image=art-13"
+    }
+   ],
+   "name": "Networks for You"
+  },
+  {
+   "id": "8869",
+   "items": [
+    {
+     "action": "Start Watching",
+     "body": "Placeholder synopsis for Show G.",
+     "eab": "EAB::00000000-0000-4000-8000-000000000019::100000019::100000020",
+     "id": "00000000-0000-4000-8000-000000000020",
+     "name": "Show G",
+     "subtitle": null,
+     "tile": "https://img.hulu.invalid/user/v3/editorial/00000000-0000-4000-8000-000000000020?base_image_bucket_name=vogue&base_image=art-14",
+     "type": "series",
+     "wide": "https://img.hulu.invalid/user/v3/editorial/00000000-0000-4000-8000-000000000020?base_image_bucket_name=vogue&base_image=art-14"
+    },
+    {
+     "action": "Start Watching",
+     "body": "Placeholder synopsis for Show H.",
+     "eab": "EAB::00000000-0000-4000-8000-000000000021::100000021::100000022",
+     "id": "00000000-0000-4000-8000-000000000022",
+     "name": "Show H",
+     "subtitle": null,
+     "tile": "https://img.hulu.invalid/user/v3/editorial/00000000-0000-4000-8000-000000000022?base_image_bucket_name=vogue&base_image=art-15",
+     "type": "series",
+     "wide": "https://img.hulu.invalid/user/v3/editorial/00000000-0000-4000-8000-000000000022?base_image_bucket_name=vogue&base_image=art-15"
+    },
+    {
+     "action": "Resume Episode",
+     "body": "Placeholder synopsis for Show I.",
+     "eab": "EAB::00000000-0000-4000-8000-000000000023::100000023::100000024",
+     "id": "00000000-0000-4000-8000-000000000024",
+     "name": "Show I",
+     "subtitle": null,
+     "tile": "https://img.hulu.invalid/user/v3/editorial/00000000-0000-4000-8000-000000000024?base_image_bucket_name=vogue&base_image=art-16",
+     "type": "series",
+     "wide": "https://img.hulu.invalid/user/v3/editorial/00000000-0000-4000-8000-000000000024?base_image_bucket_name=vogue&base_image=art-16"
+    }
+   ],
+   "name": "Top 15 Today"
+  }
+ ]
+}

@@ -1,0 +1,1381 @@
+{
+ "Episode:{\"videoId\":70000411}": {
+  "__typename": "Episode",
+  "bookmark": null,
+  "releaseYear": 1999,
+  "runtimeSec": 1542,
+  "videoId": 70000411
+ },
+ "Episode:{\"videoId\":70000822}": {
+  "__typename": "Episode",
+  "bookmark": {
+   "__typename": "VideoBookmark",
+   "position": 4
+  },
+  "releaseYear": 2023,
+  "runtimeSec": 3936,
+  "videoId": 70000822
+ },
+ "Episode:{\"videoId\":70002329}": {
+  "__typename": "Episode",
+  "bookmark": null,
+  "releaseYear": 2024,
+  "runtimeSec": 3818,
+  "videoId": 70002329
+ },
+ "Episode:{\"videoId\":70002603}": {
+  "__typename": "Episode",
+  "bookmark": null,
+  "releaseYear": 2024,
+  "runtimeSec": 3338,
+  "videoId": 70002603
+ },
+ "Episode:{\"videoId\":70003973}": {
+  "__typename": "Episode",
+  "bookmark": null,
+  "releaseYear": 2026,
+  "runtimeSec": 2447,
+  "videoId": 70003973
+ },
+ "Episode:{\"videoId\":70004384}": {
+  "__typename": "Episode",
+  "bookmark": {
+   "__typename": "VideoBookmark",
+   "position": 2289
+  },
+  "releaseYear": 2026,
+  "runtimeSec": 3140,
+  "videoId": 70004384
+ },
+ "Episode:{\"videoId\":70004521}": {
+  "__typename": "Episode",
+  "bookmark": null,
+  "releaseYear": 2026,
+  "runtimeSec": 3524,
+  "videoId": 70004521
+ },
+ "Episode:{\"videoId\":70004658}": {
+  "__typename": "Episode",
+  "bookmark": null,
+  "releaseYear": 2026,
+  "runtimeSec": 3176,
+  "videoId": 70004658
+ },
+ "Episode:{\"videoId\":70004932}": {
+  "__typename": "Episode",
+  "bookmark": null,
+  "releaseYear": 2026,
+  "runtimeSec": 4157,
+  "videoId": 70004932
+ },
+ "Episode:{\"videoId\":70005480}": {
+  "__typename": "Episode",
+  "bookmark": {
+   "__typename": "VideoBookmark",
+   "position": 2
+  },
+  "releaseYear": 2026,
+  "runtimeSec": 2522,
+  "videoId": 70005480
+ },
+ "Movie:{\"videoId\":70003836}": {
+  "__typename": "Movie",
+  "bookmark": null,
+  "contentAdvisory": {
+   "__typename": "ContentAdvisory",
+   "maturityLevel": 100
+  },
+  "contentMetadata": {
+   "__typename": "ContentMetadata",
+   "contentLabelMetadata": {
+    "__typename": "PinotContentLabelMetadata",
+    "iconId": "",
+    "text": "Movie"
+   }
+  },
+  "eventWindow": null,
+  "releaseYear": 2026,
+  "runtimeSec": 6898,
+  "unifiedEntityId": "Video:70003836",
+  "videoId": 70003836
+ },
+ "Movie:{\"videoId\":70005069}": {
+  "__typename": "Movie",
+  "availabilityEndTimeMs": 1841295600000,
+  "availabilityStartTimeMs": 1794038400000,
+  "bookmark": null,
+  "contentAdvisory": {
+   "__typename": "ContentAdvisory",
+   "boardId": 1,
+   "boardName": "MPAA",
+   "certificationRatingId": 125,
+   "certificationValue": "R",
+   "maturityDescription": "sexual content, violence/bloody images and language",
+   "maturityLevel": 100,
+   "videoSpecificRatingReason": "sexual content, violence/bloody images and language"
+  },
+  "contentMetadata": {
+   "__typename": "ContentMetadata",
+   "contentLabelMetadata": {
+    "__typename": "PinotContentLabelMetadata",
+    "iconId": "",
+    "text": "Movie"
+   }
+  },
+  "eventWindow": null,
+  "hasOriginalTreatment": false,
+  "isAvailable": true,
+  "isInRemindMeList": false,
+  "isPlayable": true,
+  "liveEvent": null,
+  "playbackBadges": [
+   "OFFLINE_DOWNLOAD_AVAILABLE",
+   "VIDEO_SD",
+   "VIDEO_HD",
+   "VIDEO_ULTRA_HD",
+   "AUDIO_SPATIAL",
+   "AUDIO_FIVE_DOT_ONE",
+   "AUDIO_ASSISTIVE",
+   "TEXT_CLOSED_CAPTIONS"
+  ],
+  "playbackEntityRedirect": {
+   "__typename": "PlaybackEntityRedirect",
+   "target": null
+  },
+  "primaryGenres({\"first\":1})": {
+   "__typename": "GenreConnection",
+   "edges": [
+    {
+     "__typename": "GenreEdge",
+     "node": {
+      "__ref": "Genre:{\"genreId\":70003151}"
+     }
+    }
+   ]
+  },
+  "releaseYear": 2026,
+  "runtimeSec": 5627,
+  "title": "Sample Movie Original Title",
+  "unifiedEntityId": "Video:70005069",
+  "unplayableCauses": null,
+  "videoId": 70005069
+ },
+ "PinotCarouselSection:{\"id\":\"886f574193ae3f5d9135a1fd2276575a5d44ac17b6905c0d4c9033096e8eb36447cdb111b93e9fb617923af27cf8345ee6a2da4ba035a0d5824b331f1f3458a9031a2225ed0c7cc8ac79262c37b4c4fa\"}": {
+  "__typename": "PinotCarouselSection",
+  "_id": "aba4b946e1477b97d8559f4543c6d5e9e82a8a70dba89228f0769cba9bb029fabc45ec4ba8e630fce16ad358dcbbe3bdcf302b89e313b3d9b8edc51176cf03869fe22fcf1ddc96642a177bc7466dbc61876c2d60a4476c0f665f4bd3ba1e5199d2a74206f6deff51ac62e8c96d1754e8b180ed357f86965a26c1ed888f58d1f45bfeeff",
+  "displayString": "Continue Watching for Profile 1",
+  "entities": {
+   "__typename": "PinotEntityConnection",
+   "edges": [
+    {
+     "__typename": "PinotEntityEdge",
+     "cursor": "MA==",
+     "node": {
+      "__ref": "PinotContinueWatchingEntityTreatment:continueWatching_Video:70000959_ca09931d-b7fc-4ad5-82e4-710be6afc470"
+     }
+    },
+    {
+     "__typename": "PinotEntityEdge",
+     "cursor": "MQ==",
+     "node": {
+      "__ref": "PinotContinueWatchingEntityTreatment:continueWatching_Video:70002877_ca09931d-b7fc-4ad5-82e4-710be6afc470"
+     }
+    },
+    {
+     "__typename": "PinotEntityEdge",
+     "cursor": "Mg==",
+     "node": {
+      "__ref": "PinotContinueWatchingEntityTreatment:continueWatching_Video:70002192_ca09931d-b7fc-4ad5-82e4-710be6afc470"
+     }
+    }
+   ],
+   "pageInfo": {
+    "__typename": "PageInfo",
+    "endCursor": "MTA=",
+    "hasNextPage": false,
+    "hasPreviousPage": false,
+    "startCursor": "MA=="
+   },
+   "totalCount": 11
+  },
+  "eventListeners": [
+   {
+    "__typename": "PinotExitPlayerEventListener",
+    "actions": [
+     {
+      "__ref": "PinotPageUpdateAction:c1168899827f12f16374bb537391792b11c8b075e21ec3fada6e7914a44758eda9b853404e0882dffa49cc809f78ac3eb715063d0a15df6ce2f06948009cf8593ab0fe420422cb7e35c35e0f08a30ba36dad499792146487589ffcac391e147f25855fc366bcfe0397e980b57bef6bb54400156a855f1cba140602b110d1d41403859230588a7b8d09476cec907fb6ca4c3b9848f23f7baa7bc82875990375fa96ab7ff4284fc21b7dc68d43f37aac53f726c541e770eb7d103ac571aa5ea8d3ca92b3f3ea774e864e95fb9606351f1f60936af249d2c47270362a6b0fe3986604e4ef6b7d0e7e06728db4ea"
+     }
+    ]
+   },
+   {
+    "__typename": "PinotServerNotificationEventListener",
+    "actions": [
+     {
+      "__ref": "PinotPageUpdateAction:64a333a5f4b26e2716cde0662ac91363a17f069bcd1d7d69d3350bb5bbf6a60fc76cfe8353498e578e63c48a6767a3e364e79128a9bd2f38324b24e7966eed41db5e59eedfa1c9beb149832285efb44e2712a02a78b1ae646060379cf872af53dcf9177779f8024dd0224b56f56f268c5002e5716535b1200b8f1ad27de6fb451f96b31d5c756191943535b9e01178f422f158228a6fd37ad0e42fc50b860c63a6b5ea9deb74800e7448beabfd27c4d141e00792f5cc77a3ee739ab3af521b1b2c6707be49b36808988a0a852215d2177fd4b39cb1dc5e8e72ab65a043f4284801c7f7d3b5294afcbdac58db"
+     }
+    ],
+    "notificationMessageRegex": "UPDATE_CW"
+   },
+   {
+    "__typename": "PinotComponentMountEventListener",
+    "actions": [
+     {
+      "__ref": "PinotPageUpdateAction:642e8380d858dbac2153c253731c86b3012d709f97a92df9aa340fa3d77560bee75519a3d997653c1180864c1872feac8630976eedfe2b5c92ea8e3074935c5f3b2bd9f19b4fb58db3ad3098a63dd9f5fd79570188ede0de1b85a70574575cbc31b07dd59595405b5d91dd5dbe5feb23bdbf2786fc6e5776b0d67d4ace2c41267c9e3497b4232493943372fabfebde05aeffd33ee369da207f1dfc06f75607b084357cca87c3d18897c2eaea409b1ba7122327f8a8295ceae3bdf6f1c8863be3f29cef99b5a083dd6f4a2492942feb4c43938ca54a54081d63ff7b1046aeb2796b5d63248089b64d95b65e26"
+     }
+    ]
+   },
+   {
+    "__typename": "PinotRemoveFromContinueWatchingEventListener",
+    "actions": [
+     {
+      "__ref": "PinotPageUpdateAction:fe6ad2564f54c8b1d172dc9978c63f69967521dc2a9272b7bcb7e2a74858904c4aee71dc0e4d3c3955d39a46c22c175103a254ec2ca81f98e9dee8d9ee08e81d46a7b3944b78e8c38fada0227535a6d2bfdfedf05f89e4ec58d2fc6aa7fc8e945b3215728cc69260c7bae0b285ea456ff44b0a50c81aaf3540b5691be8fd7cc7552c2f89343556a1fe4bf8c8282ff438203a5699c93acf3902d57a0d41341994f02d45f42abf5e62fc06f91caf7632e9e777b7af2345073f7891bceb19189f746b2416ca5cf3edadae7856bd012926d141b41d9ca352d28611ae41e12968a77376f8dd655b23c638af6ccce6"
+     }
+    ]
+   }
+  ],
+  "id": "886f574193ae3f5d9135a1fd2276575a5d44ac17b6905c0d4c9033096e8eb36447cdb111b93e9fb617923af27cf8345ee6a2da4ba035a0d5824b331f1f3458a9031a2225ed0c7cc8ac79262c37b4c4fa",
+  "loggingData": {
+   "__typename": "PinotSectionLoggingData",
+   "sectionLoggingId": "886f574193ae3f5d9135a1fd2276575a5d44ac17b6905c0d4c9033096e8eb36447cdb111b93e9fb617923af27cf8345ee6a2da4ba035a0d5824b331f1f3458a9031a2225ed0c7cc8ac79262c37b4c4fa",
+   "trackId": 260904007
+  },
+  "sectionTreatment": {
+   "__typename": "PinotStandardSectionTreatment",
+   "showTrailingBetaBadge": false
+  },
+  "version": "1"
+ },
+ "PinotCarouselSection:{\"id\":\"8fe9257d28bea93df6b87cc2acceb9a346661d3fa3d2cc42f9d5d0738f65a662187ab5c7be3d9b1e129ee0e8a4661785ccdf3b5b6c9b2ee21d6ebac458c5dbfc823f58788c53e1b2991a26df50bc19b6\"}": {
+  "__typename": "PinotCarouselSection",
+  "_id": "ce69d97d61169c9cd2500a5bcac616a6f311832f7b6de30f7588e25b8cbecb725774c70b302e9918a30bc70cb06ff12e92dbf1361d0fe301c55b83b2a8a4097c49c5234e359be2fb8c47a6460502b5747845b72a1cde3a2a5c8ca8388b0923e632a0e1aa590f715afe5b575089614bf79215dc503d96a6d5984d236fb51150b5f5bfc9c",
+  "displayString": "We Think You\u2019ll Love These",
+  "entities": {
+   "__typename": "PinotEntityConnection",
+   "edges": [
+    {
+     "__typename": "PinotEntityEdge",
+     "cursor": "MA==",
+     "node": {
+      "__ref": "PinotStandardBoxshotEntityTreatment:standardBoxshot_Video:70005206_04e36373-d367-4e79-8bc5-a6c79b5dbef0"
+     }
+    },
+    {
+     "__typename": "PinotEntityEdge",
+     "cursor": "MQ==",
+     "node": {
+      "__ref": "PinotStandardBoxshotEntityTreatment:standardBoxshot_Video:70003562_04e36373-d367-4e79-8bc5-a6c79b5dbef0"
+     }
+    },
+    {
+     "__typename": "PinotEntityEdge",
+     "cursor": "Mg==",
+     "node": {
+      "__ref": "PinotStandardBoxshotEntityTreatment:standardBoxshot_Video:70003836_04e36373-d367-4e79-8bc5-a6c79b5dbef0"
+     }
+    }
+   ],
+   "pageInfo": {
+    "__typename": "PageInfo",
+    "endCursor": "MTI=",
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "startCursor": "MA=="
+   },
+   "totalCount": 150
+  },
+  "eventListeners": [],
+  "id": "8fe9257d28bea93df6b87cc2acceb9a346661d3fa3d2cc42f9d5d0738f65a662187ab5c7be3d9b1e129ee0e8a4661785ccdf3b5b6c9b2ee21d6ebac458c5dbfc823f58788c53e1b2991a26df50bc19b6",
+  "loggingData": {
+   "__typename": "PinotSectionLoggingData",
+   "sectionLoggingId": "8fe9257d28bea93df6b87cc2acceb9a346661d3fa3d2cc42f9d5d0738f65a662187ab5c7be3d9b1e129ee0e8a4661785ccdf3b5b6c9b2ee21d6ebac458c5dbfc823f58788c53e1b2991a26df50bc19b6",
+   "trackId": 260792517
+  },
+  "sectionTreatment": {
+   "__typename": "PinotStandardSectionTreatment",
+   "showTrailingBetaBadge": false
+  },
+  "version": "1"
+ },
+ "PinotCarouselSection:{\"id\":\"88953ff3a505bf023ae36fe6a45b2a3fe66ed5497b04b60b25b59d1b0ed6942cddbdbb511330b2ab39ea13611220aad0b9a83bfd930d4c54ebdbc39b0dc08c09d357646ee90b2107660b3d29af905718\"}": {
+  "__typename": "PinotCarouselSection",
+  "_id": "98254a4e7f1c1e523b19b1d3ea70e60735b7d5baee429482b86c0fcd7b0844053adf5b0413419455a537767bb4b78e759b00cae30e260ca2ed1a9d4347b8ae2638ea704929fcf0eb399bbc0be03eda9da50e520c11db1dc4e3c02dab2cf91d8994ed26e48ec1fd3803acd300fb78a8e36b970f28cffeb54f7ceab46e24c5584c9abbcab",
+  "displayString": "Today's Top Picks for You",
+  "entities": {
+   "__typename": "PinotEntityConnection",
+   "edges": [
+    {
+     "__typename": "PinotEntityEdge",
+     "cursor": "MA==",
+     "node": {
+      "__ref": "PinotStandardBoxshotEntityTreatment:standardBoxshot_Video:70000685_d0a92b14-970a-4126-8684-93a8f5201533"
+     }
+    },
+    {
+     "__typename": "PinotEntityEdge",
+     "cursor": "MQ==",
+     "node": {
+      "__ref": "PinotStandardBoxshotEntityTreatment:standardBoxshot_Video:70000274_d0a92b14-970a-4126-8684-93a8f5201533"
+     }
+    },
+    {
+     "__typename": "PinotEntityEdge",
+     "cursor": "Mg==",
+     "node": {
+      "__ref": "PinotStandardBoxshotEntityTreatment:standardBoxshot_Video:70004110_d0a92b14-970a-4126-8684-93a8f5201533"
+     }
+    }
+   ],
+   "pageInfo": {
+    "__typename": "PageInfo",
+    "endCursor": "MTI=",
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "startCursor": "MA=="
+   },
+   "totalCount": 94
+  },
+  "eventListeners": [],
+  "id": "88953ff3a505bf023ae36fe6a45b2a3fe66ed5497b04b60b25b59d1b0ed6942cddbdbb511330b2ab39ea13611220aad0b9a83bfd930d4c54ebdbc39b0dc08c09d357646ee90b2107660b3d29af905718",
+  "loggingData": {
+   "__typename": "PinotSectionLoggingData",
+   "sectionLoggingId": "88953ff3a505bf023ae36fe6a45b2a3fe66ed5497b04b60b25b59d1b0ed6942cddbdbb511330b2ab39ea13611220aad0b9a83bfd930d4c54ebdbc39b0dc08c09d357646ee90b2107660b3d29af905718",
+   "trackId": 260186796
+  },
+  "sectionTreatment": {
+   "__typename": "PinotStandardSectionTreatment",
+   "showTrailingBetaBadge": false
+  },
+  "version": "1"
+ },
+ "PinotCarouselSection:{\"id\":\"306aa6b64a7d209c69f06b3d0432655d46f50143924dc892d5f753c615eeda5d69b0665a58a86dbc4dc29b8452dc54646a4f857bde73d8c4be77fa0841c2b23d9766c117facdd90fa47773c241588988\"}": {
+  "__typename": "PinotCarouselSection",
+  "_id": "01444c8288634fda34460b9c6be379ff6ccf2bd73de2d2b40533e0482f72b98934956478ee2628f68b7af4e099e1d537abb26f1309d449641b2bad29a05f0f70a1f9f2fdef4cabc0e759d05a45b7d969855b9fa0784284755ca72de375c1e2ea4ee3d2d3b0f15a228ef942afeae86db692b9566aad13f124271ef00371fd08061929bea",
+  "displayString": "New on Netflix",
+  "entities": {
+   "__typename": "PinotEntityConnection",
+   "edges": [
+    {
+     "__typename": "PinotEntityEdge",
+     "cursor": "MA==",
+     "node": {
+      "__ref": "PinotStandardBoxshotEntityTreatment:standardBoxshot_Video:70000959_34db114d-be78-43d2-8d3b-aaade7ec2e4d"
+     }
+    },
+    {
+     "__typename": "PinotEntityEdge",
+     "cursor": "MQ==",
+     "node": {
+      "__ref": "PinotStandardBoxshotEntityTreatment:standardBoxshot_Video:70003288_34db114d-be78-43d2-8d3b-aaade7ec2e4d"
+     }
+    },
+    {
+     "__typename": "PinotEntityEdge",
+     "cursor": "Mg==",
+     "node": {
+      "__ref": "PinotStandardBoxshotEntityTreatment:standardBoxshot_Video:70002466_34db114d-be78-43d2-8d3b-aaade7ec2e4d"
+     }
+    }
+   ],
+   "pageInfo": {
+    "__typename": "PageInfo",
+    "endCursor": "MTI=",
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "startCursor": "MA=="
+   },
+   "totalCount": 75
+  },
+  "eventListeners": [],
+  "id": "306aa6b64a7d209c69f06b3d0432655d46f50143924dc892d5f753c615eeda5d69b0665a58a86dbc4dc29b8452dc54646a4f857bde73d8c4be77fa0841c2b23d9766c117facdd90fa47773c241588988",
+  "loggingData": {
+   "__typename": "PinotSectionLoggingData",
+   "sectionLoggingId": "306aa6b64a7d209c69f06b3d0432655d46f50143924dc892d5f753c615eeda5d69b0665a58a86dbc4dc29b8452dc54646a4f857bde73d8c4be77fa0841c2b23d9766c117facdd90fa47773c241588988",
+   "trackId": 260978953
+  },
+  "sectionTreatment": {
+   "__typename": "PinotStandardSectionTreatment",
+   "showTrailingBetaBadge": false
+  },
+  "version": "1"
+ },
+ "PinotContextualArtwork:dd4762033b0a91497fb33145ce5c5ce2b6827e0c3b4e34f963bd037e9879dcb2bac0e465e45ac63188f18e8cd899e1bbd38bac80ed60cbd5df0fb7cc53fc0399eff2e00cb719fe124f3f0f0db249bcb3fa49f7e4c122232a97f1b402707d225ea84f68b235694fee61bab6193e90ebc19cdba8486339c59bc7271a63d693115317567b32907c24ac81f8c1cefe1a8c4fbe8231e7d6402a71d9e2092952f5d74a543077bd69ac0eee": {
+  "__typename": "PinotContextualArtwork",
+  "_id": "dd4762033b0a91497fb33145ce5c5ce2b6827e0c3b4e34f963bd037e9879dcb2bac0e465e45ac63188f18e8cd899e1bbd38bac80ed60cbd5df0fb7cc53fc0399eff2e00cb719fe124f3f0f0db249bcb3fa49f7e4c122232a97f1b402707d225ea84f68b235694fee61bab6193e90ebc19cdba8486339c59bc7271a63d693115317567b32907c24ac81f8c1cefe1a8c4fbe8231e7d6402a71d9e2092952f5d74a543077bd69ac0eee",
+  "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+  "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+  "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}}})": {
+   "__typename": "Image",
+   "height": 192,
+   "key": "sdp|138ac7d4-86ad-4a1d-87ab-cfe319033294|en|mra|70004795,BADGE|new.season.coming.soon|en",
+   "url": "https://art.invalid/20.jpg",
+   "width": 342
+  },
+  "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}}})": {
+   "__typename": "Image",
+   "key": "sdp|138ac7d4-86ad-4a1d-87ab-cfe319033294|en|mra|70004795,BADGE|new.season.coming.soon|en",
+   "url": "https://art.invalid/21.jpg"
+  },
+  "imageCongruenceContext": null
+ },
+ "PinotContextualArtwork:25e3dc1814b540523eebe311b2ee7c11924e1c27e4cc629f0aacd8b7d37b297b77fc010c1540d1019bc3bba0a144f9e90e6aee38a626566013506f2f34d922d65cd174abcd47fad6ecf66f3854aee277992ab976a967de57703de4dc1614d85d3f3bddb80ecb8ddf101bb28987b1ffe0a7dc78eec2f8b55c60c86553062fab792d1c4f6c3a8d3c7a9b0ab88e5ac257ba6ace2ce7eb40b3d9142ee7fe92a0e61ae0741412097a10a2": {
+  "__typename": "PinotContextualArtwork",
+  "_id": "25e3dc1814b540523eebe311b2ee7c11924e1c27e4cc629f0aacd8b7d37b297b77fc010c1540d1019bc3bba0a144f9e90e6aee38a626566013506f2f34d922d65cd174abcd47fad6ecf66f3854aee277992ab976a967de57703de4dc1614d85d3f3bddb80ecb8ddf101bb28987b1ffe0a7dc78eec2f8b55c60c86553062fab792d1c4f6c3a8d3c7a9b0ab88e5ac257ba6ace2ce7eb40b3d9142ee7fe92a0e61ae0741412097a10a2",
+  "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+  "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+  "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}}})": {
+   "__typename": "Image",
+   "height": 192,
+   "key": "sdp|c8165e03-3ec4-41e5-80a1-01eddb6fcd68|en|mra|70001644",
+   "url": "https://art.invalid/18.jpg",
+   "width": 342
+  },
+  "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}}})": {
+   "__typename": "Image",
+   "key": "sdp|c8165e03-3ec4-41e5-80a1-01eddb6fcd68|en|mra|70001644",
+   "url": "https://art.invalid/19.jpg"
+  },
+  "imageCongruenceContext": null
+ },
+ "PinotContextualArtwork:b8f80cc76bf20c305fc3dcbe1942b153bb57c53403b16281564b5039406b4520bd38dc51596656b7299955476c0ec221ade9445b6485224edfea95e32cbe556dc9bf3e5f533112311d20eba0b7256320591ea96efab0b02d4aaeb5223a6f763493486ac83ef8f1d5049be6099538fce3b58b12baf213a6922223146d41de1d7b4d45a3590ad61942c240e68c3aff5aca7d2255a2122f99d7d0a526cb972415fdb0d81922f3c323ec": {
+  "__typename": "PinotContextualArtwork",
+  "_id": "b8f80cc76bf20c305fc3dcbe1942b153bb57c53403b16281564b5039406b4520bd38dc51596656b7299955476c0ec221ade9445b6485224edfea95e32cbe556dc9bf3e5f533112311d20eba0b7256320591ea96efab0b02d4aaeb5223a6f763493486ac83ef8f1d5049be6099538fce3b58b12baf213a6922223146d41de1d7b4d45a3590ad61942c240e68c3aff5aca7d2255a2122f99d7d0a526cb972415fdb0d81922f3c323ec",
+  "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+  "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+  "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}}})": {
+   "__typename": "Image",
+   "height": 192,
+   "key": "sdp|720af718-8fd0-4398-81e6-63674ba53989|en|mra|70004247,BADGE|recently.added|en",
+   "url": "https://art.invalid/22.jpg",
+   "width": 342
+  },
+  "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}}})": {
+   "__typename": "Image",
+   "key": "sdp|720af718-8fd0-4398-81e6-63674ba53989|en|mra|70004247,BADGE|recently.added|en",
+   "url": "https://art.invalid/23.jpg"
+  },
+  "imageCongruenceContext": null
+ },
+ "PinotContextualArtwork:a645c0ac155d51b62130e5dd5a7d31970932194f03439975fdad60eada3eab5fda291b57dc03dc0a96f9b617b94147527a71f0ae248c2f170e33c59d9d9670ca2b59f2cfd7905ee7e47802fadba8f9560fad2b00e10059c843b0aee26d2238a2430cb37937d80b9eeb522b4fcc1a0d6dbb1509d7c1d3bfd82102eba08bb26254e92e36796b08621441256b639bca584913073d3d72e063fb77da10832d3d99a138c72d7e4b4ff85ef6de6b41af4c65160e1304b829d8bddbf59b527e8a3": {
+  "__typename": "PinotContextualArtwork",
+  "_id": "a645c0ac155d51b62130e5dd5a7d31970932194f03439975fdad60eada3eab5fda291b57dc03dc0a96f9b617b94147527a71f0ae248c2f170e33c59d9d9670ca2b59f2cfd7905ee7e47802fadba8f9560fad2b00e10059c843b0aee26d2238a2430cb37937d80b9eeb522b4fcc1a0d6dbb1509d7c1d3bfd82102eba08bb26254e92e36796b08621441256b639bca584913073d3d72e063fb77da10832d3d99a138c72d7e4b4ff85ef6de6b41af4c65160e1304b829d8bddbf59b527e8a3",
+  "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+  "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+  "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}}})": {
+   "__typename": "Image",
+   "height": 192,
+   "key": "sdp|466e9edb-77b4-407f-8e80-38b26e5ed20f|en,BADGE|newcontent:new.season|en",
+   "url": "https://art.invalid/6.jpg",
+   "width": 342
+  },
+  "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}}})": {
+   "__typename": "Image",
+   "key": "sdp|466e9edb-77b4-407f-8e80-38b26e5ed20f|en,BADGE|newcontent:new.season|en",
+   "url": "https://art.invalid/7.jpg"
+  },
+  "imageCongruenceContext": "BX.RecentlyAdded,BX.LeavingSoon"
+ },
+ "PinotContextualArtwork:df8fbb1fd225ff6e97d173fd3bcb8f29654a2f1b91ff2e6e31b5b4c5f0b7bc619bd70401c5988d1cddc2ab557fdd2dbc8602089e296836e61cf62fbabe8d014a8a4fcb205d8ef4c36cadbfc7e708386cf083ab4d2b54d3efead58ef63623cd97938ecab1c1d76b72adf9a753cd1c746c854b00969fd3475b137e5234af64fd141aeb017bdab22dec618a6197b614b8b853b143f3a5e050aae07c2d8b18ebc32070045e2dbf3f6e14422109b3015c8b74791ee421b2b91237a236bb14370": {
+  "__typename": "PinotContextualArtwork",
+  "_id": "df8fbb1fd225ff6e97d173fd3bcb8f29654a2f1b91ff2e6e31b5b4c5f0b7bc619bd70401c5988d1cddc2ab557fdd2dbc8602089e296836e61cf62fbabe8d014a8a4fcb205d8ef4c36cadbfc7e708386cf083ab4d2b54d3efead58ef63623cd97938ecab1c1d76b72adf9a753cd1c746c854b00969fd3475b137e5234af64fd141aeb017bdab22dec618a6197b614b8b853b143f3a5e050aae07c2d8b18ebc32070045e2dbf3f6e14422109b3015c8b74791ee421b2b91237a236bb14370",
+  "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+  "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+  "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}}})": {
+   "__typename": "Image",
+   "height": 192,
+   "key": "sdp|0f9766ec-e26b-4592-8761-aed36e128956|en,BADGE|newcontent:new.season|en",
+   "url": "https://art.invalid/10.jpg",
+   "width": 342
+  },
+  "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}}})": {
+   "__typename": "Image",
+   "key": "sdp|0f9766ec-e26b-4592-8761-aed36e128956|en,BADGE|newcontent:new.season|en",
+   "url": "https://art.invalid/11.jpg"
+  },
+  "imageCongruenceContext": "BX.RecentlyAdded,BX.LeavingSoon"
+ },
+ "PinotContextualArtwork:83be391bcbcbf536033f5915d047039c90206194c1e5c6fd85e6f8037449809fe13fa19a0014775ae82be9ea2b455ad4681e1ffa621fb3acaeabe6443077e4b7a620b44d9491bf0e2c8338fd0e45df5e84af75a393121d0dda76f3fe06e58af6d9917bd6eeb5819061a77d34937a55a6aa3b2206d75f89f01eb1b6b0fc35d3d4fed09d25ccea3037b13d39452b97dedd8df6c928839e936eef849e4b2356ec839312cfa699215836920c4396649aa455acc82d891805d1ba3159c222be5": {
+  "__typename": "PinotContextualArtwork",
+  "_id": "83be391bcbcbf536033f5915d047039c90206194c1e5c6fd85e6f8037449809fe13fa19a0014775ae82be9ea2b455ad4681e1ffa621fb3acaeabe6443077e4b7a620b44d9491bf0e2c8338fd0e45df5e84af75a393121d0dda76f3fe06e58af6d9917bd6eeb5819061a77d34937a55a6aa3b2206d75f89f01eb1b6b0fc35d3d4fed09d25ccea3037b13d39452b97dedd8df6c928839e936eef849e4b2356ec839312cfa699215836920c4396649aa455acc82d891805d1ba3159c222be5",
+  "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+  "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+  "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}}})": {
+   "__typename": "Image",
+   "height": 192,
+   "key": "sdp|8fb8c8fb-5fb3-4f2a-8ed1-9804ecea00a0|en|mra|70003425",
+   "url": "https://art.invalid/8.jpg",
+   "width": 342
+  },
+  "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}}})": {
+   "__typename": "Image",
+   "key": "sdp|8fb8c8fb-5fb3-4f2a-8ed1-9804ecea00a0|en|mra|70003425",
+   "url": "https://art.invalid/9.jpg"
+  },
+  "imageCongruenceContext": "BX.RecentlyAdded,BX.LeavingSoon"
+ },
+ "PinotContextualArtwork:fc9f109cc3ba5972ffec3aec2fb6e382380bd75b6cc3232a342663a84384c227b6fa4cd5cd1b36959bee47f74fc4e84163188840fa83c36b465c1d9db39214ea6537e0466adf32302936d28deb2b6f8ce331781bd550e2a5c1ce776de1fdaed3be5bd43fc44684f43d31cd249004bcf086c9b57619f749e48e05dac23ae2f8d6d180239dd22afc1157037e18eb764b55218a82ba3e95e09cb135d926343ce325bebb406309fc970630de9a8c101a79a8": {
+  "__typename": "PinotContextualArtwork",
+  "_id": "fc9f109cc3ba5972ffec3aec2fb6e382380bd75b6cc3232a342663a84384c227b6fa4cd5cd1b36959bee47f74fc4e84163188840fa83c36b465c1d9db39214ea6537e0466adf32302936d28deb2b6f8ce331781bd550e2a5c1ce776de1fdaed3be5bd43fc44684f43d31cd249004bcf086c9b57619f749e48e05dac23ae2f8d6d180239dd22afc1157037e18eb764b55218a82ba3e95e09cb135d926343ce325bebb406309fc970630de9a8c101a79a8",
+  "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+  "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+  "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}}})": {
+   "__typename": "Image",
+   "height": 192,
+   "key": "sdp|fcc9dcc9-db94-459a-888d-12a2bb3ffe34|en|mra|70003699,BADGE|recently.added|en",
+   "url": "https://art.invalid/26.jpg",
+   "width": 342
+  },
+  "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}}})": {
+   "__typename": "Image",
+   "key": "sdp|fcc9dcc9-db94-459a-888d-12a2bb3ffe34|en|mra|70003699,BADGE|recently.added|en",
+   "url": "https://art.invalid/27.jpg"
+  },
+  "imageCongruenceContext": null
+ },
+ "PinotContextualArtwork:50a4caecd60d0067e839419972729b38d9f3f30879a9bb31b9f0915dd7f2d4245c0b5593692cbd8536aeb9d1ee90daed500e2948da544111655dd955a7d7e7317a73a4c74dc4e7972dbbe33432fb655d61175a497bea7a5dadbfe10ffb32cfd280519bd2fbf50ec8c4ec63bd6fa5881bbcfe046010a1e5181eb018980633ce2e859d303a34eb9fbdfd0f6b3b22e1eea81da8707d42449948445aa24550a71b6638f4220958bd3aaadac88eff284abbc3": {
+  "__typename": "PinotContextualArtwork",
+  "_id": "50a4caecd60d0067e839419972729b38d9f3f30879a9bb31b9f0915dd7f2d4245c0b5593692cbd8536aeb9d1ee90daed500e2948da544111655dd955a7d7e7317a73a4c74dc4e7972dbbe33432fb655d61175a497bea7a5dadbfe10ffb32cfd280519bd2fbf50ec8c4ec63bd6fa5881bbcfe046010a1e5181eb018980633ce2e859d303a34eb9fbdfd0f6b3b22e1eea81da8707d42449948445aa24550a71b6638f4220958bd3aaadac88eff284abbc3",
+  "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+  "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+  "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}}})": {
+   "__typename": "Image",
+   "height": 192,
+   "key": "sdp|2a6b0f95-6aa7-41f6-8e83-bb97c1ada184|en|mra",
+   "url": "https://art.invalid/28.jpg",
+   "width": 342
+  },
+  "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}}})": {
+   "__typename": "Image",
+   "key": "sdp|2a6b0f95-6aa7-41f6-8e83-bb97c1ada184|en|mra",
+   "url": "https://art.invalid/29.jpg"
+  },
+  "imageCongruenceContext": null
+ },
+ "PinotContextualArtwork:686797d8279d93ee17f9cb31a69a209136739d4d8cef4c7a557eb839b061c14b54810c6a970f6b81ecce77c1241ed42943ac43d867fd6001a164882461efbe0611625dfdb4da01aa115dc948fc917dc11f2552bfe5cf9dcb2d75d0dd0972843293e7c0673a5015590b21f1fa4bce93d6829a20f92ca50a3881e0033c017699d1cfc6315f344f05f5c3d9d0d0d554483c4f47c852d9f1f091fd1496d42b5d8259131edb86bc9eef270ed3fd52722d5ced": {
+  "__typename": "PinotContextualArtwork",
+  "_id": "686797d8279d93ee17f9cb31a69a209136739d4d8cef4c7a557eb839b061c14b54810c6a970f6b81ecce77c1241ed42943ac43d867fd6001a164882461efbe0611625dfdb4da01aa115dc948fc917dc11f2552bfe5cf9dcb2d75d0dd0972843293e7c0673a5015590b21f1fa4bce93d6829a20f92ca50a3881e0033c017699d1cfc6315f344f05f5c3d9d0d0d554483c4f47c852d9f1f091fd1496d42b5d8259131edb86bc9eef270ed3fd52722d5ced",
+  "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+  "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+  "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}}})": {
+   "__typename": "Image",
+   "height": 192,
+   "key": "sdp|24b6b4d6-ee6b-4685-89da-daa96c380bf4|en|mra|70005343,BADGE|recently.added|en",
+   "url": "https://art.invalid/24.jpg",
+   "width": 342
+  },
+  "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}}})": {
+   "__typename": "Image",
+   "key": "sdp|24b6b4d6-ee6b-4685-89da-daa96c380bf4|en|mra|70005343,BADGE|recently.added|en",
+   "url": "https://art.invalid/25.jpg"
+  },
+  "imageCongruenceContext": null
+ },
+ "PinotContinueWatchingEntityTreatment:continueWatching_Video:70000959_ca09931d-b7fc-4ad5-82e4-710be6afc470": {
+  "__typename": "PinotContinueWatchingEntityTreatment",
+  "contextualArtwork": {
+   "__typename": "PinotContextualArtwork",
+   "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+   "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+   "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"fallbackStrategy\":\"STILL\"}}})": {
+    "__typename": "Image",
+    "height": 192,
+    "key": "sdp|466e9edb-77b4-407f-8e80-38b26e5ed20f|en,BADGE|newcontent:new.season|en",
+    "url": "https://art.invalid/12.jpg",
+    "width": 342
+   },
+   "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"fallbackStrategy\":\"STILL\"}}})": {
+    "__typename": "Image",
+    "key": "sdp|466e9edb-77b4-407f-8e80-38b26e5ed20f|en,BADGE|newcontent:new.season|en",
+    "url": "https://art.invalid/13.jpg"
+   },
+   "imageCongruenceContext": null
+  },
+  "displayString": "Sample Series",
+  "id": "continueWatching_Video:70000959_ca09931d-b7fc-4ad5-82e4-710be6afc470",
+  "loggingData": {
+   "__typename": "PinotEntityLoggingData",
+   "contextualMetadataToken": "v2.7d893f76bb464bdb1d13db"
+  },
+  "unifiedEntity": {
+   "__ref": "Show:{\"videoId\":70000959}"
+  }
+ },
+ "PinotContinueWatchingEntityTreatment:continueWatching_Video:70002192_ca09931d-b7fc-4ad5-82e4-710be6afc470": {
+  "__typename": "PinotContinueWatchingEntityTreatment",
+  "contextualArtwork": {
+   "__typename": "PinotContextualArtwork",
+   "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+   "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+   "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"fallbackStrategy\":\"STILL\"}}})": {
+    "__typename": "Image",
+    "height": 192,
+    "key": "sdp|f802ef12-ce53-4cfd-8a5d-f2bd668b5cd3|en|mra|70002740",
+    "url": "https://art.invalid/16.jpg",
+    "width": 342
+   },
+   "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"fallbackStrategy\":\"STILL\"}}})": {
+    "__typename": "Image",
+    "key": "sdp|f802ef12-ce53-4cfd-8a5d-f2bd668b5cd3|en|mra|70002740",
+    "url": "https://art.invalid/17.jpg"
+   },
+   "imageCongruenceContext": null
+  },
+  "displayString": "Delta Show",
+  "id": "continueWatching_Video:70002192_ca09931d-b7fc-4ad5-82e4-710be6afc470",
+  "loggingData": {
+   "__typename": "PinotEntityLoggingData",
+   "contextualMetadataToken": "v2.c95c9eab00f1e76b4b9299"
+  },
+  "unifiedEntity": {
+   "__ref": "Show:{\"videoId\":70002192}"
+  }
+ },
+ "PinotContinueWatchingEntityTreatment:continueWatching_Video:70002877_ca09931d-b7fc-4ad5-82e4-710be6afc470": {
+  "__typename": "PinotContinueWatchingEntityTreatment",
+  "contextualArtwork": {
+   "__typename": "PinotContextualArtwork",
+   "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+   "allArtworksByEventState({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"enableLockBadgeChecks\":true,\"fallbackStrategy\":\"STILL\"}},\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandleLiveOnChannelEventState\":true}})": null,
+   "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":192,\"width\":342},\"features\":{\"fallbackStrategy\":\"STILL\"}}})": {
+    "__typename": "Image",
+    "height": 192,
+    "key": "sdp|86fd2f53-b582-4da5-8b65-51ed539a2aa8|en|mra|70003014",
+    "url": "https://art.invalid/14.jpg",
+    "width": 342
+   },
+   "artwork({\"params\":{\"artworkType\":\"SDP\",\"dimension\":{\"height\":375,\"width\":665},\"features\":{\"fallbackStrategy\":\"STILL\"}}})": {
+    "__typename": "Image",
+    "key": "sdp|86fd2f53-b582-4da5-8b65-51ed539a2aa8|en|mra|70003014",
+    "url": "https://art.invalid/15.jpg"
+   },
+   "imageCongruenceContext": null
+  },
+  "displayString": "Golf Special",
+  "id": "continueWatching_Video:70002877_ca09931d-b7fc-4ad5-82e4-710be6afc470",
+  "loggingData": {
+   "__typename": "PinotEntityLoggingData",
+   "contextualMetadataToken": "v2.5fda2fe4b392423b95a902"
+  },
+  "unifiedEntity": {
+   "__ref": "Show:{\"videoId\":70002877}"
+  }
+ },
+ "PinotDefaultBrowsePage:PS_ab54082c-e23f-4cb9-868c-710260d7ef5e_L2_N1": {
+  "__typename": "PinotDefaultBrowsePage",
+  "_id": "1b81cd16c4ae1180405907fb0122fb17f3223eadd8b5526c7c0278bd58c8d8c9099417d74ad89a0565661481e863f205c4a812",
+  "displayString": null,
+  "eventListeners": [
+   {
+    "__typename": "PinotTimeoutEventListener",
+    "actions": [
+     {
+      "__typename": "PinotPageRefreshAction"
+     }
+    ],
+    "timestamp": "2026-01-01T00:00:00.000Z"
+   },
+   {
+    "__typename": "PinotServerNotificationEventListener",
+    "actions": [
+     {
+      "__typename": "PinotPageRefreshAction"
+     }
+    ],
+    "notificationMessageRegex": "UPDATE_PAGE"
+   }
+  ],
+  "id": "PS_ab54082c-e23f-4cb9-868c-710260d7ef5e_L2_N1",
+  "pageTreatment": null,
+  "sections({\"after\":null,\"first\":8})": {
+   "__typename": "PinotSectionConnection",
+   "edges": [
+    {
+     "__typename": "PinotSectionEdge",
+     "node": {
+      "__ref": "PinotSingleItemSection:cda9294885807965c91b85e4c456190cec21fb82a671134edfbc7051175104d33ab7461582966a68032555d0be389d44097027df5face96d8122c7ba5432ada5e9dd7bb1f98902f0c19e1534fe1019ac"
+     }
+    },
+    {
+     "__typename": "PinotSectionEdge",
+     "node": {
+      "__ref": "PinotCarouselSection:{\"id\":\"306aa6b64a7d209c69f06b3d0432655d46f50143924dc892d5f753c615eeda5d69b0665a58a86dbc4dc29b8452dc54646a4f857bde73d8c4be77fa0841c2b23d9766c117facdd90fa47773c241588988\"}"
+     }
+    },
+    {
+     "__typename": "PinotSectionEdge",
+     "node": {
+      "__ref": "PinotCarouselSection:{\"id\":\"886f574193ae3f5d9135a1fd2276575a5d44ac17b6905c0d4c9033096e8eb36447cdb111b93e9fb617923af27cf8345ee6a2da4ba035a0d5824b331f1f3458a9031a2225ed0c7cc8ac79262c37b4c4fa\"}"
+     }
+    },
+    {
+     "__typename": "PinotSectionEdge",
+     "node": {
+      "__ref": "PinotCarouselSection:{\"id\":\"88953ff3a505bf023ae36fe6a45b2a3fe66ed5497b04b60b25b59d1b0ed6942cddbdbb511330b2ab39ea13611220aad0b9a83bfd930d4c54ebdbc39b0dc08c09d357646ee90b2107660b3d29af905718\"}"
+     }
+    },
+    {
+     "__typename": "PinotSectionEdge",
+     "node": {
+      "__ref": "PinotCarouselSection:{\"id\":\"8fe9257d28bea93df6b87cc2acceb9a346661d3fa3d2cc42f9d5d0738f65a662187ab5c7be3d9b1e129ee0e8a4661785ccdf3b5b6c9b2ee21d6ebac458c5dbfc823f58788c53e1b2991a26df50bc19b6\"}"
+     }
+    }
+   ],
+   "pageInfo": {
+    "__typename": "PageInfo",
+    "endCursor": "7e9b0222423a8639420a0052d7c9fe17bad4a3f786da1034f3cc197599ea4e36e758621a681b61cc006a9ac6ae4b2a37b6584a310797e3355eec2e649a48fb2670ce579e9cc36294a165abf63966",
+    "hasNextPage": true
+   },
+   "totalCount": 49
+  },
+  "trackingInfo": {
+   "__typename": "PinotHomePageTrackingInfo",
+   "requestId": "00000000-0000-4000-8000-000000000000-1"
+  },
+  "version": "0"
+ },
+ "PinotSingleItemSection:cda9294885807965c91b85e4c456190cec21fb82a671134edfbc7051175104d33ab7461582966a68032555d0be389d44097027df5face96d8122c7ba5432ada5e9dd7bb1f98902f0c19e1534fe1019ac": {
+  "__typename": "PinotSingleItemSection",
+  "_id": "50dea36adb6bf48689b859cc826d17e96e0b621cb0a22a96c20146c54507a02f70a95d2a706720a24ac5be91451e48f92ee8444fd9622834e18e4720e4bf59d700c30ce452eb4acb8be1269bc8d3b3251233ee75b6ecfe0cef2228443260a827f322fb59c73fb079f40e8e407cedf34c8e0cf7b10fe4596470efd8cac0cd0855b09807cf85",
+  "entity": {
+   "__ref": "PinotStandardBillboardEntityTreatment:standardBillboard_Video:70005069_59f9b76c-5161-443b-8c42-d880c82f7b57"
+  },
+  "eventListeners": [],
+  "id": "cda9294885807965c91b85e4c456190cec21fb82a671134edfbc7051175104d33ab7461582966a68032555d0be389d44097027df5face96d8122c7ba5432ada5e9dd7bb1f98902f0c19e1534fe1019ac",
+  "loggingData": {
+   "__typename": "PinotSectionLoggingData",
+   "sectionLoggingId": "cda9294885807965c91b85e4c456190cec21fb82a671134edfbc7051175104d33ab7461582966a68032555d0be389d44097027df5face96d8122c7ba5432ada5e9dd7bb1f98902f0c19e1534fe1019ac",
+   "trackId": 260130934
+  }
+ },
+ "PinotStandardBillboardEntityTreatment:standardBillboard_Video:70005069_59f9b76c-5161-443b-8c42-d880c82f7b57": {
+  "__typename": "PinotStandardBillboardEntityTreatment",
+  "allAvailabilityEvidenceByEventWindowState({\"params\":{\"characterCount\":50}})": null,
+  "allCalloutsByEventWindowState({\"clientRequestedAvailabilityEvidence\":true,\"supportedCapabilities\":{\"canHandleLiveEventState\":true,\"canHandlePremiereEventState\":true}})": null,
+  "availabilityEvidence({\"params\":{\"characterCount\":50}})": null,
+  "buttons": [
+   {
+    "__typename": "PinotHawkinsButton",
+    "displayString": "Play",
+    "leadingIconToken": "play",
+    "onPress": {
+     "__typename": "PinotEntityPlaybackAction",
+     "ignoreBookmark": false,
+     "trackId": null,
+     "unifiedEntity": {
+      "__ref": "Movie:{\"videoId\":70005069}"
+     }
+    }
+   },
+   {
+    "__typename": "PinotHawkinsButton",
+    "displayString": "More Info",
+    "leadingIconToken": null,
+    "onPress": {
+     "__typename": "PinotNavigateToDisplayPageAction"
+    }
+   }
+  ],
+  "callouts": {
+   "__typename": "Callouts",
+   "inFocus": [
+    {
+     "__typename": "CalloutEvidence",
+     "iconId": "horn",
+     "key": "CALLOUT|new.content_callout.recently.added+70005069+IN_FOCUS|en-US|UNP",
+     "text": "Recently Added"
+    },
+    {
+     "__typename": "CalloutEvidence",
+     "iconId": "scene",
+     "key": "CALLOUT|on.screen.talent_evidencecards.talentonscreen+70005069+IN_FOCUS|en-US|UNP",
+     "text": "Starring Actor One and Actor Two"
+    }
+   ]
+  },
+  "contextualArtwork": {
+   "__typename": "PinotContextualArtwork",
+   "artwork({\"params\":{\"artworkType\":\"APP_ICON\",\"dimension\":{\"height\":200,\"width\":200},\"formats\":[\"WEBP\",\"JPG\",\"PNG\"]}})": {
+    "__typename": "Image",
+    "key": "unavailable",
+    "url": "https://art.invalid/5.jpg"
+   },
+   "artwork({\"params\":{\"artworkType\":\"BRAND_LOGO_SMALL_FLEX\",\"dimension\":{\"height\":30},\"features\":{\"graybox\":false,\"tone\":\"LIGHT\"},\"formats\":[\"WEBP\",\"JPG\",\"PNG\"]}})": null,
+   "artwork({\"params\":{\"artworkType\":\"ECLIPSE_BILLBOARD_REDUX\",\"dimension\":{\"height\":544,\"width\":1190},\"formats\":[\"WEBP\",\"JPG\",\"PNG\"]}})": {
+    "__typename": "Image",
+    "dominantBackgroundColor": "415870",
+    "key": "ECLIPSE_BILLBOARD_REDUX,BILLBOARD|d09f5e04-5640-4d1b-88e3-f3bf6bb883e8|en|mri",
+    "url": "https://art.invalid/1.jpg"
+   },
+   "artwork({\"params\":{\"artworkType\":\"ECLIPSE_BOXART_BACKGROUND\",\"dimension\":{\"width\":500},\"formats\":[\"WEBP\",\"JPG\",\"PNG\"]}})": {
+    "__typename": "Image",
+    "key": "ECLIPSE_BOXART_BACKGROUND,SHORT_PANEL|95c19e0b-5a8c-4700-8cb2-ef08a7547f1a|en|mr9",
+    "url": "https://art.invalid/3.jpg"
+   },
+   "artwork({\"params\":{\"artworkType\":\"LOGO_UNBRANDED_STACKED\",\"dimension\":{\"height\":260,\"width\":650},\"formats\":[\"WEBP\",\"JPG\",\"PNG\"]}})": {
+    "__typename": "Image",
+    "dominantBackgroundColor": "702222",
+    "height": 260,
+    "key": "LOGO_UNBRANDED_STACKED|bd33e164-e108-48a4-8b55-67828740d228|en",
+    "url": "https://art.invalid/4.jpg",
+    "width": 650
+   },
+   "artwork({\"params\":{\"artworkType\":\"VERTICAL_BILLBOARD_PLUS\",\"dimension\":{\"height\":1000,\"width\":640},\"formats\":[\"WEBP\",\"JPG\",\"PNG\"]}})": {
+    "__typename": "Image",
+    "dominantBackgroundColor": "702D22",
+    "key": "VERTICAL_BILLBOARD_PLUS,VERTICAL_BILLBOARD|69e292cb-92c2-4785-8147-330845c43984|en",
+    "url": "https://art.invalid/2.jpg"
+   },
+   "imageCongruenceContext": null
+  },
+  "contextualSynopsis": {
+   "__typename": "PinotContextualSynopsis",
+   "evidenceKey": "synopsis|1000000000000000001|en|mr9",
+   "text": "A small-town hairdresser sets out on a sample adventure."
+  },
+  "id": "standardBillboard_Video:70005069_59f9b76c-5161-443b-8c42-d880c82f7b57",
+  "loggingData": {
+   "__typename": "PinotEntityLoggingData",
+   "contextualMetadataToken": "v2.49977e8e43acce80aebd98"
+  },
+  "promoVideo": {
+   "__ref": "PromoVideo:{\"id\":70005617}"
+  },
+  "promotedEntity": {
+   "__ref": "Movie:{\"videoId\":70005069}"
+  }
+ },
+ "PinotStandardBoxshotEntityTreatment:standardBoxshot_Video:70000274_d0a92b14-970a-4126-8684-93a8f5201533": {
+  "__typename": "PinotStandardBoxshotEntityTreatment",
+  "contextualArtwork": {
+   "__ref": "PinotContextualArtwork:dd4762033b0a91497fb33145ce5c5ce2b6827e0c3b4e34f963bd037e9879dcb2bac0e465e45ac63188f18e8cd899e1bbd38bac80ed60cbd5df0fb7cc53fc0399eff2e00cb719fe124f3f0f0db249bcb3fa49f7e4c122232a97f1b402707d225ea84f68b235694fee61bab6193e90ebc19cdba8486339c59bc7271a63d693115317567b32907c24ac81f8c1cefe1a8c4fbe8231e7d6402a71d9e2092952f5d74a543077bd69ac0eee"
+  },
+  "displayString": "Sample Long-Runner",
+  "id": "standardBoxshot_Video:70000274_d0a92b14-970a-4126-8684-93a8f5201533",
+  "loggingData": {
+   "__typename": "PinotEntityLoggingData",
+   "contextualMetadataToken": "v2.a3550e0aa6ea96dd64a1ea"
+  },
+  "unifiedEntity": {
+   "__ref": "Show:{\"videoId\":70000274}"
+  }
+ },
+ "PinotStandardBoxshotEntityTreatment:standardBoxshot_Video:70000685_d0a92b14-970a-4126-8684-93a8f5201533": {
+  "__typename": "PinotStandardBoxshotEntityTreatment",
+  "contextualArtwork": {
+   "__ref": "PinotContextualArtwork:25e3dc1814b540523eebe311b2ee7c11924e1c27e4cc629f0aacd8b7d37b297b77fc010c1540d1019bc3bba0a144f9e90e6aee38a626566013506f2f34d922d65cd174abcd47fad6ecf66f3854aee277992ab976a967de57703de4dc1614d85d3f3bddb80ecb8ddf101bb28987b1ffe0a7dc78eec2f8b55c60c86553062fab792d1c4f6c3a8d3c7a9b0ab88e5ac257ba6ace2ce7eb40b3d9142ee7fe92a0e61ae0741412097a10a2"
+  },
+  "displayString": "SAMPLE LONG-RUNNER",
+  "id": "standardBoxshot_Video:70000685_d0a92b14-970a-4126-8684-93a8f5201533",
+  "loggingData": {
+   "__typename": "PinotEntityLoggingData",
+   "contextualMetadataToken": "v2.ccc0ff977c8aea5b5bf7c5"
+  },
+  "unifiedEntity": {
+   "__ref": "Show:{\"videoId\":70000685}"
+  }
+ },
+ "PinotStandardBoxshotEntityTreatment:standardBoxshot_Video:70000959_34db114d-be78-43d2-8d3b-aaade7ec2e4d": {
+  "__typename": "PinotStandardBoxshotEntityTreatment",
+  "contextualArtwork": {
+   "__ref": "PinotContextualArtwork:a645c0ac155d51b62130e5dd5a7d31970932194f03439975fdad60eada3eab5fda291b57dc03dc0a96f9b617b94147527a71f0ae248c2f170e33c59d9d9670ca2b59f2cfd7905ee7e47802fadba8f9560fad2b00e10059c843b0aee26d2238a2430cb37937d80b9eeb522b4fcc1a0d6dbb1509d7c1d3bfd82102eba08bb26254e92e36796b08621441256b639bca584913073d3d72e063fb77da10832d3d99a138c72d7e4b4ff85ef6de6b41af4c65160e1304b829d8bddbf59b527e8a3"
+  },
+  "displayString": "Sample Series",
+  "id": "standardBoxshot_Video:70000959_34db114d-be78-43d2-8d3b-aaade7ec2e4d",
+  "loggingData": {
+   "__typename": "PinotEntityLoggingData",
+   "contextualMetadataToken": "v2.e5c2cab297e933056dfc84"
+  },
+  "unifiedEntity": {
+   "__ref": "Show:{\"videoId\":70000959}"
+  }
+ },
+ "PinotStandardBoxshotEntityTreatment:standardBoxshot_Video:70002466_34db114d-be78-43d2-8d3b-aaade7ec2e4d": {
+  "__typename": "PinotStandardBoxshotEntityTreatment",
+  "contextualArtwork": {
+   "__ref": "PinotContextualArtwork:df8fbb1fd225ff6e97d173fd3bcb8f29654a2f1b91ff2e6e31b5b4c5f0b7bc619bd70401c5988d1cddc2ab557fdd2dbc8602089e296836e61cf62fbabe8d014a8a4fcb205d8ef4c36cadbfc7e708386cf083ab4d2b54d3efead58ef63623cd97938ecab1c1d76b72adf9a753cd1c746c854b00969fd3475b137e5234af64fd141aeb017bdab22dec618a6197b614b8b853b143f3a5e050aae07c2d8b18ebc32070045e2dbf3f6e14422109b3015c8b74791ee421b2b91237a236bb14370"
+  },
+  "displayString": "Alpha Show",
+  "id": "standardBoxshot_Video:70002466_34db114d-be78-43d2-8d3b-aaade7ec2e4d",
+  "loggingData": {
+   "__typename": "PinotEntityLoggingData",
+   "contextualMetadataToken": "v2.39161654f58b82c2a364eb"
+  },
+  "unifiedEntity": {
+   "__ref": "Show:{\"videoId\":70002466}"
+  }
+ },
+ "PinotStandardBoxshotEntityTreatment:standardBoxshot_Video:70003288_34db114d-be78-43d2-8d3b-aaade7ec2e4d": {
+  "__typename": "PinotStandardBoxshotEntityTreatment",
+  "contextualArtwork": {
+   "__ref": "PinotContextualArtwork:83be391bcbcbf536033f5915d047039c90206194c1e5c6fd85e6f8037449809fe13fa19a0014775ae82be9ea2b455ad4681e1ffa621fb3acaeabe6443077e4b7a620b44d9491bf0e2c8338fd0e45df5e84af75a393121d0dda76f3fe06e58af6d9917bd6eeb5819061a77d34937a55a6aa3b2206d75f89f01eb1b6b0fc35d3d4fed09d25ccea3037b13d39452b97dedd8df6c928839e936eef849e4b2356ec839312cfa699215836920c4396649aa455acc82d891805d1ba3159c222be5"
+  },
+  "displayString": "Charlie Docuseries",
+  "id": "standardBoxshot_Video:70003288_34db114d-be78-43d2-8d3b-aaade7ec2e4d",
+  "loggingData": {
+   "__typename": "PinotEntityLoggingData",
+   "contextualMetadataToken": "v2.ba5ba87a33a15c9b20ec7c"
+  },
+  "unifiedEntity": {
+   "__ref": "Show:{\"videoId\":70003288}"
+  }
+ },
+ "PinotStandardBoxshotEntityTreatment:standardBoxshot_Video:70003562_04e36373-d367-4e79-8bc5-a6c79b5dbef0": {
+  "__typename": "PinotStandardBoxshotEntityTreatment",
+  "contextualArtwork": {
+   "__ref": "PinotContextualArtwork:fc9f109cc3ba5972ffec3aec2fb6e382380bd75b6cc3232a342663a84384c227b6fa4cd5cd1b36959bee47f74fc4e84163188840fa83c36b465c1d9db39214ea6537e0466adf32302936d28deb2b6f8ce331781bd550e2a5c1ce776de1fdaed3be5bd43fc44684f43d31cd249004bcf086c9b57619f749e48e05dac23ae2f8d6d180239dd22afc1157037e18eb764b55218a82ba3e95e09cb135d926343ce325bebb406309fc970630de9a8c101a79a8"
+  },
+  "displayString": "Echo Movie",
+  "id": "standardBoxshot_Video:70003562_04e36373-d367-4e79-8bc5-a6c79b5dbef0",
+  "loggingData": {
+   "__typename": "PinotEntityLoggingData",
+   "contextualMetadataToken": "v2.4a00b835f5fbd8b2fc7945"
+  },
+  "unifiedEntity": {
+   "__ref": "Show:{\"videoId\":70003562}"
+  }
+ },
+ "PinotStandardBoxshotEntityTreatment:standardBoxshot_Video:70003836_04e36373-d367-4e79-8bc5-a6c79b5dbef0": {
+  "__typename": "PinotStandardBoxshotEntityTreatment",
+  "contextualArtwork": {
+   "__ref": "PinotContextualArtwork:50a4caecd60d0067e839419972729b38d9f3f30879a9bb31b9f0915dd7f2d4245c0b5593692cbd8536aeb9d1ee90daed500e2948da544111655dd955a7d7e7317a73a4c74dc4e7972dbbe33432fb655d61175a497bea7a5dadbfe10ffb32cfd280519bd2fbf50ec8c4ec63bd6fa5881bbcfe046010a1e5181eb018980633ce2e859d303a34eb9fbdfd0f6b3b22e1eea81da8707d42449948445aa24550a71b6638f4220958bd3aaadac88eff284abbc3"
+  },
+  "displayString": "Sample Movie",
+  "id": "standardBoxshot_Video:70003836_04e36373-d367-4e79-8bc5-a6c79b5dbef0",
+  "loggingData": {
+   "__typename": "PinotEntityLoggingData",
+   "contextualMetadataToken": "v2.9172939d831694cb73f2b1"
+  },
+  "unifiedEntity": {
+   "__ref": "Movie:{\"videoId\":70003836}"
+  }
+ },
+ "PinotStandardBoxshotEntityTreatment:standardBoxshot_Video:70004110_d0a92b14-970a-4126-8684-93a8f5201533": {
+  "__typename": "PinotStandardBoxshotEntityTreatment",
+  "contextualArtwork": {
+   "__ref": "PinotContextualArtwork:b8f80cc76bf20c305fc3dcbe1942b153bb57c53403b16281564b5039406b4520bd38dc51596656b7299955476c0ec221ade9445b6485224edfea95e32cbe556dc9bf3e5f533112311d20eba0b7256320591ea96efab0b02d4aaeb5223a6f763493486ac83ef8f1d5049be6099538fce3b58b12baf213a6922223146d41de1d7b4d45a3590ad61942c240e68c3aff5aca7d2255a2122f99d7d0a526cb972415fdb0d81922f3c323ec"
+  },
+  "displayString": "Foxtrot Documentary",
+  "id": "standardBoxshot_Video:70004110_d0a92b14-970a-4126-8684-93a8f5201533",
+  "loggingData": {
+   "__typename": "PinotEntityLoggingData",
+   "contextualMetadataToken": "v2.d6447cf349a0bac203b485"
+  },
+  "unifiedEntity": {
+   "__ref": "Show:{\"videoId\":70004110}"
+  }
+ },
+ "PinotStandardBoxshotEntityTreatment:standardBoxshot_Video:70005206_04e36373-d367-4e79-8bc5-a6c79b5dbef0": {
+  "__typename": "PinotStandardBoxshotEntityTreatment",
+  "contextualArtwork": {
+   "__ref": "PinotContextualArtwork:686797d8279d93ee17f9cb31a69a209136739d4d8cef4c7a557eb839b061c14b54810c6a970f6b81ecce77c1241ed42943ac43d867fd6001a164882461efbe0611625dfdb4da01aa115dc948fc917dc11f2552bfe5cf9dcb2d75d0dd0972843293e7c0673a5015590b21f1fa4bce93d6829a20f92ca50a3881e0033c017699d1cfc6315f344f05f5c3d9d0d0d554483c4f47c852d9f1f091fd1496d42b5d8259131edb86bc9eef270ed3fd52722d5ced"
+  },
+  "displayString": "Bravo Show",
+  "id": "standardBoxshot_Video:70005206_04e36373-d367-4e79-8bc5-a6c79b5dbef0",
+  "loggingData": {
+   "__typename": "PinotEntityLoggingData",
+   "contextualMetadataToken": "v2.37fd286e358afcd4054dc7"
+  },
+  "unifiedEntity": {
+   "__ref": "Show:{\"videoId\":70005206}"
+  }
+ },
+ "Profile:{\"guid\":\"SYNTHPROFILE0000000000000001\"}": {
+  "__typename": "Profile",
+  "guid": "SYNTHPROFILE0000000000000001",
+  "icon": {
+   "__ref": "ProfileIcon:{\"key\":\"icon19\"}"
+  },
+  "isKids": true,
+  "isPinLocked": false,
+  "name": "Profile 5"
+ },
+ "Profile:{\"guid\":\"SYNTHPROFILE0000000000000002\"}": {
+  "__typename": "Profile",
+  "guid": "SYNTHPROFILE0000000000000002",
+  "icon": {
+   "__ref": "ProfileIcon:{\"key\":\"icon25\"}"
+  },
+  "isKids": false,
+  "isPinLocked": false,
+  "isRecentlyCreated": false,
+  "name": "Profile 1"
+ },
+ "Profile:{\"guid\":\"SYNTHPROFILE0000000000000003\"}": {
+  "__typename": "Profile",
+  "guid": "SYNTHPROFILE0000000000000003",
+  "icon": {
+   "__ref": "ProfileIcon:{\"key\":\"AVATAR|476cd95c-44a9-437e-8a15-ba5cb59cb831|en|US|70002055\"}"
+  },
+  "isKids": true,
+  "isPinLocked": false,
+  "name": "Profile 4"
+ },
+ "Profile:{\"guid\":\"SYNTHPROFILE0000000000000004\"}": {
+  "__typename": "Profile",
+  "guid": "SYNTHPROFILE0000000000000004",
+  "icon": {
+   "__ref": "ProfileIcon:{\"key\":\"icon23\"}"
+  },
+  "isKids": false,
+  "isPinLocked": false,
+  "name": "Profile 2"
+ },
+ "Profile:{\"guid\":\"SYNTHPROFILE0000000000000005\"}": {
+  "__typename": "Profile",
+  "guid": "SYNTHPROFILE0000000000000005",
+  "icon": {
+   "__ref": "ProfileIcon:{\"key\":\"icon22\"}"
+  },
+  "isKids": true,
+  "isPinLocked": false,
+  "name": "Profile 3"
+ },
+ "ROOT_QUERY": {
+  "__typename": "Query",
+  "currentProfile": {
+   "__ref": "Profile:{\"guid\":\"SYNTHPROFILE0000000000000002\"}"
+  },
+  "pinotBrowsePage({\"categoryId\":null,\"options\":{\"pageCapabilities\":{\"base\":{\"canHandleLiveOnChannelEventState\":false,\"canHandlePlayingCloudGames\":true,\"canHandlePlayingLiveOnChannelEvents\":false,\"capabilitiesBySection\":{\"pinotCarousel\":{\"base\":{\"capabilitiesBySectionTreatment\":{\"pinotCharacter\":{\"base\":{\"capabilitiesByEntityTreatment\":{\"pinotCharacterCircle\":{\"base\":{\"canHandleEntityKinds\":[\"CHARACTER\"]}}},\"maxTotalEntities\":150}},\"pinotEmpty\":{},\"pinotEpisodicPodcast\":{\"base\":{\"capabilitiesByEntityTreatment\":{\"pinotCreatorEmphasizedDestination\":{\"base\":{\"canHandleEntityKinds\":[\"GENERIC_CONTAINER\"]},\"capabilitiesByButton\":{\"pinotHawkins\":{\"base\":{\"canHandleActions\":[\"NAVIGATE_TO_COLLECTION_PAGE\",\"NAVIGATE_TO_GAMES_PAGE\"]}}}},\"pinotCuratedPodcastEpisodic\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]}},\"pinotEmphasizedDestination\":{\"base\":{\"canHandleEntityKinds\":[\"GENERIC_CONTAINER\"]},\"capabilitiesByButton\":{\"pinotHawkins\":{\"base\":{\"canHandleActions\":[\"NAVIGATE_TO_COLLECTION_PAGE\",\"NAVIGATE_TO_GAMES_PAGE\"]}}}},\"pinotEpisodicPodcast\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]}},\"pinotStandardDestination\":{\"base\":{\"canHandleEntityKinds\":[\"GENERIC_CONTAINER\"]},\"capabilitiesByButton\":{\"pinotHawkins\":{\"base\":{\"canHandleActions\":[\"NAVIGATE_TO_COLLECTION_PAGE\",\"NAVIGATE_TO_GAMES_PAGE\"]}}}},\"pinotTimelyPodcastEpisodic\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]}}},\"maxTotalEntities\":150}},\"pinotStandard\":{\"base\":{\"capabilitiesByEntityTreatment\":{\"pinotContinueWatching\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]}},\"pinotCreatorEmphasizedDestination\":{\"base\":{\"canHandleEntityKinds\":[\"GENERIC_CONTAINER\"]},\"capabilitiesByButton\":{\"pinotHawkins\":{\"base\":{\"canHandleActions\":[\"NAVIGATE_TO_COLLECTION_PAGE\",\"NAVIGATE_TO_GAMES_PAGE\"]}}}},\"pinotCuratedPodcastEpisodic\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]}},\"pinotCuratedStandardEpisodic\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]}},\"pinotEmphasizedDestination\":{\"base\":{\"canHandleEntityKinds\":[\"GENERIC_CONTAINER\"]},\"capabilitiesByButton\":{\"pinotHawkins\":{\"base\":{\"canHandleActions\":[\"NAVIGATE_TO_COLLECTION_PAGE\",\"NAVIGATE_TO_GAMES_PAGE\"]}}}},\"pinotEpisodicPodcast\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]}},\"pinotRankedBoxshot\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]}},\"pinotStandardBoxshot\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]}},\"pinotStandardCloudAppIcon\":{\"base\":{\"canHandleEntityKinds\":[\"GAME\"]}},\"pinotStandardDestination\":{\"base\":{\"canHandleEntityKinds\":[\"GENERIC_CONTAINER\"]},\"capabilitiesByButton\":{\"pinotHawkins\":{\"base\":{\"canHandleActions\":[\"NAVIGATE_TO_COLLECTION_PAGE\",\"NAVIGATE_TO_GAMES_PAGE\"]}}}},\"pinotStandardEpisodic\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]}},\"pinotStandardMobileAppIcon\":{\"base\":{\"canHandleEntityKinds\":[\"GAME\"]}},\"pinotTimelyPodcastEpisodic\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]}},\"pinotTimelyStandardEpisodic\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]}}},\"maxTotalEntities\":150}},\"pinotStandardChannel\":{\"base\":{\"capabilitiesByEntityTreatment\":{\"pinotStandardChannel\":{\"base\":{\"canHandleEntityKinds\":[\"CHANNEL\"]}}}}},\"pinotTextButtonWithChevron\":{\"base\":{\"capabilitiesByEntityTreatment\":{\"pinotContinueWatching\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]}},\"pinotCuratedPodcastEpisodic\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]}},\"pinotCuratedStandardEpisodic\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]}},\"pinotEpisodicPodcast\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]}},\"pinotRankedBoxshot\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]}},\"pinotStandardBoxshot\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]}},\"pinotStandardCloudAppIcon\":{\"base\":{\"canHandleEntityKinds\":[\"GAME\"]}},\"pinotStandardEpisodic\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]}},\"pinotStandardMobileAppIcon\":{\"base\":{\"canHandleEntityKinds\":[\"GAME\"]}},\"pinotTimelyPodcastEpisodic\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]}},\"pinotTimelyStandardEpisodic\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]}}},\"maxTotalEntities\":150}}}}},\"pinotSingleItem\":{\"base\":{\"capabilitiesBySectionTreatment\":{\"pinotBanner\":{\"base\":{\"capabilitiesByEntityTreatment\":{\"pinotBannerWithTrailer\":{\"base\":{\"canHandleEntityKinds\":[\"GENERIC_CONTAINER\"]}}},\"maxTotalEntities\":1}},\"pinotBillboard\":{\"base\":{\"capabilitiesByEntityTreatment\":{\"pinotAwardsBillboard\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]},\"capabilitiesByButton\":{\"pinotHawkins\":{\"base\":{\"canHandleActions\":[\"ENTITY_PLAYBACK\",\"NAVIGATE_TO_DISPLAY_PAGE\"]}}}},\"pinotCloudAppIconBillboard\":{\"base\":{\"canHandleEntityKinds\":[\"GAME\"]},\"capabilitiesByButton\":{\"pinotHawkins\":{\"base\":{\"canHandleActions\":[\"START_GAME\",\"NAVIGATE_TO_DISPLAY_PAGE\",\"ENTITY_ADD_TO_REMINDERS\"]}}}},\"pinotEpisodicBillboard\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]},\"capabilitiesByButton\":{\"pinotHawkins\":{\"base\":{\"canHandleActions\":[\"ENTITY_PLAYBACK\",\"NAVIGATE_TO_DISPLAY_PAGE\",\"NAVIGATE_TO_EPISODES_PAGE\"]}}}},\"pinotMobileAppIconBillboard\":{\"base\":{\"canHandleEntityKinds\":[\"GAME\"]},\"capabilitiesByButton\":{\"pinotHawkins\":{\"base\":{\"canHandleActions\":[\"GET_MOBILE_APP\",\"SEND_TO_MOBILE_DEVICE\"]}}}},\"pinotPrelaunchBillboard\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]},\"canHandleClientSideTransitionsForLiveEvents\":true,\"capabilitiesByButton\":{\"pinotHawkins\":{\"base\":{\"canHandleActions\":[\"ENTITY_PLAYBACK\",\"NAVIGATE_TO_DISPLAY_PAGE\",\"ENTITY_ADD_TO_REMINDERS\"]}}}},\"pinotReminderBillboard\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]},\"capabilitiesByButton\":{\"pinotHawkins\":{\"base\":{\"canHandleActions\":[\"ENTITY_ADD_TO_REMINDERS\",\"NAVIGATE_TO_DISPLAY_PAGE\"]}}}},\"pinotStandardBillboard\":{\"base\":{\"canHandleEntityKinds\":[\"MOVIE\",\"SHOW\",\"EPISODE\",\"SEASON\",\"SUPPLEMENTAL\",\"SPORT_EVENT\"]},\"capabilitiesByButton\":{\"pinotHawkins\":{\"base\":{\"canHandleActions\":[\"ENTITY_PLAYBACK\",\"NAVIGATE_TO_DISPLAY_PAGE\",\"ENTITY_ADD_TO_REMINDERS\"]}}}}},\"maxTotalEntities\":1}},\"pinotHeader\":{\"base\":{\"capabilitiesByEntityTreatment\":{\"pinotCreatorHubHeader\":{\"base\":{\"canHandleEntityKinds\":[\"GENERIC_CONTAINER\"]}},\"pinotHubHeader\":{\"base\":{\"canHandleEntityKinds\":[\"GENERIC_CONTAINER\"]}}},\"maxTotalEntities\":1}}}}}},\"maxTotalSections\":72,\"viewportWidthInBoxshots\":8}}}})": {
+   "__ref": "PinotDefaultBrowsePage:PS_ab54082c-e23f-4cb9-868c-710260d7ef5e_L2_N1"
+  }
+ },
+ "Show:{\"videoId\":70000274}": {
+  "__typename": "Show",
+  "contentAdvisory": {
+   "__typename": "ContentAdvisory",
+   "maturityLevel": 90
+  },
+  "contentMetadata": {
+   "__typename": "ContentMetadata",
+   "contentLabelMetadata": {
+    "__typename": "PinotContentLabelMetadata",
+    "iconId": "",
+    "text": "Show"
+   }
+  },
+  "currentEpisode": {
+   "__ref": "Episode:{\"videoId\":70000411}"
+  },
+  "nextEventWindow": null,
+  "numSeasonsLabel": "37 Seasons",
+  "releaseYear": 1999,
+  "seasons": {
+   "__typename": "SeasonsConnection",
+   "edges": [],
+   "pageInfo": {
+    "endCursor": "",
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "startCursor": ""
+   },
+   "totalCount": 37
+  },
+  "unifiedEntityId": "Video:70000274",
+  "videoId": 70000274
+ },
+ "Show:{\"videoId\":70000685}": {
+  "__typename": "Show",
+  "contentAdvisory": {
+   "__typename": "ContentAdvisory",
+   "maturityLevel": 90
+  },
+  "contentMetadata": {
+   "__typename": "ContentMetadata",
+   "contentLabelMetadata": {
+    "__typename": "PinotContentLabelMetadata",
+    "iconId": "",
+    "text": "Show"
+   }
+  },
+  "currentEpisode": {
+   "__ref": "Episode:{\"videoId\":70000822}"
+  },
+  "nextEventWindow": null,
+  "numSeasonsLabel": "2 Seasons",
+  "releaseYear": 2023,
+  "seasons": {
+   "__typename": "SeasonsConnection",
+   "edges": [],
+   "pageInfo": {
+    "endCursor": "",
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "startCursor": ""
+   },
+   "totalCount": 2
+  },
+  "unifiedEntityId": "Video:70000685",
+  "videoId": 70000685
+ },
+ "Show:{\"videoId\":70000959}": {
+  "__typename": "Show",
+  "contentAdvisory": {
+   "__typename": "ContentAdvisory",
+   "maturityLevel": 110
+  },
+  "contentMetadata": {
+   "__typename": "ContentMetadata",
+   "contentLabelMetadata": {
+    "__typename": "PinotContentLabelMetadata",
+    "iconId": "",
+    "text": "Show"
+   }
+  },
+  "currentEpisode": {
+   "__ref": "Episode:{\"videoId\":70004932}"
+  },
+  "nextEventWindow": null,
+  "numSeasonsLabel": "11 Seasons",
+  "releaseYear": 2020,
+  "seasons": {
+   "__typename": "SeasonsConnection",
+   "edges": [],
+   "pageInfo": {
+    "endCursor": "",
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "startCursor": ""
+   },
+   "totalCount": 11
+  },
+  "unifiedEntityId": "Video:70000959",
+  "videoId": 70000959
+ },
+ "Show:{\"videoId\":70002192}": {
+  "__typename": "Show",
+  "contentAdvisory": {
+   "__typename": "ContentAdvisory",
+   "maturityLevel": 110
+  },
+  "contentMetadata": {
+   "__typename": "ContentMetadata",
+   "contentLabelMetadata": {
+    "__typename": "PinotContentLabelMetadata",
+    "iconId": "",
+    "text": "Show"
+   }
+  },
+  "currentEpisode": {
+   "__ref": "Episode:{\"videoId\":70002329}"
+  },
+  "nextEventWindow": null,
+  "numSeasonsLabel": "2 Seasons",
+  "releaseYear": 2024,
+  "seasons": {
+   "__typename": "SeasonsConnection",
+   "edges": [],
+   "pageInfo": {
+    "endCursor": "",
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "startCursor": ""
+   },
+   "totalCount": 2
+  },
+  "unifiedEntityId": "Video:70002192",
+  "videoId": 70002192
+ },
+ "Show:{\"videoId\":70002466}": {
+  "__typename": "Show",
+  "contentAdvisory": {
+   "__typename": "ContentAdvisory",
+   "maturityLevel": 110
+  },
+  "contentMetadata": {
+   "__typename": "ContentMetadata",
+   "contentLabelMetadata": {
+    "__typename": "PinotContentLabelMetadata",
+    "iconId": "",
+    "text": "Show"
+   }
+  },
+  "currentEpisode": {
+   "__ref": "Episode:{\"videoId\":70002603}"
+  },
+  "nextEventWindow": null,
+  "numSeasonsLabel": "2 Seasons",
+  "releaseYear": 2024,
+  "seasons": {
+   "__typename": "SeasonsConnection",
+   "edges": [],
+   "pageInfo": {
+    "endCursor": "",
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "startCursor": ""
+   },
+   "totalCount": 2
+  },
+  "unifiedEntityId": "Video:70002466",
+  "videoId": 70002466
+ },
+ "Show:{\"videoId\":70002877}": {
+  "__typename": "Show",
+  "contentAdvisory": {
+   "__typename": "ContentAdvisory",
+   "maturityLevel": 70
+  },
+  "contentMetadata": {
+   "__typename": "ContentMetadata",
+   "contentLabelMetadata": {
+    "__typename": "PinotContentLabelMetadata",
+    "iconId": "",
+    "text": "Show"
+   }
+  },
+  "currentEpisode": {
+   "__ref": "Episode:{\"videoId\":70004384}"
+  },
+  "nextEventWindow": null,
+  "numSeasonsLabel": "9 Episodes",
+  "releaseYear": 2026,
+  "seasons": {
+   "__typename": "SeasonsConnection",
+   "edges": [],
+   "pageInfo": {
+    "endCursor": "",
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "startCursor": ""
+   },
+   "totalCount": 1
+  },
+  "unifiedEntityId": "Video:70002877",
+  "videoId": 70002877
+ },
+ "Show:{\"videoId\":70003288}": {
+  "__typename": "Show",
+  "contentAdvisory": {
+   "__typename": "ContentAdvisory",
+   "maturityLevel": 90
+  },
+  "contentMetadata": {
+   "__typename": "ContentMetadata",
+   "contentLabelMetadata": {
+    "__typename": "PinotContentLabelMetadata",
+    "iconId": "",
+    "text": "Show"
+   }
+  },
+  "currentEpisode": {
+   "__ref": "Episode:{\"videoId\":70003973}"
+  },
+  "nextEventWindow": null,
+  "numSeasonsLabel": "3 Episodes",
+  "releaseYear": 2026,
+  "seasons": {
+   "__typename": "SeasonsConnection",
+   "edges": [],
+   "pageInfo": {
+    "endCursor": "",
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "startCursor": ""
+   },
+   "totalCount": 1
+  },
+  "unifiedEntityId": "Video:70003288",
+  "videoId": 70003288
+ },
+ "Show:{\"videoId\":70003562}": {
+  "__typename": "Show",
+  "contentAdvisory": {
+   "__typename": "ContentAdvisory",
+   "maturityLevel": 110
+  },
+  "contentMetadata": {
+   "__typename": "ContentMetadata",
+   "contentLabelMetadata": {
+    "__typename": "PinotContentLabelMetadata",
+    "iconId": "",
+    "text": "Show"
+   }
+  },
+  "currentEpisode": {
+   "__ref": "Episode:{\"videoId\":70004658}"
+  },
+  "nextEventWindow": null,
+  "numSeasonsLabel": "6 Episodes",
+  "releaseYear": 2026,
+  "seasons": {
+   "__typename": "SeasonsConnection",
+   "edges": [],
+   "pageInfo": {
+    "endCursor": "",
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "startCursor": ""
+   },
+   "totalCount": 1
+  },
+  "unifiedEntityId": "Video:70003562",
+  "videoId": 70003562
+ },
+ "Show:{\"videoId\":70004110}": {
+  "__typename": "Show",
+  "contentAdvisory": {
+   "__typename": "ContentAdvisory",
+   "maturityLevel": 110
+  },
+  "contentMetadata": {
+   "__typename": "ContentMetadata",
+   "contentLabelMetadata": {
+    "__typename": "PinotContentLabelMetadata",
+    "iconId": "",
+    "text": "Show"
+   }
+  },
+  "currentEpisode": {
+   "__ref": "Episode:{\"videoId\":70004521}"
+  },
+  "nextEventWindow": null,
+  "numSeasonsLabel": "3 Episodes",
+  "releaseYear": 2026,
+  "seasons": {
+   "__typename": "SeasonsConnection",
+   "edges": [],
+   "pageInfo": {
+    "endCursor": "",
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "startCursor": ""
+   },
+   "totalCount": 1
+  },
+  "unifiedEntityId": "Video:70004110",
+  "videoId": 70004110
+ },
+ "Show:{\"videoId\":70005206}": {
+  "__typename": "Show",
+  "contentAdvisory": {
+   "__typename": "ContentAdvisory",
+   "maturityLevel": 70
+  },
+  "contentMetadata": {
+   "__typename": "ContentMetadata",
+   "contentLabelMetadata": {
+    "__typename": "PinotContentLabelMetadata",
+    "iconId": "",
+    "text": "Show"
+   }
+  },
+  "currentEpisode": {
+   "__ref": "Episode:{\"videoId\":70005480}"
+  },
+  "nextEventWindow": null,
+  "numSeasonsLabel": "2 Seasons",
+  "releaseYear": 2024,
+  "seasons": {
+   "__typename": "SeasonsConnection",
+   "edges": [],
+   "pageInfo": {
+    "endCursor": "",
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "startCursor": ""
+   },
+   "totalCount": 2
+  },
+  "unifiedEntityId": "Video:70005206",
+  "videoId": 70005206
+ }
+}
