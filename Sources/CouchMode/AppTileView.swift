@@ -38,19 +38,33 @@ struct TileArt: View {
     }
 
     private func logoTile(_ logo: NSImage) -> some View {
-        let edge = icons.edgeColor(for: item.id) ?? item.brand
-        let bg = edge.map { Color(red: $0.r, green: $0.g, blue: $0.b) } ?? item.colors.first ?? .gray
-        let r = TileLayout.logoRect(logo: (logo.size.width, logo.size.height), tile: (size.width, size.height), fraction: 0.56)
+        let fallback = item.brand ?? RGB(r: 0.12, g: 0.12, b: 0.13)
+        let band = icons.edgeBand(for: item.id) ?? (top: fallback, bottom: fallback)
+        let backdrop = TileLayout.backdrop(top: band.top, bottom: band.bottom)
+        let crop = icons.glyph(for: item.id)
+        // Source pixels, not points: a small source is kept smaller (TileLayout caps the magnification).
+        let whole = logo.representations.first.map { CGSize(width: $0.pixelsWide, height: $0.pixelsHigh) } ?? logo.size
+        let tight = crop?.tight ?? whole
+        let r = TileLayout.glyphRect(glyph: (tight.width, tight.height), tile: (size.width, size.height))
         return ZStack {
-            bg
-            LinearGradient(colors: [.white.opacity(0.14), .clear, .black.opacity(0.16)], startPoint: .top, endPoint: .bottom)
+            LinearGradient(colors: [Self.color(backdrop.top), Self.color(backdrop.bottom)], startPoint: .top, endPoint: .bottom)
             if let r {
-                Image(nsImage: logo).resizable().interpolation(.high)
-                    .frame(width: r.w, height: r.h)
+                // The margin around the glyph is drawn too, faded to the tile's own background at its edge.
+                let scale = r.w / tight.width
+                let image = crop?.image ?? logo
+                let pixels = crop?.pixels ?? whole
+                let feather = TileLayout.glyphFeather * min(r.w, r.h)
+                Image(nsImage: image).resizable().interpolation(.high)
+                    .frame(width: pixels.width * scale, height: pixels.height * scale)
+                    .mask {
+                        if crop != nil { Rectangle().padding(feather).blur(radius: feather * 0.7) } else { Color.white }
+                    }
                     .shadow(color: .black.opacity(0.28), radius: size.height * 0.04, y: size.height * 0.02)
             }
         }
     }
+
+    private static func color(_ c: RGB) -> Color { Color(red: c.r, green: c.g, blue: c.b) }
 
     private var systemTile: some View {
         ZStack {

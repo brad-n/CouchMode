@@ -11,8 +11,11 @@ public struct IconCandidate: Equatable, Sendable {
     public let size: Int?
     public let type: String?
     public let kind: Kind
-    public init(href: String, size: Int?, type: String?, kind: Kind) {
-        self.href = href; self.size = size; self.type = type; self.kind = kind
+    /// A maskable icon: the glyph sits in a safe zone inside extra background, so it
+    /// needs trimming (LogoTrim) before it is shown large.
+    public let padded: Bool
+    public init(href: String, size: Int?, type: String?, kind: Kind, padded: Bool = false) {
+        self.href = href; self.size = size; self.type = type; self.kind = kind; self.padded = padded
     }
 }
 
@@ -56,15 +59,16 @@ public enum SiteIcons {
         return page
     }
 
-    /// The icons a web app manifest lists (maskable-only ones are padded art, so skipped).
+    /// The icons a web app manifest lists; maskable-only ones are marked `padded` (they are often the largest).
     public static func parseManifest(_ data: Data) -> [IconCandidate] {
         guard let root = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any],
               let list = root["icons"] as? [[String: Any]] else { return [] }
         return list.prefix(40).compactMap { item in
             guard let src = item["src"] as? String, !src.isEmpty else { return nil }
             let purpose = (item["purpose"] as? String)?.lowercased().split(separator: " ").map(String.init) ?? []
-            if !purpose.isEmpty, !purpose.contains("any") { return nil }
-            return IconCandidate(href: src, size: largestSide(of: item["sizes"] as? String), type: item["type"] as? String, kind: .manifest)
+            let padded = !purpose.isEmpty && !purpose.contains("any")
+            return IconCandidate(href: src, size: largestSide(of: item["sizes"] as? String), type: item["type"] as? String,
+                                 kind: .manifest, padded: padded)
         }
     }
 
@@ -80,8 +84,8 @@ public enum SiteIcons {
     }
 
     /// The best icon: https, PNG, not declared too small; the largest wins
-    /// (so 512 and up are preferred), then touch icon over manifest over
-    /// plain icon. An icon with no declared size ranks last; the app checks
+    /// (so 512 and up are preferred, padded or not: the app trims padding), then
+    /// an unpadded icon, then touch icon over manifest over plain icon. An icon with no declared size ranks last; the app checks
     /// its real size once downloaded.
     public static func best(_ candidates: [IconCandidate], relativeTo base: URL) -> URL? {
         func rank(_ k: IconCandidate.Kind) -> Int { k == .appleTouch ? 2 : k == .manifest ? 1 : 0 }
@@ -95,7 +99,8 @@ public enum SiteIcons {
         }
         return usable.max { a, b in
             let (sa, sb) = (a.1.size ?? 0, b.1.size ?? 0)
-            return sa != sb ? sa < sb : rank(a.1.kind) < rank(b.1.kind)
+            if sa != sb { return sa < sb }
+            return a.1.padded != b.1.padded ? a.1.padded : rank(a.1.kind) < rank(b.1.kind)
         }?.0
     }
 

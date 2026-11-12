@@ -116,6 +116,34 @@ final class TVArtTests: XCTestCase {
         XCTAssertNil(TileLayout.logoRect(logo: (0, 10), tile: (400, 240)))
     }
 
+    func testGlyphIsLimitedByHeightOrWidthAndCentered() {
+        let square = TileLayout.glyphRect(glyph: (500, 500), tile: (400, 240))!
+        XCTAssertEqual(square.h, 144, accuracy: 0.001, "60% of the tile height")
+        XCTAssertEqual(square.x, 128, accuracy: 0.001)
+        let wide = TileLayout.glyphRect(glyph: (715, 360), tile: (400, 240))!
+        XCTAssertEqual(wide.w, 280, accuracy: 0.001, "70% of the tile width")
+        XCTAssertEqual(wide.h, 280 * 360 / 715, accuracy: 0.001)
+        XCTAssertEqual(wide.y, (240 - wide.h) / 2, accuracy: 0.001)
+    }
+
+    func testSmallGlyphStaysSmallerThanFraction() {
+        let r = TileLayout.glyphRect(glyph: (60, 60), tile: (400, 240))!
+        XCTAssertEqual(r.w, 120, accuracy: 0.001, "at most 2x its pixels")
+        XCTAssertNil(TileLayout.glyphRect(glyph: (0, 10), tile: (400, 240)))
+        XCTAssertNil(TileLayout.glyphRect(glyph: (10, 10), tile: (400, 240), heightFraction: 1.5))
+    }
+
+    func testBackdropKeepsTheIconsOwnGradientWithLittleExtraDepth() {
+        let top = RGB(r: 0.17, g: 0.17, b: 0.17), bottom = RGB(r: 0.07, g: 0.07, b: 0.07)
+        let b = TileLayout.backdrop(top: top, bottom: bottom)
+        XCTAssertGreaterThan(b.top.luminance, top.luminance)
+        XCTAssertLessThan(b.top.luminance - top.luminance, 0.03)
+        XCTAssertLessThan(b.bottom.luminance, bottom.luminance)
+        XCTAssertGreaterThan(b.top.luminance, b.bottom.luminance)
+        let black = RGB(r: 0, g: 0, b: 0)
+        XCTAssertEqual(TileLayout.backdrop(top: black, bottom: black).bottom, black)
+    }
+
     func testTiltFollowsPointerAndClamps() {
         XCTAssertEqual(TileLayout.tilt(pointerX: 0, pointerY: 0).aroundY, 0)
         XCTAssertEqual(TileLayout.tilt(pointerX: 1, pointerY: 0).aroundY, TileLayout.maxTilt)

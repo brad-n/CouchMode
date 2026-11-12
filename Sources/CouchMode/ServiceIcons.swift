@@ -20,12 +20,17 @@ final class ServiceIcons: ObservableObject {
         static let icon = 4_000_000
         static let lookup = TVArt.maxLookupBytes
         static let timeout: TimeInterval = 10
+        /// The side, in pixels, of the copy an icon is analysed at.
+        static let analysis = 256
+        /// The side of the copy an icon's edge colors are sampled from.
+        static let band = 64
     }
 
     private let log = Logger(subsystem: "local.brad.htpcshell", category: "icons")
     private var images: [String: NSImage] = [:]
     private var tileImages: [String: NSImage] = [:]
-    private var edgeColors: [String: RGB] = [:]
+    private var edgeBands: [String: (top: RGB, bottom: RGB)] = [:]
+    private var glyphs: [String: GlyphCrop] = [:]
     private var attempted: Set<String> = []
     private let session: URLSession = {
         let c = URLSessionConfiguration.ephemeral
@@ -40,7 +45,8 @@ final class ServiceIcons: ObservableObject {
         return support.appendingPathComponent(id).appendingPathComponent("icons")
     }
 
-    private func file(_ id: String) -> URL? { directory?.appendingPathComponent("\(id).png") }
+    // ".site" marks icons chosen with the padded-manifest rule; older "<id>.png" files are not read.
+    private func file(_ id: String) -> URL? { directory?.appendingPathComponent("\(id).site.png") }
     private func tileFile(_ id: String) -> URL? { directory?.appendingPathComponent("\(id).tv.jpg") }
 
     /// The service's tvOS landscape app icon, or nil (the tile falls back to its logo).
@@ -52,16 +58,60 @@ final class ServiceIcons: ObservableObject {
         return image
     }
 
-    /// The dominant edge color of the site icon, to extend it into a full-bleed background.
-    func edgeColor(for id: String) -> RGB? {
-        if let hit = edgeColors[id] { return hit }
-        guard let image = image(for: id), let color = Self.sampleEdge(image) else { return nil }
-        edgeColors[id] = color
-        return color
+    /// The icon's own color along its top and bottom edges, the ends of the full-bleed background gradient.
+    func edgeBand(for id: String) -> (top: RGB, bottom: RGB)? {
+        if let hit = edgeBands[id] { return hit }
+        guard let image = image(for: id), let band = Self.sampleBand(image) else { return nil }
+        edgeBands[id] = band
+        return band
     }
 
-    private static func sampleEdge(_ image: NSImage) -> RGB? {
-        let side = 64
+    /// The icon cropped to its glyph (its own padding, border and rounded-square frame removed), with a
+    /// soft margin of background left around it for the tile to feather; `tight` is the glyph's own size in pixels.
+    struct GlyphCrop {
+        let image: NSImage
+        let tight: CGSize
+        /// The crop's size in real pixels (an NSImage's own representation can report double).
+        let pixels: CGSize
+    }
+
+    /// Nil when there is nothing to trim; the tile then uses the whole icon.
+    func glyph(for id: String) -> GlyphCrop? {
+        if let hit = glyphs[id] { return hit }
+        guard let image = image(for: id), let cg = image.cgImage(forProposedRect: nil, context: nil, hints: nil),
+              let (tight, margin) = Self.glyphRects(of: cg), let cropped = cg.cropping(to: margin) else { return nil }
+        let out = GlyphCrop(image: NSImage(cgImage: cropped, size: NSSize(width: cropped.width, height: cropped.height)), tight: tight.size,
+                            pixels: CGSize(width: cropped.width, height: cropped.height))
+        glyphs[id] = out
+        return out
+    }
+
+    /// The glyph's box, and that box plus a margin, in the image's own pixels. Found on a copy of at most
+    /// `Limits.analysis` pixels a side.
+    private static func glyphRects(of cg: CGImage) -> (tight: CGRect, margin: CGRect)? {
+        let longest = max(cg.width, cg.height)
+        guard longest > 0 else { return nil }
+        let k = min(1, Double(Limits.analysis) / Double(longest))
+        let w = max(1, Int((Double(cg.width) * k).rounded())), h = max(1, Int((Double(cg.height) * k).rounded()))
+        guard let ctx = CGContext(data: nil, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w * 4,
+                                  space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue),
+              let data = ctx.data else { return nil }
+        ctx.interpolationQuality = .high
+        ctx.draw(cg, in: CGRect(x: 0, y: 0, width: w, height: h))
+        let bytes = Array(UnsafeBufferPointer(start: data.assumingMemoryBound(to: UInt8.self), count: w * h * 4))
+        guard let box = LogoTrim.glyphBounds(rgba: bytes, width: w, height: h) else { return nil }
+        let full = CGRect(x: 0, y: 0, width: cg.width, height: cg.height)
+        let sx = Double(cg.width) / Double(w), sy = Double(cg.height) / Double(h)
+        // One analysis pixel each way so soft edges are not clipped.
+        let tight = CGRect(x: Double(box.x - 1) * sx, y: Double(box.y - 1) * sy,
+                           width: Double(box.w + 2) * sx, height: Double(box.h + 2) * sy).integral.intersection(full)
+        guard !tight.isNull, tight.width > 0, tight.height > 0 else { return nil }
+        let m = Double(TileLayout.glyphFeather) * min(tight.width, tight.height)
+        return (tight, tight.insetBy(dx: -m, dy: -m).integral.intersection(full))
+    }
+
+    private static func sampleBand(_ image: NSImage) -> (top: RGB, bottom: RGB)? {
+        let side = Limits.band
         guard let rep = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: side, pixelsHigh: side, bitsPerSample: 8, samplesPerPixel: 4,
                                          hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: side * 4, bitsPerPixel: 32),
               let ctx = NSGraphicsContext(bitmapImageRep: rep) else { return nil }
@@ -70,7 +120,13 @@ final class ServiceIcons: ObservableObject {
         image.draw(in: NSRect(x: 0, y: 0, width: side, height: side))
         NSGraphicsContext.restoreGraphicsState()
         guard let data = rep.bitmapData else { return nil }
-        return EdgeColor.dominant(rgba: Array(UnsafeBufferPointer(start: data, count: side * side * 4)), width: side, height: side, border: 2)
+        let bytes = Array(UnsafeBufferPointer(start: data, count: side * side * 4))
+        let rows = 3
+        func band(_ y: Int) -> RGB? {
+            EdgeColor.dominantSolid(rgba: bytes, width: side, height: side, region: PixelRect(x: 0, y: y, w: side, h: rows), border: 1)?.color
+        }
+        guard let top = band(0), let bottom = band(side - rows) else { return nil }
+        return (top, bottom)
     }
 
     /// The cached icon for a service, or nil (the tile keeps its symbol).
@@ -111,7 +167,7 @@ final class ServiceIcons: ObservableObject {
             candidates += SiteIcons.parseManifest(manifest.data).map { c in
                 // A manifest's own relative addresses are relative to the manifest.
                 guard let abs = URL(string: c.href, relativeTo: manifestURL)?.absoluteString else { return c }
-                return IconCandidate(href: abs, size: c.size, type: c.type, kind: c.kind)
+                return IconCandidate(href: abs, size: c.size, type: c.type, kind: c.kind, padded: c.padded)
             }
         }
         guard let iconURL = SiteIcons.best(candidates, relativeTo: home), let icon = await get(iconURL, limit: Limits.icon),

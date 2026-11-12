@@ -1,5 +1,5 @@
 // Owns: the arithmetic of an Apple TV style app tile: its size at a screen
-// scale, corner radius, where a logo sits on a full-bleed background, and
+// scale, corner radius, where a logo sits on a full-bleed background and what that background looks like, and
 // the parallax tilt and sheen position that follow a focus "pointer".
 // Pure: HomeView's tile draws what these return.
 
@@ -28,6 +28,34 @@ public enum TileLayout {
         let k = min(tile.w * fraction / logo.w, tile.h * fraction / logo.h, maxMagnify)
         let (w, h) = (logo.w * k, logo.h * k)
         return ((tile.w - w) / 2, (tile.h - h) / 2, w, h)
+    }
+
+    /// The margin of background kept around a trimmed glyph, as a share of its shorter side, that the
+    /// tile fades out so the crop's edge does not show against the tile's own gradient.
+    public static let glyphFeather: Double = 0.08
+
+    /// Where a trimmed glyph sits on a full-bleed fallback tile, centered: at most
+    /// `heightFraction` of the tile's height and `widthFraction` of its width
+    /// (a wide wordmark is limited by width), and never magnified past
+    /// `maxMagnify` times its own pixels, so a small source stays small, not blurry.
+    public static func glyphRect(glyph: (w: Double, h: Double), tile: (w: Double, h: Double),
+                                 heightFraction: Double = 0.6, widthFraction: Double = 0.7,
+                                 maxMagnify: Double = 2) -> (x: Double, y: Double, w: Double, h: Double)? {
+        guard glyph.w > 0, glyph.h > 0, tile.w > 0, tile.h > 0, heightFraction > 0, heightFraction <= 1,
+              widthFraction > 0, widthFraction <= 1, maxMagnify > 0 else { return nil }
+        let k = min(tile.h * heightFraction / glyph.h, tile.w * widthFraction / glyph.w, maxMagnify)
+        let (w, h) = (glyph.w * k, glyph.h * k)
+        return ((tile.w - w) / 2, (tile.h - h) / 2, w, h)
+    }
+
+    /// The top and bottom colors of a fallback tile's background, from the icon's own
+    /// top and bottom edge colors (so the trimmed glyph's backdrop matches the tile),
+    /// eased a touch lighter above and darker below so even a flat icon gets some depth.
+    public static func backdrop(top: RGB, bottom: RGB) -> (top: RGB, bottom: RGB) {
+        func mix(_ c: RGB, _ to: Double, _ t: Double) -> RGB {
+            RGB(r: c.r + (to - c.r) * t, g: c.g + (to - c.g) * t, b: c.b + (to - c.b) * t)
+        }
+        return (mix(top, 1, 0.02), mix(bottom, 0, 0.12))
     }
 
     /// Rotation for a pointer position in -1...1 on each axis (0 = center): the

@@ -33,9 +33,20 @@ final class SiteIconsTests: XCTestCase {
     func testReadsManifestIcons() {
         let json = #"{"icons":[{"src":"a-192.png","sizes":"192x192","type":"image/png"},{"src":"/a-512.png","sizes":"512x512"},{"src":"m.png","sizes":"512x512","purpose":"maskable"}]}"#
         let icons = SiteIcons.parseManifest(Data(json.utf8))
-        XCTAssertEqual(icons.map(\.href), ["a-192.png", "/a-512.png"])
-        XCTAssertEqual(icons.map(\.size), [192, 512])
+        XCTAssertEqual(icons.map(\.href), ["a-192.png", "/a-512.png", "m.png"])
+        XCTAssertEqual(icons.map(\.size), [192, 512, 512])
+        XCTAssertEqual(icons.map(\.padded), [false, false, true])
         XCTAssertTrue(icons.allSatisfy { $0.kind == .manifest })
+    }
+
+    func testLargestMaskableIconWinsBySizeButUnpaddedWinsATie() {
+        let base = URL(string: "https://example.com/")!
+        let any192 = IconCandidate(href: "a.png", size: 192, type: nil, kind: .manifest)
+        let mask1024 = IconCandidate(href: "m1024.png", size: 1024, type: nil, kind: .manifest, padded: true)
+        XCTAssertEqual(SiteIcons.best([any192, mask1024], relativeTo: base)?.lastPathComponent, "m1024.png")
+        let any512 = IconCandidate(href: "a512.png", size: 512, type: nil, kind: .manifest)
+        let mask512 = IconCandidate(href: "m512.png", size: 512, type: nil, kind: .manifest, padded: true)
+        XCTAssertEqual(SiteIcons.best([mask512, any512], relativeTo: base)?.lastPathComponent, "a512.png")
     }
 
     func testMalformedManifestGivesNothing() {
