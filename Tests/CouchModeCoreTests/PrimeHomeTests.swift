@@ -58,7 +58,7 @@ final class PrimeHomeTests: XCTestCase {
         XCTAssertEqual(cw.tileArt?.absoluteString, "https://example.invalid/images/S/synthetic-a/cover001._SX640_.jpg",
                        "the composite's badges are dropped; the plain image is sized")
         XCTAssertEqual(cw.heroArt?.absoluteString, "https://example.invalid/images/S/synthetic-a/cover001._SX1920_.jpg")
-        XCTAssertEqual(home.hero?.heroArt?.absoluteString, "https://example.invalid/images/S/synthetic-a/hero0001._SX1920_.jpg")
+        XCTAssertEqual(home.hero?.heroArt?.absoluteString, "https://example.invalid/images/S/synthetic-a/hero0001._SX1920_.jpeg")
     }
 
     func testImageURLRefusesOddAddresses() {
@@ -67,8 +67,9 @@ final class PrimeHomeTests: XCTestCase {
         XCTAssertNil(PrimeSite.imageURL("https://example.invalid/a/b.jpg", width: 0))
         XCTAssertNil(PrimeSite.imageURL("https://example.invalid/a/b.jpg", width: 99_999))
         XCTAssertNil(PrimeSite.imageURL(nil, width: 640))
+        XCTAssertNil(PrimeSite.imageURL("https://example.invalid/images/S/x/y.exe", width: 640), "only image extensions")
         XCTAssertEqual(PrimeSite.imageURL("https://m.media-amazon.com/images/S/x/y.png", width: 320)?.absoluteString,
-                       "https://m.media-amazon.com/images/S/x/y._SX320_.jpg")
+                       "https://m.media-amazon.com/images/S/x/y._SX320_.png")
         XCTAssertEqual(PrimeSite.imageURL("https://images-na.ssl-images-amazon.com/images/S/x/y._UR1920,1080_CLs%7Cz.jpg", width: 640)?.absoluteString,
                        "https://images-na.ssl-images-amazon.com/images/S/x/y._SX640_.jpg")
     }

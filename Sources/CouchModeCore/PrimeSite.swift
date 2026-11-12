@@ -70,19 +70,21 @@ public enum PrimeSite {
         return imageDomains.contains { host == $0 || host.hasSuffix("." + $0) }
     }
 
-    /// An image address at a width: the file's stem with a size modifier. Any modifier it
-    /// already has is dropped (a row's own cover has a badge overlay composed into its
-    /// modifier, which can itself contain slashes).
+    /// An image address at a width: the file's stem with a size modifier and the file's own
+    /// extension (the server answers a png file only under .png). Any modifier it already has
+    /// is dropped (a row's own cover has a badge overlay composed into its modifier, which can
+    /// itself contain slashes).
     public static func imageURL(_ address: String?, width: Int) -> URL? {
         guard let address, let url = StreamJSON.httpsURL(address), isImageHost(url), width > 0, width <= 4096,
               let path = address.range(of: "/images/") else { return nil }
         let rest = address[path.upperBound...]
+        guard let dot = rest.lastIndex(of: "."), ["jpg", "jpeg", "png"].contains(rest[rest.index(after: dot)...].lowercased()) else { return nil }
+        let ext = rest[rest.index(after: dot)...].lowercased()
         let stem: Substring
         if let modifier = rest.range(of: "._") { stem = rest[..<modifier.lowerBound] }
-        else if let dot = rest.lastIndex(of: ".") { stem = rest[..<dot] }
-        else { stem = rest }
+        else { stem = rest[..<dot] }
         guard !stem.isEmpty, !stem.contains("?"), !stem.hasSuffix("/") else { return nil }
-        return URL(string: "\(address[..<path.upperBound])\(stem)._SX\(width)_.jpg")
+        return URL(string: "\(address[..<path.upperBound])\(stem)._SX\(width)_.\(ext)")
     }
 
     /// A profile's avatar address as the page shows it: https and an Amazon image host only.
