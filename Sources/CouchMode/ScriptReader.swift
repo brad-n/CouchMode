@@ -28,6 +28,8 @@ final class ScriptReader: StreamSource {
     private var shownProfile: String?
     private var unfinished = UnfinishedSwitch()
     private var noticeLine: String?
+    /// The gate the last details, search or season read ran into (taken once by the screen).
+    private var gateSeen: StreamHome?
     private let log = Logger(subsystem: "local.brad.htpcshell", category: "stream")
 
     var playerShownScript: String? { manifest.definesPlayerShown ? body(call: "reader.playerShown()", fallback: "false") : nil }
@@ -45,6 +47,19 @@ final class ScriptReader: StreamSource {
     func takeNotice() -> String? {
         defer { noticeLine = nil }
         return noticeLine
+    }
+
+    func takeGate() -> StreamHome? {
+        defer { gateSeen = nil }
+        return gateSeen
+    }
+
+    /// A read's answer that is the service's "who's watching" gate (a home that asks) instead of what was asked for:
+    /// kept for the screen, and that read is nil. Any read may end there; only a package that says so ever does.
+    private func sawGate(_ json: String) -> Bool {
+        guard json.contains("asksWhoIsWatching"), let gate = decoder.home(json, serviceID: service.id)?.home, gate.asksWhoIsWatching else { return false }
+        gateSeen = gate
+        return true
     }
 
     func home() async -> StreamHome? {
@@ -73,14 +88,17 @@ final class ScriptReader: StreamSource {
     }
 
     func details(for title: StreamTitle) async -> StreamTitleDetails? {
+        gateSeen = nil
         guard title.page != nil, let json = await read("details", .details, .init(titlePage: title.page), call: "details",
                                                         args: ["title": PackageDecoder.argument(for: title)]) else { return nil }
+        if sawGate(json) { return nil }
         return decoder.details(json) ?? failed("details", "answer not usable")
     }
 
     func episodes(in season: StreamSeason, of title: StreamTitle) async -> [StreamEpisode]? {
         guard let page = manifest.pages[.season], let url = manifest.url(for: .season, .init(titlePage: title.page, seasonID: season.id)) else { return nil }
         let action = driver.begin("episodes")
+        gateSeen = nil
         // A season that is a request from the title's own page (not a page of its own) reuses that page when it is showing.
         if !(page.reuseIfOpen && isOpen(url)), !(await reuseCurrentPage(action, page)) {
             guard driver.isCurrent(action), await driver.open(url, for: action, timeout: manifest.loadTimeout) else { return nil }
@@ -88,6 +106,7 @@ final class ScriptReader: StreamSource {
         guard await driver.waitFor(readyBody(page.ready), for: action, timeout: page.readyTimeout ?? manifest.readyTimeout, what: "never ready"),
               let json = await driver.text(body(call: "reader.season(\(argument(["seasonID": season.id, "title": PackageDecoder.argument(for: title)])))"), for: action,
                                            timeout: page.readTimeout ?? manifest.readTimeout, what: "unreadable") else { return nil }
+        if sawGate(json) { return nil }
         return decoder.episodes(json) ?? failed("episodes", "answer not usable")
     }
 
@@ -95,6 +114,7 @@ final class ScriptReader: StreamSource {
         guard let page = manifest.pages[.search] else { return nil }
         guard let text = StreamSearch.normalized(query), let url = manifest.url(for: .search, .init(query: text)) else { return [] }
         let action = driver.begin("search")
+        gateSeen = nil
         if !(await reuseCurrentPage(action, page)) {
             guard driver.isCurrent(action), await driver.open(url, for: action, timeout: manifest.loadTimeout) else { return nil }
             // A search with no matches is a valid answer ([]), not a failure, when the manifest says readiness is optional.
@@ -104,6 +124,7 @@ final class ScriptReader: StreamSource {
         guard let json = await driver.text(body(call: "reader.search(\(argument(["query": text])))"), for: action,
                                            timeout: page.readTimeout ?? manifest.readTimeout, what: "results unreadable")
         else { return nil }
+        if sawGate(json) { return nil }
         return decoder.titles(json) ?? failed("search", "answer not usable")
     }
 

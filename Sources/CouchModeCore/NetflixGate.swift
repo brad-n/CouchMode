@@ -14,15 +14,34 @@ public enum NetflixGate {
     static let maxTiles = 30
 
     /// The gate's tiles, in the page's order. Gate markers are required, because Netflix's top bar
-    /// also lists profile links on /browse and those must never read as the gate.
+    /// also lists profile links on /browse and those must never read as the gate. Two forms are known:
+    /// the current one (a `button[data-uia="profile-selector+tile-<profile id>"]` per profile, with no
+    /// link on it) and the older one (`a.profile-link` tiles carrying a /SwitchProfile?tkn= link).
     private static let tilesJS = #"""
+    const NEW_TILES = 'button[data-uia^="profile-selector+tile"]';
+    const OLD_TILES = '.choose-profile a.profile-link, .profiles-gate-container a.profile-link, a[data-uia^="action-select-profile"], a[data-uia="profile-link"]';
+    const PREFIX = "profile-selector+tile-";
     const onGate = () => {
       const path = location.pathname.toLowerCase();
-      return path.indexOf("profilesgate") >= 0 || !!document.querySelector('.profile-gate-label, .choose-profile, .profiles-gate-container, [data-uia="profile-gate-label"]');
+      return path.indexOf("profilesgate") >= 0 ||
+        !!document.querySelector('.profile-gate-label, .choose-profile, .profiles-gate-container, [data-uia="profile-gate-label"], [data-uia="profile-gate-screen"]') ||
+        document.querySelectorAll(NEW_TILES).length > 0;
     };
-    const tiles = () => onGate() ? Array.from(document.querySelectorAll('.choose-profile a.profile-link, .profiles-gate-container a.profile-link, a[data-uia^="action-select-profile"], a[data-uia="profile-link"]')) : [];
-    const token = (a) => { const m = /[?&]tkn=([A-Za-z0-9-]{1,64})(?:&|$)/.exec(a.getAttribute("href") || ""); return m ? m[1] : null; };
-    const locked = (a) => !!a.querySelector('[class*="lock" i], [data-uia*="lock" i]') || /lock|pin/i.test(a.getAttribute("aria-label") || "") || !!a.closest('[class*="locked" i]');
+    const tiles = () => onGate() ? Array.from(document.querySelectorAll(NEW_TILES)).concat(Array.from(document.querySelectorAll(OLD_TILES))) : [];
+    const fiberOf = (el) => el && el[Object.keys(el).find(k => k.startsWith("__reactFiber"))];
+    const propUp = (el, name, depth) => {
+      for (let p = fiberOf(el), d = 0; p && d < depth; p = p.return, d++) {
+        if (p.memoizedProps && p.memoizedProps[name] !== undefined) return p.memoizedProps[name];
+      }
+      return undefined;
+    };
+    const token = (a) => {
+      const uia = a.getAttribute("data-uia") || "";
+      if (uia.indexOf(PREFIX) === 0) { const t = uia.slice(PREFIX.length); return /^[A-Za-z0-9-]{1,64}$/.test(t) ? t : null; }
+      const m = /[?&]tkn=([A-Za-z0-9-]{1,64})(?:&|$)/.exec(a.getAttribute("href") || "");
+      return m ? m[1] : null;
+    };
+    const locked = (a) => propUp(a, "isLocked", 6) === true || !!a.querySelector('[class*="lock" i], [data-uia*="lock" i]') || /lock|pin/i.test(a.getAttribute("aria-label") || "") || !!a.closest('[class*="locked" i]');
     """#
 
     /// Function body: true once the page is the gate and has drawn its tiles.
@@ -30,6 +49,23 @@ public enum NetflixGate {
     \#(tilesJS)
     return tiles().length > 0;
     """#
+
+    /// Function body: true when the page is the gate, whether or not its tiles have drawn.
+    public static let onGateScript = #"""
+    \#(tilesJS)
+    return onGate();
+    """#
+
+    /// A ready function body that is also satisfied by the gate, so any read can end there
+    /// (Netflix shows the gate instead of a title, search or home page when it wants a choice).
+    public static func readyOrGate(_ ready: String) -> String {
+        "const a = (() => { \(ready) })(); if (a) return true; return (() => { \(readyScript) })();"
+    }
+
+    /// A read function body that answers with the gate's tiles when the page is the gate, else runs `read`.
+    public static func readOrGate(_ read: String) -> String {
+        "const g = (() => { \(extractScript) })(); if (g) return g; \(read)"
+    }
 
     /// Function body: `{"gate":[{id,name,avatar,locked}]}` as a JSON string when the page is the
     /// gate, "" when it isn't (or on error). Reads only; presses nothing.
@@ -40,12 +76,17 @@ public enum NetflixGate {
       if (found.length === 0) return "";
       const gate = found.map((a, i) => {
         const nameEl = a.querySelector('.profile-name');
-        const name = ((nameEl && nameEl.textContent) || a.getAttribute("aria-label") || a.textContent || "").trim().slice(0, 64);
+        const propName = propUp(a, "name", 4);
+        const name = (typeof propName === "string" && propName !== "" ? propName
+          : (nameEl && nameEl.textContent) || a.getAttribute("aria-label") || a.textContent || "").trim().slice(0, 64);
+        const propAvatar = propUp(a, "avatarUrl", 4);
+        const img = a.querySelector('img');
         const icon = a.querySelector('.profile-icon') || a.querySelector('[class*="avatar" i]');
         const bg = icon ? (getComputedStyle(icon).backgroundImage || "") : "";
         const m = /url\(["']?([^"')]+)["']?\)/.exec(bg);
+        const avatar = typeof propAvatar === "string" && propAvatar !== "" ? propAvatar : (img && img.getAttribute("src")) || (m ? m[1] : "");
         const isLocked = locked(a);
-        return { id: token(a) || (isLocked ? "locked-" + (i + 1) : ""), name: name, avatar: m ? m[1] : "", locked: isLocked };
+        return { id: token(a) || (isLocked ? "locked-" + (i + 1) : ""), name: name, avatar: avatar, locked: isLocked };
       });
       return JSON.stringify({ gate: gate });
     } catch (e) {
@@ -63,9 +104,11 @@ public enum NetflixGate {
         const hits = tiles().filter(a => token(a) === id && !locked(a));
         if (hits.length !== 1) return false;
         // Netflix ignores scripted clicks on its pages, so the press is following the tile's own link
-        // (its SwitchProfile address on netflix.com); a tile without one is clicked.
+        // (its SwitchProfile address on netflix.com). The current tiles are buttons with no link, whose
+        // profile's switch address is Netflix's own; a tile with neither is clicked.
         const link = hits[0].href ? new URL(hits[0].href, location.href) : null;
         if (link && link.origin === location.origin && link.pathname.toLowerCase() === "/switchprofile") { location.assign(link.href); }
+        else if (/^[A-Za-z0-9]{1,64}$/.test(id)) { location.assign(location.origin + "/SwitchProfile?tkn=" + id); }
         else { hits[0].click(); }
         return true;
         """#

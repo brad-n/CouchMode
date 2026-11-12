@@ -14,7 +14,6 @@ struct StreamHomeView: View {
         static let rowTitleGap: CGFloat = 14
         static let rowGap: CGFloat = 26
         static let tileInset: CGFloat = 26
-        static let pickerWidth: CGFloat = 640
         static let avatar: CGFloat = 44
     }
 
@@ -43,7 +42,7 @@ struct StreamHomeView: View {
                         .frame(maxHeight: .infinity, alignment: .bottom).padding(.bottom, 40 * s)
                         .transition(.opacity)
                 }
-                if let picked = model.picker { picker(selected: picked, s: s, size: geo.size) }
+                if let picked = model.picker { ProfilePickerOverlay(profiles: model.home?.profiles ?? [], selected: picked, currentID: model.home?.currentProfileID, s: s, size: geo.size) }
             }
             .frame(width: geo.size.width, height: geo.size.height, alignment: .top)
             .clipped()
@@ -83,15 +82,7 @@ struct StreamHomeView: View {
             .animation(DS.focusSpring, value: focused)
     }
 
-    private func avatar(_ profile: StreamProfile, s: CGFloat) -> some View {
-        let side = Metrics.avatar * s
-        return ZStack {
-            Circle().fill(DS.accent.opacity(0.85))
-            Text(String(profile.name.prefix(1)).uppercased()).font(DS.ui(22, s, .heavy)).foregroundStyle(.black)
-            if let url = profile.avatar { RemoteImage(url: url, cover: CGSize(width: side, height: side)) }
-        }
-        .frame(width: side, height: side).clipShape(Circle())
-    }
+    private func avatar(_ profile: StreamProfile, s: CGFloat) -> some View { ProfileAvatar(profile: profile, side: Metrics.avatar * s, s: s) }
 
     // MARK: Hero
 
@@ -142,48 +133,5 @@ struct StreamHomeView: View {
             .frame(width: width, height: (StreamLayout.tileHeight + Metrics.tileInset * 2) * s, alignment: .leading)
             .animation(DS.slide, value: column)
         }
-    }
-
-    // MARK: Profile picker
-
-    private func picker(selected: Int, s: CGFloat, size: CGSize) -> some View {
-        let profiles = model.home?.profiles ?? []
-        return ZStack {
-            Color.black.opacity(0.65)
-            VStack(alignment: .leading, spacing: 14 * s) {
-                Text("Who's watching?").font(DS.display(40, s)).foregroundStyle(DS.text).padding(.bottom, 8 * s)
-                ForEach(Array(profiles.enumerated()), id: \.element.id) { i, profile in
-                    pickerRow(profile, focused: i == selected, current: profile.id == model.home?.currentProfileID, s: s)
-                }
-            }
-            .padding(40 * s)
-            .frame(width: Metrics.pickerWidth * s)
-            .background(RoundedRectangle(cornerRadius: DS.tileRadius * s, style: .continuous).fill(DS.canvas.opacity(0.96)))
-            .overlay(RoundedRectangle(cornerRadius: DS.tileRadius * s, style: .continuous).strokeBorder(DS.hairline, lineWidth: 1))
-        }
-        .frame(width: size.width, height: size.height)
-        .transition(.opacity)
-    }
-
-    private func pickerRow(_ profile: StreamProfile, focused: Bool, current: Bool, s: CGFloat) -> some View {
-        HStack(spacing: 18 * s) {
-            avatar(profile, s: s)
-            VStack(alignment: .leading, spacing: 2 * s) {
-                Text(profile.name).font(DS.ui(26, s, .bold))
-                if profile.isLocked {
-                    Text("Needs its PIN on the website").font(DS.ui(17, s, .medium)).opacity(0.7)
-                } else if profile.isKids {
-                    Text("Kids").font(DS.ui(17, s, .medium)).opacity(0.7)
-                }
-            }
-            Spacer()
-            if profile.isLocked { Image(systemName: "lock.fill").font(.system(size: 22 * s)) }
-            else if current { Image(systemName: "checkmark").font(.system(size: 22 * s, weight: .bold)) }
-        }
-        .foregroundStyle(focused ? Color.black : (profile.isLocked ? DS.text3 : DS.text))
-        .padding(.horizontal, 22 * s).padding(.vertical, 14 * s)
-        .background(RoundedRectangle(cornerRadius: DS.cardRadius * s, style: .continuous).fill(focused ? Color.white : DS.surface))
-        .scaleEffect(focused ? 1.04 : 1)
-        .animation(DS.focusSpring, value: focused)
     }
 }

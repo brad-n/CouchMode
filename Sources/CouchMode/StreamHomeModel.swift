@@ -122,6 +122,9 @@ final class StreamHomeModel: ObservableObject {
         log.info("home service=\(self.service.id, privacy: .public) rows=\(bounded.rows.count)")
     }
 
+    /// A read elsewhere (a search) found the service's page on its gate: the same picker as when the home finds it.
+    func showGate(_ gate: StreamHome) { apply(gate) }
+
     /// The service's page is on its profile gate: the cached rows are dropped, never shown as
     /// current, and the picker opens at once on the gate's own profiles (first unlocked one).
     private func applyGate(_ gate: StreamHome) {

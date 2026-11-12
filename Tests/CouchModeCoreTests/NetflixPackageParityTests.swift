@@ -316,6 +316,114 @@ final class NetflixPackageParityTests: XCTestCase {
         XCTAssertEqual(NetflixHome.switchProfileURL(profileID: "abc123")?.absoluteString, "https://www.netflix.com/SwitchProfile?tkn=abc123")
     }
 
+    // MARK: The gate's current markup (a button per profile, no link)
+
+    private static let synthTiles: [(token: String, name: String, locked: Bool)] =
+        [("SYNTHPROFILE0000000000000001", "Profile 1", false), ("SYNTHPROFILE0000000000000002", "Profile 2", true), ("SYNTHPROFILE0000000000000003", "Profile 3", false)]
+
+    /// A page showing the current gate: `button[data-uia="profile-selector+tile-<id>"]` with the name and avatar in the
+    /// tile's React props, an <img> inside, and no href. `onGate` false is a title page with none of it.
+    private func setButtonGate(path: String = "/title/70000959", onGate: Bool = true) {
+        let tileJS = Self.synthTiles.map { t in
+            "{ uia: 'profile-selector+tile-\(t.token)', textContent: '\(t.name)', __reactFiber$x: { memoizedProps: { type: 'button' }, return: { memoizedProps: { name: '\(t.name)', avatarUrl: 'https://art.invalid/\(t.token).png', isLocked: \(t.locked) }, return: null } }, " +
+            "getAttribute(n) { return n === 'data-uia' ? this.uia : null; }, querySelector(s) { return s === 'img' ? { getAttribute: () => 'https://art.invalid/img.png' } : null; }, closest() { return null; } }"
+        }.joined(separator: ",")
+        context.evaluateScript("""
+        var __nav = [], __clicks = [];
+        var location = { pathname: '\(path)', origin: 'https://www.netflix.com', href: 'https://www.netflix.com\(path)', assign(u) { __nav.push(u); } };
+        var URL = function (u) { const m = /^https:\\/\\/[^\\/]+(\\/[^?]*)/.exec(u); this.href = u; this.origin = 'https://www.netflix.com'; this.pathname = m[1]; };
+        var getComputedStyle = () => ({ backgroundImage: '' });
+        var window = { netflix: {} };
+        var __tiles = \(onGate ? "[\(tileJS)]" : "[]"); __tiles.forEach(t => { t.click = () => __clicks.push(t.textContent); });
+        var document = { querySelector(s) { return \(onGate ? "s.indexOf('profile-gate-screen') >= 0 ? {} : null" : "null"); },
+          querySelectorAll(s) { return s.indexOf('profile-selector+tile') >= 0 ? __tiles : []; } };
+        """)
+    }
+
+    private func readerAnswer(_ call: String) -> String {
+        context.evaluateScript("var __answer = 'pending'; \(call).then(v => { __answer = v; });")
+        return self.call("__answer")
+    }
+
+    /// What the Swift gate's own scripts read from the same page, as the app runs them (a function body).
+    private func swiftGateRead() -> String {
+        self.call("(() => { \(NetflixGate.extractScript) })()")
+    }
+
+    func testTheCurrentGateMarkupIsReadWithNamesAvatarsLockAndIDs() throws {
+        setButtonGate()
+        XCTAssertEqual(call("reader.homeReady()"), "true")
+        let home = try XCTUnwrap(decoder.home(readerAnswer("reader.home({})"), serviceID: "netflix")).home
+        XCTAssertTrue(home.asksWhoIsWatching)
+        XCTAssertEqual(home.profiles.map(\.name), ["Profile 1", "Profile 2", "Profile 3"])
+        XCTAssertEqual(home.profiles.map(\.isLocked), [false, true, false])
+        XCTAssertEqual(home.profiles.map(\.id), Self.synthTiles.map(\.token), "the id is the tile's data-uia suffix")
+        XCTAssertEqual(home.profiles[0].avatar?.absoluteString, "https://art.invalid/SYNTHPROFILE0000000000000001.png")
+        XCTAssertEqual(call("__nav.length + __clicks.length"), "0", "reading presses nothing")
+    }
+
+    func testSwiftAndPackageGateParseTheSameCurrentMarkup() throws {
+        setButtonGate()
+        let swift = try XCTUnwrap(NetflixGate.parse(swiftGateRead()))
+        let package = try XCTUnwrap(decoder.home(readerAnswer("reader.home({})"), serviceID: "netflix")).home
+        XCTAssertEqual(package, swift)
+        XCTAssertEqual(swift.profiles.map(\.isLocked), [false, true, false])
+        // Same on a title page that is not the gate: neither reads a gate.
+        setButtonGate(onGate: false)
+        XCTAssertEqual(swiftGateRead(), "")
+        XCTAssertEqual(call("JSON.stringify(reader.extract.gate())"), "null")
+    }
+
+    func testEveryReadReportsTheGate() throws {
+        setButtonGate(path: "/title/70000959")
+        XCTAssertEqual(call("reader.detailsReady()"), "true", "the gate ends the wait for a details panel")
+        XCTAssertEqual(call("reader.searchReady()"), "true", "and for search results")
+        let title = #"{title: {id: '70000959', kind: 'show'}}"#
+        for read in ["reader.details(\(title))", "reader.season({seasonID: '70000960', title: {id: '70000959', kind: 'show'}})", "reader.search({query: 'x'})"] {
+            let home = try XCTUnwrap(decoder.home(readerAnswer(read), serviceID: "netflix"), read).home
+            XCTAssertTrue(home.asksWhoIsWatching, read)
+            XCTAssertEqual(home.profiles.count, 3, read)
+        }
+        // Not the gate: the search read is the cards (none here), never a gate.
+        setButtonGate(onGate: false)
+        XCTAssertEqual(call("reader.detailsReady()"), "false")
+        XCTAssertEqual(call("reader.searchReady()"), "false")
+        XCTAssertNil(decoder.home(readerAnswer("reader.search({query: 'x'})"), serviceID: "netflix"))
+    }
+
+    func testTheDecoderKeepsADetailsGateAnswerFromBeingTakenAsDetails() throws {
+        setButtonGate()
+        let answer = readerAnswer(#"reader.details({title: {id: '70000959', kind: 'show'}})"#)
+        XCTAssertNil(decoder.details(answer))
+        XCTAssertNil(decoder.titles(answer))
+        XCTAssertNotNil(decoder.home(answer, serviceID: "netflix"))
+    }
+
+    func testChoosingOnTheCurrentGateFollowsThatProfilesSwitchAddressAndNeverTypesOrOpensALockedOne() {
+        setButtonGate()
+        XCTAssertEqual(readerAnswer("reader.chooseProfile({profileID: 'SYNTHPROFILE0000000000000003'})"), "true")
+        XCTAssertEqual(call("__nav.join()"), "https://www.netflix.com/SwitchProfile?tkn=SYNTHPROFILE0000000000000003")
+        XCTAssertEqual(call("__clicks.length"), "0")
+        // The Swift choose script does the same on the same page.
+        setButtonGate()
+        XCTAssertEqual(call("(() => { \(NetflixGate.chooseScript(profileID: "SYNTHPROFILE0000000000000001")) })()"), "true")
+        XCTAssertEqual(call("__nav.join()"), "https://www.netflix.com/SwitchProfile?tkn=SYNTHPROFILE0000000000000001")
+        // A locked tile is never pressed by the Swift script.
+        setButtonGate()
+        XCTAssertEqual(call("(() => { \(NetflixGate.chooseScript(profileID: "SYNTHPROFILE0000000000000002")) })()"), "false")
+        XCTAssertEqual(call("__nav.length + __clicks.length"), "0")
+    }
+
+    func testSwiftReadyAndReadWrappersEndOnTheGateToo() {
+        setButtonGate()
+        XCTAssertEqual(call("(() => { \(NetflixGate.readyOrGate("return false;")) })()"), "true")
+        XCTAssertEqual(call("(() => { \(NetflixGate.onGateScript) })()"), "true")
+        XCTAssertTrue(NetflixGate.parse(call("(() => { \(NetflixGate.readOrGate("return 'not the gate';")) })()")) != nil)
+        setButtonGate(onGate: false)
+        XCTAssertEqual(call("(() => { \(NetflixGate.readyOrGate("return false;")) })()"), "false")
+        XCTAssertEqual(call("(() => { \(NetflixGate.readOrGate("return 'not the gate';")) })()"), "not the gate")
+    }
+
     func testNothingIsTypedOrPlayed() throws {
         let source = try String(contentsOf: Self.appDirectory.appendingPathComponent("reader.js"), encoding: .utf8)
         for forbidden in [".value =", "KeyboardEvent", "dispatchEvent", "fetch(", "XMLHttpRequest", ".play()", "localStorage", "document.cookie"] {

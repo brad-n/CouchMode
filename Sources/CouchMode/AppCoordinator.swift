@@ -464,13 +464,25 @@ final class AppCoordinator {
         let source = home.source
         var search: StreamSearchModel!
         search = StreamSearchModel(serviceName: home.service.name,
-                                   search: { [weak source] query in await source?.search(query) },
+                                   search: { [weak self, weak source, weak home] query in
+                                       let found = await source?.search(query)
+                                       // The page was the service's gate: its picker is the home screen's, shown now.
+                                       if found == nil, let gate = source?.takeGate() { self?.showGate(gate, on: home) }
+                                       return found
+                                   },
                                    onChoose: { [weak self] title in
                                        guard let self else { return }
                                        self.showStreamDetails(title, from: home, back: .streamSearch(search, home: home))
                                    })
         showStreamSearch(search, home: home)
         log.info("stream search service=\(home.service.id, privacy: .public)")
+    }
+
+    /// The service asked who is watching during a search: back to its home with the picker open on the gate's profiles.
+    private func showGate(_ gate: StreamHome, on home: StreamHomeModel?) {
+        guard let home, case .streamSearch(_, let shown) = screen, shown === home else { return }
+        showStreamHomeAgain(home)
+        home.showGate(gate)
     }
 
     private func showStreamSearch(_ search: StreamSearchModel, home: StreamHomeModel) {
@@ -666,6 +678,14 @@ final class AppCoordinator {
     }
 
     private func handleStreamDetail(_ intent: ShellIntent, model: StreamDetailModel) {
+        // The service asked who is watching: Select/Move work the picker; Back and Home leave as usual.
+        if model.picker != nil {
+            switch intent {
+            case .move(let d): model.movePicker(d); return
+            case .select: model.chooseProfile(); return
+            case .back, .home, .info: break
+            }
+        }
         switch intent {
         case .move(let d): model.move(d)
         case .select:
@@ -681,6 +701,7 @@ final class AppCoordinator {
                 showStreamSearch(search, home: home)
             } else {
                 showStreamHomeAgain(model.home)
+                if model.profileChanged { model.home.refresh() }
             }
         case .home: goHome()
         case .info: break

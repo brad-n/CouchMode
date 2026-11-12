@@ -21,11 +21,15 @@ import CouchModeCore
     var playerShownScript: String? { get }
     /// A one-time line the reader has for the screen after a read (e.g. it undid an unfinished profile switch); nil by default.
     func takeNotice() -> String?
+    /// The service's "who's watching" gate, when the last details, search or season read found the page on it
+    /// (that read answers nil); taken once. nil by default.
+    func takeGate() -> StreamHome?
 }
 
 extension StreamSource {
     var playerShownScript: String? { nil }
     func takeNotice() -> String? { nil }
+    func takeGate() -> StreamHome? { nil }
 }
 
 @MainActor

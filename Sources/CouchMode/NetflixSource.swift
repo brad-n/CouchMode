@@ -29,6 +29,8 @@ final class NetflixSource: StreamSource {
 
     let service: Service
     private let driver: PageDriver
+    /// The gate the last details, search or season read ran into (taken once by the screen).
+    private var gateSeen: StreamHome?
 
     init(service: Service, player: WebPlayer) {
         self.service = service
@@ -39,42 +41,64 @@ final class NetflixSource: StreamSource {
         // /browse may land on the gate (which has no home data): ready is either, and the read is
         // the gate's tiles when it is the gate, else the page data. One open, one read.
         guard let json = await driver.read("home", open: Self.browseURL,
-                                           ready: "const a = (() => { \(Self.pageDataReady) })(); if (a) return true; return (() => { \(NetflixGate.readyScript) })();",
-                                           script: "const g = (() => { \(NetflixGate.extractScript) })(); if (g) return g; \(NetflixHome.extractScript)")
+                                           ready: NetflixGate.readyOrGate(Self.pageDataReady),
+                                           script: NetflixGate.readOrGate(NetflixHome.extractScript))
         else { return nil }
         if let gate = NetflixGate.parse(json) { return gate }
         return NetflixHome.parse(graphQLCache: Data(json.utf8))
+    }
+
+    func takeGate() -> StreamHome? {
+        defer { gateSeen = nil }
+        return gateSeen
+    }
+
+    /// A read's answer that is the gate's profiles instead of the page's data: kept for the screen, and the read is nil.
+    private func sawGate(_ json: String) -> Bool {
+        guard let gate = NetflixGate.parse(json) else { return false }
+        gateSeen = gate
+        return true
     }
 
     func search(_ query: String) async -> [StreamTitle]? {
         guard let url = NetflixSearch.pageURL(query: query) else { return [] }
         let action = driver.begin("search")
         guard await driver.open(url, for: action) else { return nil }
-        guard await driver.waitFor(NetflixSearch.readyScript, for: action, timeout: Self.searchResultsWait,
+        gateSeen = nil
+        guard await driver.waitFor(NetflixGate.readyOrGate(NetflixSearch.readyScript), for: action, timeout: Self.searchResultsWait,
                                    what: "results", required: false) else {
             return driver.isCurrent(action) ? [] : nil
         }
-        guard let json = await driver.text(NetflixSearch.resultsScript, for: action, what: "results unreadable") else { return nil }
+        guard let json = await driver.text(NetflixGate.readOrGate(NetflixSearch.resultsScript), for: action, what: "results unreadable") else { return nil }
+        if sawGate(json) { return nil }
         return NetflixSearch.titles(fromResults: json,
                                     play: { NetflixHome.playURL(videoID: $0) },
                                     page: { NetflixHome.pageURL(videoID: $0) })
     }
 
     func details(for title: StreamTitle) async -> StreamTitleDetails? {
+        gateSeen = nil
         guard let page = title.page,
-              let json = await driver.read("details", open: page, ready: NetflixDetails.readyScript,
-                                           script: NetflixDetails.readScript(for: title.kind), timeouts: Self.panel)
+              let json = await driver.read("details", open: page, ready: NetflixGate.readyOrGate(NetflixDetails.readyScript),
+                                           script: NetflixGate.readOrGate(NetflixDetails.readScript(for: title.kind)), timeouts: Self.panel)
         else { return nil }
+        if sawGate(json) { return nil }
         return NetflixDetails.details(fromRead: json, title: title)
     }
 
     func episodes(in season: StreamSeason, of title: StreamTitle) async -> [StreamEpisode]? {
         guard let page = title.page else { return nil }
         let action = driver.begin("episodes")
+        gateSeen = nil
         // The title's panel has to be what the page shows (another action may have moved it).
         if driver.view.url?.path != page.path {
             guard await driver.open(page, for: action),
-                  await driver.waitFor(NetflixDetails.readyScript, for: action, what: "no details panel") else { return nil }
+                  await driver.waitFor(NetflixGate.readyOrGate(NetflixDetails.readyScript), for: action, what: "no details panel") else { return nil }
+        }
+        // The page may be the gate instead of the title's panel: that is the answer (the screen asks who is watching).
+        if await WebPage.run(NetflixGate.onGateScript, in: driver.view, timeout: .seconds(5)) as? Bool == true {
+            if let json = await WebPage.text(NetflixGate.extractScript, in: driver.view, timeout: .seconds(5)) { _ = sawGate(json) }
+            return nil
         }
         guard await driver.yes(NetflixDetails.chooseSeasonScript(seasonName: season.name), for: action,
                                what: "season not in Netflix's picker"),

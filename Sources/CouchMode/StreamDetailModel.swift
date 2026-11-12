@@ -24,6 +24,12 @@ final class StreamDetailModel: ObservableObject {
     @Published private(set) var details: StreamTitleDetails?
     @Published private(set) var focus: StreamDetailFocus
     @Published private(set) var episodesLoading = false
+    /// The service's "who's watching" gate, when a read found the page on it: the picker is shown over the details
+    /// (selected row in `picker`), and once a profile is chosen the details are read again.
+    @Published private(set) var gate: [StreamProfile]?
+    @Published private(set) var picker: Int?
+    /// A profile was chosen here, so the home behind this screen shows another profile's rows until it is read again.
+    private(set) var profileChanged = false
 
     private var closed = false
     private var episodesTried: Set<String> = []
@@ -72,10 +78,53 @@ final class StreamDetailModel: ObservableObject {
 
     func load() {
         Task { [weak self] in
-            guard let self, let read = await source.details(for: rowTitle), !closed else { return }
+            guard let self else { return }
+            let read = await source.details(for: rowTitle)
+            guard !closed else { return }
+            guard let read else { return showGateIfSeen() }
             apply(read.bounded)
             loadEpisodesIfNeeded()
         }
+    }
+
+    // MARK: The gate
+
+    /// The page was the service's gate instead of the title: the profiles are the picker over this screen.
+    private func showGateIfSeen() {
+        guard let seen = source.takeGate()?.bounded, !seen.profiles.isEmpty else { return }
+        gate = seen.profiles
+        picker = seen.profiles.firstIndex { !$0.isLocked } ?? 0
+        log.info("gate on details service=\(self.service.id, privacy: .public) profiles=\(seen.profiles.count)")
+    }
+
+    func movePicker(_ direction: Direction) {
+        guard let current = picker, let count = gate?.count, count > 0 else { return }
+        switch direction {
+        case .up: picker = max(0, current - 1)
+        case .down: picker = min(count - 1, current + 1)
+        case .left, .right: break
+        }
+    }
+
+    /// Picks the highlighted profile (a locked one isn't switchable): one switch, then one read of the details again.
+    func chooseProfile() {
+        guard let i = picker, let profiles = gate, profiles.indices.contains(i), !profiles[i].isLocked else { return }
+        let profile = profiles[i]
+        picker = nil
+        Task { [weak self] in
+            guard let self else { return }
+            let result = await source.switchProfile(to: profile.id)
+            guard !closed else { return }
+            guard result == .switched else { return showGateAgain(profiles) }
+            gate = nil
+            profileChanged = true
+            load()
+        }
+    }
+
+    private func showGateAgain(_ profiles: [StreamProfile]) {
+        gate = profiles
+        picker = profiles.firstIndex { !$0.isLocked } ?? 0
     }
 
     /// Stops late results from touching the screen.
@@ -110,6 +159,7 @@ final class StreamDetailModel: ObservableObject {
             guard let self else { return }
             let read = await source.episodes(in: season, of: rowTitle)
             guard !closed else { return }
+            if read == nil { showGateIfSeen() }
             if let read, var current = details, let i = current.seasons.firstIndex(where: { $0.id == season.id }) {
                 current.seasons[i].episodes = Array(read.prefix(StreamLimits.maxEpisodesPerSeason))
                 details = current

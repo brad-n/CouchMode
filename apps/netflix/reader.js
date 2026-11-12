@@ -255,16 +255,38 @@ const reader = (() => {
   const pageDataReady = () => !!graphql();
 
   // The gate's tiles, in the page's order. Gate markers are required, because Netflix's top bar also
-  // lists profile links on /browse and those must never read as the gate.
+  // lists profile links on /browse and those must never read as the gate. Two forms are known: the
+  // current one (a screen with a <button data-uia="profile-selector+tile-<profile id>"> per profile,
+  // no link on it) and the older one (a.profile-link tiles carrying a /SwitchProfile?tkn= link).
+  const NEW_TILES = 'button[data-uia^="profile-selector+tile"]';
+  const OLD_TILES = '.choose-profile a.profile-link, .profiles-gate-container a.profile-link, a[data-uia^="action-select-profile"], a[data-uia="profile-link"]';
+  const TILE_PREFIX = "profile-selector+tile-";
   const onGate = () => {
     const path = location.pathname.toLowerCase();
-    return path.indexOf("profilesgate") >= 0 || !!document.querySelector('.profile-gate-label, .choose-profile, .profiles-gate-container, [data-uia="profile-gate-label"]');
+    return path.indexOf("profilesgate") >= 0 ||
+      !!document.querySelector('.profile-gate-label, .choose-profile, .profiles-gate-container, [data-uia="profile-gate-label"], [data-uia="profile-gate-screen"]') ||
+      document.querySelectorAll(NEW_TILES).length > 0;
   };
   const gateTiles = () => onGate()
-    ? Array.from(document.querySelectorAll('.choose-profile a.profile-link, .profiles-gate-container a.profile-link, a[data-uia^="action-select-profile"], a[data-uia="profile-link"]'))
+    ? Array.from(document.querySelectorAll(NEW_TILES)).concat(Array.from(document.querySelectorAll(OLD_TILES)))
     : [];
-  const tileToken = a => { const m = /[?&]tkn=([A-Za-z0-9-]{1,64})(?:&|$)/.exec(a.getAttribute("href") || ""); return m ? m[1] : null; };
-  const tileLocked = a => !!a.querySelector('[class*="lock" i], [data-uia*="lock" i]') || /lock|pin/i.test(a.getAttribute("aria-label") || "") || !!a.closest('[class*="locked" i]');
+  // React props of the element's fiber (or an ancestor's), as the page's own components hold them.
+  const fiberOf = el => el && el[Object.keys(el).find(k => k.startsWith("__reactFiber"))];
+  const propUp = (el, name, depth) => {
+    for (let p = fiberOf(el), d = 0; p && d < depth; p = p.return, d++) {
+      if (p.memoizedProps && p.memoizedProps[name] !== undefined) return p.memoizedProps[name];
+    }
+    return undefined;
+  };
+  // A tile's profile id: the current form carries it in its data-uia, the older one in its link.
+  const tileToken = a => {
+    const uia = a.getAttribute("data-uia") || "";
+    if (uia.indexOf(TILE_PREFIX) === 0) { const t = uia.slice(TILE_PREFIX.length); return /^[A-Za-z0-9-]{1,64}$/.test(t) ? t : null; }
+    const m = /[?&]tkn=([A-Za-z0-9-]{1,64})(?:&|$)/.exec(a.getAttribute("href") || "");
+    return m ? m[1] : null;
+  };
+  const tileLocked = a => propUp(a, "isLocked", 6) === true || !!a.querySelector('[class*="lock" i], [data-uia*="lock" i]') ||
+    /lock|pin/i.test(a.getAttribute("aria-label") || "") || !!a.closest('[class*="locked" i]');
 
   extract.home = () => {
     const data = graphql() && graphql().data;
@@ -277,12 +299,17 @@ const reader = (() => {
     return {
       gate: found.map((a, i) => {
         const nameEl = a.querySelector(".profile-name");
-        const name = ((nameEl && nameEl.textContent) || a.getAttribute("aria-label") || a.textContent || "").trim().slice(0, 64);
+        const propName = propUp(a, "name", 4);
+        const name = (typeof propName === "string" && propName !== "" ? propName
+          : (nameEl && nameEl.textContent) || a.getAttribute("aria-label") || a.textContent || "").trim().slice(0, 64);
+        const propAvatar = propUp(a, "avatarUrl", 4);
+        const img = a.querySelector("img");
         const icon = a.querySelector(".profile-icon") || a.querySelector('[class*="avatar" i]');
         const bg = icon ? (getComputedStyle(icon).backgroundImage || "") : "";
         const m = /url\(["']?([^"')]+)["']?\)/.exec(bg);
+        const avatar = typeof propAvatar === "string" && propAvatar !== "" ? propAvatar : (img && img.getAttribute("src")) || (m ? m[1] : "");
         const isLocked = tileLocked(a);
-        return { id: tileToken(a) || (isLocked ? "locked-" + (i + 1) : ""), name, avatar: m ? m[1] : "", locked: isLocked };
+        return { id: tileToken(a) || (isLocked ? "locked-" + (i + 1) : ""), name, avatar, locked: isLocked };
       })
     };
   };
@@ -294,14 +321,6 @@ const reader = (() => {
       return { id: match ? match[1] : null, name: card.getAttribute("aria-label") || "", art: image ? image.getAttribute("src") : null };
     });
 
-  // React props of the element's fiber (or an ancestor's), as the page's own components hold them.
-  const fiberOf = el => el && el[Object.keys(el).find(k => k.startsWith("__reactFiber"))];
-  const propUp = (el, name, depth) => {
-    for (let p = fiberOf(el), d = 0; p && d < depth; p = p.return, d++) {
-      if (p.memoizedProps && p.memoizedProps[name] !== undefined) return p.memoizedProps[name];
-    }
-    return undefined;
-  };
   const CARD = '[data-uia="titleCard--container"]';
   const episodeCards = () => Array.from(document.querySelectorAll(CARD)).filter(c => propUp(c, "episode", 6));
   const picker = () => document.querySelector('[data-uia="episode-selector"]');
@@ -395,39 +414,54 @@ const reader = (() => {
     return isObject(profile) && typeof profile.guid === "string" ? profile.guid : null;
   };
 
+  // The gate as a home that asks who is watching, when the page is on it; else null.
+  const gateHome = () => { const read = extract.gate(); return read ? build.gate(read) : null; };
+
   // ---- the API the app calls ----
   return {
     api: 1, build, extract,
     // The home page's data is there, or the "Who's watching?" gate has drawn its tiles (/browse may land on it).
     homeReady: () => { try { return pageDataReady() || gateTiles().length > 0; } catch (e) { return false; } },
+    // Every read also ends when the page is the gate: Netflix shows it instead of a title or search page
+    // (a fresh session, or after a while), and the read then answers with the gate's profiles.
     detailsReady: () => {
-      try { return !!(document.querySelector('[data-uia="preview-modal-synopsis"]') || document.querySelector('[data-uia="episode-selector"]')); }
+      try { return !!(document.querySelector('[data-uia="preview-modal-synopsis"]') || document.querySelector('[data-uia="episode-selector"]')) || gateTiles().length > 0; }
       catch (e) { return false; }
     },
-    searchReady: () => { try { return document.querySelectorAll('[data-uia="standard-card"]').length > 0; } catch (e) { return false; } },
+    searchReady: () => { try { return document.querySelectorAll('[data-uia="standard-card"]').length > 0 || gateTiles().length > 0; } catch (e) { return false; } },
     home: async () => {
       try {
         // On the gate the home is its profiles with no rows; else the page data. One read.
-        const gate = extract.gate();
-        if (gate) { const g = build.gate(gate); if (g) return text(g); }
+        const gate = gateHome();
+        if (gate) return text(gate);
         const cache = extract.home();
         return cache ? text(build.home(cache)) : "";
       } catch (e) { return ""; }
     },
     details: async args => {
       try {
+        const gate = gateHome();
+        if (gate) return text(gate);
         const title = args.title;
         return text(build.details(await extract.panel(title.kind), title));
       } catch (e) { return ""; }
     },
     season: async args => {
       try {
+        const gate = gateHome();
+        if (gate) return text(gate);
         const id = numericID(args.seasonID);
         const read = id ? await extract.season(id) : null;
         return read ? text(build.episodes(read)) : "";
       } catch (e) { return ""; }
     },
-    search: async () => { try { return text(build.search(extract.search())); } catch (e) { return ""; } },
+    search: async () => {
+      try {
+        const gate = gateHome();
+        if (gate) return text(gate);
+        return text(build.search(extract.search()));
+      } catch (e) { return ""; }
+    },
     // On the gate: follow the unlocked tile's own link (Netflix ignores scripted clicks), a tile without
     // one is clicked. Elsewhere: Netflix's own profile switch address. Never types anything.
     chooseProfile: async args => {
@@ -438,7 +472,10 @@ const reader = (() => {
         const hits = gateTiles().filter(a => tileToken(a) === id && !tileLocked(a));
         if (hits.length === 1) {
           const link = hits[0].href ? new URL(hits[0].href, location.href) : null;
+          // The tile's own address if it has one; the current tiles are buttons, whose profile's switch
+          // address is Netflix's own; a tile with neither is pressed.
           if (link && link.origin === location.origin && link.pathname.toLowerCase() === "/switchprofile") location.assign(link.href);
+          else if (/^[A-Za-z0-9]{1,64}$/.test(id)) location.assign(ORIGIN + "/SwitchProfile?tkn=" + id);
           else hits[0].click();
           return true;
         }

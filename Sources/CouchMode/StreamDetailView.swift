@@ -33,10 +33,14 @@ struct StreamDetailView: View {
                 }
                 .padding(.horizontal, StreamLayout.page * s)
                 ScreenHeader(.streamDetail, s: s).pinnedToTop()
+                if let picked = model.picker {
+                    ProfilePickerOverlay(profiles: model.gate ?? [], selected: picked, currentID: nil, s: s, size: geo.size)
+                }
             }
             .frame(width: geo.size.width, height: geo.size.height, alignment: .topLeading)
             .clipped()
             .animation(DS.fade, value: model.title)
+            .animation(DS.fade, value: model.picker != nil)
         }
         .ignoresSafeArea()
     }
