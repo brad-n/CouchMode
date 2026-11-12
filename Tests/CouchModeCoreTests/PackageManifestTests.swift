@@ -9,7 +9,9 @@ final class PackageManifestTests: XCTestCase {
     func testPrimeManifestParses() throws {
         let m = try primeManifest()
         XCTAssertEqual(m.id, "prime")
-        XCTAssertEqual(Set(m.pages.keys), Set(PackageManifest.PageKind.allCases))
+        XCTAssertEqual(Set(m.pages.keys), Set(PackageManifest.PageKind.allCases).subtracting([.restore]))
+        XCTAssertFalse(m.isProfileForm(URL(string: "https://www.primevideo.com/update-profile/1")), "Prime lists no profile forms")
+        XCTAssertTrue(m.isReusableSitePage(URL(string: "https://www.primevideo.com/")))
         XCTAssertEqual(m.pages[.search]?.readyRequired, false)
         XCTAssertEqual(m.pages[.profile]?.confirmTimeout, .seconds(15))
         XCTAssertEqual(m.readTimeout, .seconds(12))
@@ -30,6 +32,24 @@ final class PackageManifestTests: XCTestCase {
         XCTAssertEqual(URLComponents(url: search, resolvingAgainstBaseURL: false)?.queryItems?.first?.value, "the & garden é")
         XCTAssertEqual(search.host, "www.primevideo.com")
         XCTAssertNil(m.url(for: .search, .init(query: "   ")))
+    }
+
+    func testOptionalProfileFormsAndPageChecksParseStrictly() throws {
+        func parse(_ extra: String, page: String = "") throws -> PackageManifest {
+            let json = #"{"id":"x","version":"1","readerAPI":1,"site":{"hosts":["example.invalid"]\#(extra)},"pages":{"home":{"open":"https://example.invalid/","ready":"homeReady"\#(page)}}}"#
+            return try PackageManifest.parse(Data(json.utf8))
+        }
+        let m = try parse(#","profileForms":["update-profile"],"playerPaths":["play"]"#, page: #","settled":"profileSettled","readTimeout":20,"reuseSitePage":true"#)
+        XCTAssertTrue(m.isProfileForm(URL(string: "https://example.invalid/update-profile/1")))
+        XCTAssertFalse(m.isProfileForm(URL(string: "http://example.invalid/update-profile/1")))
+        XCTAssertFalse(m.isProfileForm(URL(string: "https://other.invalid/update-profile/1")))
+        XCTAssertTrue(m.isReusableSitePage(URL(string: "https://example.invalid/browse")))
+        XCTAssertFalse(m.isReusableSitePage(URL(string: "https://example.invalid/play/1")))
+        XCTAssertEqual(m.pages[.home]?.settled, "profileSettled")
+        XCTAssertEqual(m.pages[.home]?.readTimeout, .seconds(20))
+        XCTAssertEqual(m.pages[.home]?.reuseSitePage, true)
+        XCTAssertTrue(try parse(#","profileForms":["a/b"]"#).profileForms.isEmpty, "an odd path list gives none")
+        XCTAssertThrowsError(try parse("", page: #","settled":"not a name!""#))
     }
 
     func testBadManifestsAreRefused() throws {

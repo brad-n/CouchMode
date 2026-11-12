@@ -7,6 +7,9 @@
 // id, address and size rules. The script only returns data; it never plays
 // anything and never runs outside the service's page. A row's paging cursor is
 // opaque text the script returned, kept in memory only and handed back to it.
+// Stateful steps stay here, in Swift, with the package supplying only page checks:
+// the earlier profile (UnfinishedSwitch), switching back to it when a switch ended
+// on a profile form the person backed out of, and the notice that says so.
 // What a package must define: agents/add-a-streaming-service.md.
 
 import Foundation
@@ -21,6 +24,10 @@ final class ScriptReader: StreamSource {
     private let source: String
     private let decoder: PackageDecoder
     private var cursors: [String: String] = [:]
+    /// The profile the last home showed as current, and the one to switch back to if a switch ends on a form the person backs out of.
+    private var shownProfile: String?
+    private var unfinished = UnfinishedSwitch()
+    private var noticeLine: String?
     private let log = Logger(subsystem: "local.brad.htpcshell", category: "stream")
 
     var playerShownScript: String? { manifest.definesPlayerShown ? body(call: "reader.playerShown()", fallback: "false") : nil }
@@ -35,11 +42,33 @@ final class ScriptReader: StreamSource {
 
     // MARK: StreamSource
 
+    func takeNotice() -> String? {
+        defer { noticeLine = nil }
+        return noticeLine
+    }
+
     func home() async -> StreamHome? {
         cursors = [:]
-        guard let json = await read("home", .home, call: "home") else { return nil }
+        await restoreUnfinishedSwitch()
+        if let home = await readHome() { return home }
+        // Opening the page lands on the profile form while that profile is unfinished: the page only shows it once the read has tried, so look again.
+        guard unfinished.previous != nil, manifest.isProfileForm(driver.view.url) else { return nil }
+        await restoreUnfinishedSwitch()
+        return await readHome()
+    }
+
+    /// One read of the home. The wait ends as soon as the page is ready or is on a profile form (which never gets ready); on the form nothing is read.
+    private func readHome() async -> StreamHome? {
+        guard let page = manifest.pages[.home], let url = manifest.url(for: .home) else { return nil }
+        let action = driver.begin("home")
+        guard driver.isCurrent(action), await driver.open(url, for: action, timeout: manifest.loadTimeout),
+              await driver.waitFor(readyBody(page.ready), for: action, timeout: page.readyTimeout ?? manifest.readyTimeout, what: "never ready"),
+              !manifest.isProfileForm(driver.view.url),
+              let json = await driver.text(body(call: "reader.home({})"), for: action, timeout: page.readTimeout ?? manifest.readTimeout, what: "unreadable")
+        else { return nil }
         guard let result = decoder.home(json, serviceID: service.id) else { return failed("home", "answer not usable") }
         cursors = result.cursors
+        shownProfile = result.home.currentProfileID
         return result.home
     }
 
@@ -53,12 +82,12 @@ final class ScriptReader: StreamSource {
         guard let page = manifest.pages[.season], let url = manifest.url(for: .season, .init(titlePage: title.page, seasonID: season.id)) else { return nil }
         let action = driver.begin("episodes")
         // A season that is a request from the title's own page (not a page of its own) reuses that page when it is showing.
-        if !(page.reuseIfOpen && isOpen(url)) {
-            guard await driver.open(url, for: action, timeout: manifest.loadTimeout) else { return nil }
+        if !(page.reuseIfOpen && isOpen(url)), !(await reuseCurrentPage(action, page)) {
+            guard driver.isCurrent(action), await driver.open(url, for: action, timeout: manifest.loadTimeout) else { return nil }
         }
         guard await driver.waitFor(readyBody(page.ready), for: action, timeout: page.readyTimeout ?? manifest.readyTimeout, what: "never ready"),
               let json = await driver.text(body(call: "reader.season(\(argument(["seasonID": season.id])))"), for: action,
-                                           timeout: manifest.readTimeout, what: "unreadable") else { return nil }
+                                           timeout: page.readTimeout ?? manifest.readTimeout, what: "unreadable") else { return nil }
         return decoder.episodes(json) ?? failed("episodes", "answer not usable")
     }
 
@@ -66,11 +95,14 @@ final class ScriptReader: StreamSource {
         guard let page = manifest.pages[.search] else { return nil }
         guard let text = StreamSearch.normalized(query), let url = manifest.url(for: .search, .init(query: text)) else { return [] }
         let action = driver.begin("search")
-        guard await driver.open(url, for: action, timeout: manifest.loadTimeout) else { return nil }
-        // A search with no matches is a valid answer ([]), not a failure, when the manifest says readiness is optional.
-        guard await driver.waitFor(readyBody(page.ready), for: action, timeout: page.readyTimeout ?? manifest.readyTimeout, what: "results",
-                                   required: page.readyRequired) else { return driver.isCurrent(action) && !page.readyRequired ? [] : nil }
-        guard let json = await driver.text(body(call: "reader.search(\(argument(["query": text])))"), for: action, timeout: manifest.readTimeout, what: "results unreadable")
+        if !(await reuseCurrentPage(action, page)) {
+            guard driver.isCurrent(action), await driver.open(url, for: action, timeout: manifest.loadTimeout) else { return nil }
+            // A search with no matches is a valid answer ([]), not a failure, when the manifest says readiness is optional.
+            guard await driver.waitFor(readyBody(page.ready), for: action, timeout: page.readyTimeout ?? manifest.readyTimeout, what: "results",
+                                       required: page.readyRequired) else { return driver.isCurrent(action) && !page.readyRequired ? [] : nil }
+        }
+        guard let json = await driver.text(body(call: "reader.search(\(argument(["query": text])))"), for: action,
+                                           timeout: page.readTimeout ?? manifest.readTimeout, what: "results unreadable")
         else { return nil }
         return decoder.titles(json) ?? failed("search", "answer not usable")
     }
@@ -80,28 +112,74 @@ final class ScriptReader: StreamSource {
         cursors[row.id] = nil   // one request per reach; a successful read puts the next cursor back
         let action = driver.begin("more")
         // The request is the page's own, so it runs in that page (opened again when another is showing).
-        if !(page.reuseIfOpen && isOpen(url)) {
-            guard await driver.open(url, for: action, timeout: manifest.loadTimeout) else { return nil }
+        if !(page.reuseIfOpen && isOpen(url)), !(await reuseCurrentPage(action, page)) {
+            guard driver.isCurrent(action), await driver.open(url, for: action, timeout: manifest.loadTimeout) else { return nil }
         }
         guard await driver.waitFor(readyBody(page.ready), for: action, timeout: manifest.readyTimeout, what: "never ready"),
               let json = await driver.text(body(call: "reader.more(\(argument(rawCursor: cursor)))"), for: action,
-                                           timeout: manifest.readTimeout, what: "more unreadable") else { return nil }
+                                           timeout: page.readTimeout ?? manifest.readTimeout, what: "more unreadable") else { return nil }
         guard let batch = decoder.more(json) else { return failed("more", "answer not usable") }
         cursors[row.id] = batch.cursor
         return batch.titles
     }
 
+    /// Presses the profile in the service's own menu, nothing more. A profile that lands on the service's own form
+    /// (a path the manifest lists) is `.needsPerson`: the form is left alone, never filled in or submitted.
     func switchProfile(to profileID: String) async -> ProfileSwitch {
         cursors = [:]
+        let before = shownProfile
+        let result = await pressProfile(profileID)
+        unfinished.record(result, from: before)
+        return result
+    }
+
+    private func pressProfile(_ profileID: String) async -> ProfileSwitch {
         guard let page = manifest.pages[.profile], let url = manifest.url(for: .profile) else { return .failed }
         let action = driver.begin("profile")
-        guard await driver.open(url, for: action, timeout: manifest.loadTimeout),
-              await driver.waitFor(readyBody(page.ready), for: action, timeout: manifest.readyTimeout, what: "never ready"),
-              await driver.yes(body(call: "reader.chooseProfile(\(argument(["profileID": profileID])))", fallback: "false"), for: action,
-                               timeout: manifest.readTimeout, what: "profile not offered by the page")
-        else { return .failed }
-        return ProfileSwitch(succeeded: await driver.waitFor(body(call: "reader.profileIsCurrent(\(argument(["profileID": profileID])))", fallback: "false"),
-                                                             for: action, timeout: page.confirmTimeout ?? manifest.readyTimeout, what: "profile didn't switch"))
+        if !(await reuseCurrentPage(action, page)) {
+            guard driver.isCurrent(action), await driver.open(url, for: action, timeout: manifest.loadTimeout),
+                  await driver.waitFor(readyBody(page.ready), for: action, timeout: page.readyTimeout ?? manifest.readyTimeout, what: "never ready")
+            else { return .failed }
+        }
+        guard await driver.yes(body(call: "reader.chooseProfile(\(argument(["profileID": profileID])))", fallback: "false"), for: action,
+                               timeout: manifest.readTimeout, what: "profile not offered by the page") else { return .failed }
+        let confirm = page.confirmTimeout ?? manifest.readyTimeout
+        guard let settled = page.settled else {
+            return ProfileSwitch(succeeded: await driver.waitFor(body(call: "reader.profileIsCurrent(\(argument(["profileID": profileID])))", fallback: "false"),
+                                                                 for: action, timeout: confirm, what: "profile didn't switch"))
+        }
+        guard await driver.waitFor(body(call: "reader.\(settled)(\(argument(["profileID": profileID])))", fallback: "false"), for: action,
+                                   timeout: confirm, what: "profile didn't switch") else { return .failed }
+        if manifest.isProfileForm(driver.view.url) { return .needsPerson }
+        return ProfileSwitch(succeeded: await driver.yes(body(call: "reader.profileIsCurrent(\(argument(["profileID": profileID])))", fallback: "false"),
+                                                         for: action, timeout: manifest.readTimeout, what: "profile didn't switch"))
+    }
+
+    /// A switch that ended on the service's profile form leaves the page stuck there when the person backs out unfinished.
+    /// Choose the profile that was active before, on the service's own "who's watching" page (one try; success or not, the memory is cleared).
+    private func restoreUnfinishedSwitch() async {
+        guard let page = manifest.pages[.restore], let url = manifest.url(for: .restore),
+              let name = unfinished.profileToRestore(onForm: manifest.isProfileForm(driver.view.url)) else { return }
+        unfinished.clear()
+        let action = driver.begin("restore")
+        guard driver.isCurrent(action), await driver.open(url, for: action, timeout: manifest.loadTimeout),
+              await driver.waitFor(readyBody(page.ready), for: action, timeout: page.readyTimeout ?? manifest.readyTimeout, what: "no profile tiles"),
+              await driver.yes(body(call: "reader.restoreProfile(\(argument(["profileID": name])))", fallback: "false"), for: action,
+                               timeout: manifest.readTimeout, what: "profile not on the picker"),
+              await driver.waitFor(body(call: "reader.\(page.settled ?? "restored")(\(argument(["profileID": name])))", fallback: "false"), for: action,
+                                   timeout: page.confirmTimeout ?? manifest.readyTimeout, what: "picker didn't close")
+        else {
+            log.error("\(self.service.id, privacy: .public): couldn't switch back after an unfinished profile form")
+            return
+        }
+        noticeLine = "Switched back to \(name)"
+    }
+
+    /// True when the page already showing is a usable page of the service (reuseSitePage) that says it is ready within a moment.
+    private func reuseCurrentPage(_ action: PageDriver.Action, _ page: PackageManifest.Page) async -> Bool {
+        guard page.reuseSitePage, manifest.isReusableSitePage(driver.view.url),
+              await driver.waitFor(readyBody(page.ready), for: action, timeout: .seconds(2), what: "page not ready", required: false) else { return false }
+        return driver.isCurrent(action)
     }
 
     // MARK: Running the package
@@ -110,9 +188,14 @@ final class ScriptReader: StreamSource {
     private func read(_ name: String, _ kind: PackageManifest.PageKind, _ fill: PackageManifest.Fill = .init(),
                       call function: String, args: [String: Any] = [:]) async -> String? {
         guard let page = manifest.pages[kind], let url = manifest.url(for: kind, fill) else { return nil }
-        let timeouts = PageDriver.Timeouts(load: manifest.loadTimeout, ready: page.readyTimeout ?? manifest.readyTimeout, read: manifest.readTimeout)
-        return await driver.read(name, open: url, ready: readyBody(page.ready),
-                                 script: body(call: "reader.\(function)(\(argument(args)))"), timeouts: timeouts)
+        let action = driver.begin(name)
+        if !(await reuseCurrentPage(action, page)) {
+            guard driver.isCurrent(action), await driver.open(url, for: action, timeout: manifest.loadTimeout),
+                  await driver.waitFor(readyBody(page.ready), for: action, timeout: page.readyTimeout ?? manifest.readyTimeout, what: "never ready")
+            else { return nil }
+        }
+        return await driver.text(body(call: "reader.\(function)(\(argument(args)))"), for: action,
+                                 timeout: page.readTimeout ?? manifest.readTimeout, what: "unreadable")
     }
 
     /// A function body for callAsyncJavaScript: the package's script, then the call; "" (or `fallback`) on any error.

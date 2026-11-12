@@ -43,7 +43,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             coordinator.registerStreamSource(Self.reader(for: hulu, player: player, builtin: { HuluSource(service: hulu, player: player) }))
         }
         if let disney = AppServices.all.first(where: { $0.id == DisneyHome.serviceID }) {
-            coordinator.registerStreamSource(DisneySource(service: disney, player: player))
+            coordinator.registerStreamSource(Self.reader(for: disney, player: player, builtin: { DisneySource(service: disney, player: player) }))
         }
         if let prime = AppServices.all.first(where: { $0.id == PrimeHome.serviceID }) {
             coordinator.registerStreamSource(Self.reader(for: prime, player: player, builtin: { PrimeSource(service: prime, player: player) }))

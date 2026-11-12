@@ -1,0 +1,21 @@
+{
+  "id": "disney",
+  "version": "1.0.0",
+  "readerAPI": 1,
+  "site": {
+    "hosts": ["www.disneyplus.com"],
+    "imageHosts": ["bamgrid.com", "disney-plus.net", "example.invalid"],
+    "profileForms": ["update-profile"],
+    "playerPaths": ["play", "video"]
+  },
+  "timeouts": { "load": 20, "ready": 10, "read": 12 },
+  "pages": {
+    "home": { "open": "https://www.disneyplus.com/browse/search", "ready": "homeReady", "readTimeout": 20 },
+    "details": { "open": "https://www.disneyplus.com/browse/search", "ready": "pageReady", "reuseSitePage": true },
+    "season": { "open": "https://www.disneyplus.com/browse/search", "ready": "pageReady", "reuseSitePage": true },
+    "search": { "open": "https://www.disneyplus.com/browse/search", "ready": "pageReady", "reuseSitePage": true },
+    "more": { "open": "https://www.disneyplus.com/browse/search", "ready": "pageReady", "reuseSitePage": true },
+    "profile": { "open": "https://www.disneyplus.com/browse/search", "ready": "pageReady", "reuseSitePage": true, "settled": "profileSettled", "confirmTimeout": 15 },
+    "restore": { "open": "https://www.disneyplus.com/select-profile", "ready": "pickerReady", "settled": "leftPicker", "confirmTimeout": 15 }
+  }
+}

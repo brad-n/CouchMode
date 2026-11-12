@@ -16,7 +16,7 @@ public struct PackageManifest: Equatable, Sendable {
     public static let maxBytes = 64 * 1024
 
     /// The site actions a package can open a page for, one per user action.
-    public enum PageKind: String, CaseIterable, Sendable { case home, details, season, search, more, profile }
+    public enum PageKind: String, CaseIterable, Sendable { case home, details, season, search, more, profile, restore }
 
     public struct Page: Equatable, Sendable {
         /// An https address, or a template using {title.page}, {season.id} or {query}.
@@ -30,6 +30,14 @@ public struct PackageManifest: Equatable, Sendable {
         public let confirmTimeout: Duration?
         /// more: keep the page as it is when it is already this page.
         public let reuseIfOpen: Bool
+        /// Any usable page of the service (one of its hosts, not a player page) will do: it is kept when it
+        /// says it is ready within a moment, instead of opening this page again.
+        public let reuseSitePage: Bool
+        /// How long to wait for the action's answer, where it differs from the manifest's.
+        public let readTimeout: Duration?
+        /// profile, restore: the name of the reader function that says the action has settled
+        /// (profile: the page is on a profile form or the profile is current; restore: the picker closed).
+        public let settled: String?
     }
 
     public let id: String
@@ -42,6 +50,10 @@ public struct PackageManifest: Equatable, Sendable {
     public let pages: [PageKind: Page]
     /// The reader defines `playerShown()`.
     public let definesPlayerShown: Bool
+    /// First path parts of the service's own profile forms, which only the person can finish (`/update-profile/...`).
+    public let profileForms: [String]
+    /// First path parts of the service's player pages, which are never reused as a page to read from.
+    public let playerPaths: [String]
 
     // MARK: Parsing
 
@@ -66,12 +78,14 @@ public struct PackageManifest: Equatable, Sendable {
             }
             pages[kind] = Page(open: open, ready: ready, readyRequired: entry["readyRequired"] as? Bool ?? true,
                                readyTimeout: duration(entry["readyTimeout"]), confirmTimeout: duration(entry["confirmTimeout"]),
-                               reuseIfOpen: entry["reuseIfOpen"] as? Bool ?? false)
+                               reuseIfOpen: entry["reuseIfOpen"] as? Bool ?? false, reuseSitePage: entry["reuseSitePage"] as? Bool ?? false,
+                               readTimeout: duration(entry["readTimeout"]), settled: try optionalFunction(entry["settled"], "pages.\(kind.rawValue).settled"))
         }
         guard pages[.home] != nil else { throw PackageError.malformed("pages.home") }
         return PackageManifest(id: id, version: version, siteHosts: hosts, imageHosts: hostList(site["imageHosts"]),
                                loadTimeout: seconds("load", 20), readyTimeout: seconds("ready", 10), readTimeout: seconds("read", 8),
-                               pages: pages, definesPlayerShown: root["playerShown"] as? Bool ?? false)
+                               pages: pages, definesPlayerShown: root["playerShown"] as? Bool ?? false,
+                               profileForms: pathList(site["profileForms"]), playerPaths: pathList(site["playerPaths"]))
     }
 
     private static let placeholders = ["{title.page}", "{season.id}", "{query}"]
@@ -82,6 +96,19 @@ public struct PackageManifest: Equatable, Sendable {
 
     private static func isFunctionName(_ text: String) -> Bool {
         (1...48).contains(text.count) && text.allSatisfy { $0.isASCII && ($0.isLetter || $0.isNumber) } && text.first?.isLetter == true
+    }
+
+    private static func optionalFunction(_ value: Any?, _ what: String) throws -> String? {
+        guard let value else { return nil }
+        guard let name = value as? String, isFunctionName(name) else { throw PackageError.malformed(what) }
+        return name
+    }
+
+    /// First path parts: up to 8 of 1 to 48 letters, digits or dashes; anything odd gives none.
+    private static func pathList(_ value: Any?) -> [String] {
+        guard let list = value as? [String], list.count <= 8,
+              list.allSatisfy({ (1...48).contains($0.count) && $0.allSatisfy { $0.isASCII && ($0.isLetter || $0.isNumber || $0 == "-") } }) else { return [] }
+        return list
     }
 
     private static func hostList(_ value: Any?) -> [String] {
@@ -111,6 +138,20 @@ public struct PackageManifest: Equatable, Sendable {
     static func host(_ host: String?, within allowed: [String]) -> Bool {
         guard let host = host?.lowercased() else { return false }
         return allowed.contains { host == $0 || host.hasSuffix("." + $0) }
+    }
+
+    private static func firstPath(_ url: URL) -> String? { url.pathComponents.first { $0 != "/" } }
+
+    /// True when `url` is one of the service's own profile forms (https, on its hosts, a path in `profileForms`).
+    public func isProfileForm(_ url: URL?) -> Bool {
+        guard let url, url.scheme == "https", hostAllowed(url.host), let first = Self.firstPath(url) else { return false }
+        return profileForms.contains(first)
+    }
+
+    /// True when `url` is a page of the service that its requests can run in: https, on its hosts, not a player page.
+    public func isReusableSitePage(_ url: URL?) -> Bool {
+        guard let url, url.scheme == "https", hostAllowed(url.host) else { return false }
+        return Self.firstPath(url).map { !playerPaths.contains($0) } ?? true
     }
 
     /// What a page template needs filled in.

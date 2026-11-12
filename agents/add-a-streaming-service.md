@@ -27,7 +27,8 @@ Netflix and Hulu are the worked examples; keep them open while you work:
 A reader is a **script package** in `apps/<id>/`, run by one generic reader
 (`ScriptReader`, `Sources/CouchMode/ScriptReader.swift`). Prime Video is the
 worked example (`apps/prime/`; Hulu, `apps/hulu/`, shows a request made from
-the title's page and a typed search); the Swift readers below (Netflix, Hulu,
+the title's page and a typed search; Disney+, `apps/disney/`, shows API requests
+made from any signed-in page, profile forms and a restore step); the Swift readers below (Netflix, Hulu,
 Disney+, Apple TV, and Prime's `PrimeSource`) are the older way and stay until
 each service is ported. A Mac chooses per service with the `reader` setting
 (`builtin`, the default, or `package`; see [config.md](config.md)).
@@ -84,6 +85,29 @@ apps/<id>/reader.js       one script: `const reader = ...` with the functions be
   how long to wait for the chosen profile to show.
 - `playerShown: true` says `reader.js` defines `playerShown()`.
 
+Optional additions (reader API 1 stays version 1: a package that omits them
+behaves as before):
+
+- `pages.<action>.reuseSitePage: true` keeps the page that is already showing
+  when it is a usable page of the service (on `site.hosts`, and not a player
+  page, see `site.playerPaths`) and its ready function says yes within 2
+  seconds; otherwise the action's page is opened. For a service whose reads
+  are requests that run in any signed-in page of the site (Disney+).
+- `pages.<action>.readTimeout` (seconds): the wait for that action's answer
+  when it differs from `timeouts.read`.
+- `site.profileForms`: first path parts of the service's own forms that only
+  the person can finish (`["update-profile"]`). `site.playerPaths`: first path
+  parts of its player pages.
+- `pages.profile.settled`: a ready-style function, called with
+  `{profileID}`, that says the switch has ended (the page is on a profile
+  form, or the profile is current). Without it the reader waits for
+  `profileIsCurrent`. When the settled page is one of `site.profileForms`, the
+  switch is `needsPerson` (the form is left alone), else `profileIsCurrent` decides.
+- `pages.restore`: the service's "who's watching" page, used after a switch
+  ended on a profile form the person backed out of. `ready` says the picker
+  is drawn, `settled` (called with `{profileID}`) that it closed, and
+  `confirmTimeout` bounds the wait.
+
 ### reader.js: the API (version 1)
 
 `reader` is one object. Every function runs in the service's page. Ready
@@ -94,6 +118,7 @@ characters, and never throw. Arguments arrive as one object.
 | Function | Argument | Returns |
 |---|---|---|
 | `homeReady()`, `detailsReady()`, `searchReady()` | none | `true` when the page's data is there |
+| `pageReady()` | none | (Disney+) ready for any request action; named by the manifest's `ready` |
 | `home()` | none | a **home**, or `""` |
 | `details({title})` | `title` is the row's title (a **title**) | a **details**, or `""` |
 | `season({seasonID})` | the season's `id`, exactly as `details()` returned it (the season's page is open) | an array of **episodes** |
@@ -101,6 +126,7 @@ characters, and never throw. Arguments arrive as one object.
 | `more({cursor})` | the row's cursor, exactly as `home()` returned it | `{"titles": [title], "cursor": opaque or null}` |
 | `chooseProfile({profileID})` | a profile `id` from the home | `true` when the page's own control was pressed (or already current) |
 | `profileIsCurrent({profileID})` | same | `true` once that profile is current |
+| `restoreProfile({profileID})` | the profile's name | `true` when the picker's tile was pressed (only with `pages.restore`) |
 | `playerShown()` | none | `true` while the service's player is showing (only if `playerShown`) |
 
 The vocabulary is `StreamCatalog.swift` as JSON; leave a missing value `null`:
@@ -127,6 +153,21 @@ it (nothing listed in time is `[]`, a box it can't type into is `""`). These
 are additions to API v1 (an older package that ignores the arguments still
 works), so v1 stays 1.
 
+**What stays in Swift.** The stateful steps are in `ScriptReader`, not in the
+package: the profile that was current when the last home was read
+(`shownProfile`), Core's `UnfinishedSwitch` (the earlier profile, kept only
+after a switch ended on a profile form), the restore on the next home read,
+and the notice line ("Switched back to ..."), handed out by `takeNotice()`.
+The package only supplies page checks (`profileSettled`, `pickerReady`,
+`leftPicker`) and the two button presses (`chooseProfile`, `restoreProfile`).
+The profile-form check itself is the manifest's `site.profileForms`, so Swift
+can see the form without asking the page.
+
+A request-based service (Disney+) keeps its API token inside its request
+helper in `reader.js`: read from the page's storage there, used for the one
+request, never returned. Its parity test also runs `extract.*` against a
+stand-in `fetch` and asserts the token is sent but absent from the answer.
+
 Prime's `reader.js` splits each function in two so the second half can be
 tested without a page: `extract.*` reads the page into a small "read", and
 `build.*` turns a read into the vocabulary (pure). Copy that split.
@@ -135,7 +176,7 @@ tested without a page: `extract.*` reads the page into a small "read", and
 
 Same ground rules as the Swift readers, and they bind the script: it runs
 only in the service's page, makes at most the one request the page itself
-would make for that action (Prime's `more` is the only one), reads and
+would make for that action (Prime's `more`; each of Disney+'s explore requests), reads and
 returns no token, cookie or account data, and **never plays anything** (it
 returns the title's `play` address; `AppCoordinator.playStream` hands it to
 the service's player).
@@ -146,8 +187,8 @@ the service's player).
    peek with the debug channel; synthetic fixtures only).
 2. Write `apps/<id>/manifest.json` and `reader.js`. Port the parsing from the
    existing Swift parser rather than redesigning it.
-3. **Parity test** (`Tests/CouchModeCoreTests/PrimePackageParityTests.swift` is
-   the pattern): load `reader.js` in JavaScriptCore, run `reader.build.*` on
+3. **Parity test** (`PrimePackageParityTests.swift` and `DisneyPackageParityTests.swift`
+   in `Tests/CouchModeCoreTests/` are the patterns): load `reader.js` in JavaScriptCore, run `reader.build.*` on
    each of the service's existing fixtures, decode with `PackageDecoder`, and
    assert it equals what the Swift parser makes from the same fixture. Add a
    test that runs `extract.*` against a small stand-in page.
