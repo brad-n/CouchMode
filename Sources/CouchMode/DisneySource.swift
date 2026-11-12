@@ -53,6 +53,15 @@ final class DisneySource: StreamSource {
     func home() async -> StreamHome? {
         cursors = [:]
         await restoreUnfinishedSwitch()
+        if let home = await readHome() { return home }
+        // Opening the session page lands on the profile form while that profile is unfinished:
+        // the page only shows it once the read has tried, so look again here.
+        guard unfinished.previous != nil, DisneyHome.isProfileForm(driver.view.url) else { return nil }
+        await restoreUnfinishedSwitch()
+        return await readHome()
+    }
+
+    private func readHome() async -> StreamHome? {
         guard let json = await driver.read("home", open: DisneyExplore.sessionPageURL, ready: DisneyHome.readyScript,
                                            script: DisneyHome.extractScript, timeouts: Self.homeRead) else { return nil }
         cursors = DisneyMore.cursors(fromHome: json)
