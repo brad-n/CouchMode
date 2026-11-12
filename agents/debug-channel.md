@@ -49,7 +49,7 @@ All `GET` unless noted. Replies are JSON of strings unless noted.
 | `/ax?bundle=<bundle id>` | Another app's interface as Accessibility sees it (bounded text listing), to learn its layout. |
 | `/bt?do=scan\|open\|menu\|hover[&name=...]` | The shell's view of the Bluetooth pane (`menu` and `hover` only read; nothing is pressed). |
 | `/media-formats?service=<id>` | The media probe's record for a service: each SourceBuffer's mime string, and the first init segment's audio codec and channels or video codec and size, plus sizes seen on the video element. Needs the `mediaprobe` flag on. Services that play through native HLS (Hulu, Prime) record no buffers. |
-| `/debug-flag?name=mediaprobe&on=1\|0` | In-memory debug flags, off at every launch. `mediaprobe` injects the probe and reloads service pages. (Netflix 5.1 is a Settings option, not a flag.) |
+| `/debug-flag?name=mediaprobe&on=1\|0` | In-memory debug flags, off at every launch. `mediaprobe` injects the probe and reloads service pages. `fakescreenlock` makes Settings and setup act as if macOS's screen lock were on (5 min), without touching the Mac. (Netflix 5.1 is a Settings option, not a flag.) |
 | `/fakeupdate?state=available\|checking\|downloading\|installing\|uptodate\|unreachable\|failed` | The update screen with made-up content, to look at it. Nothing reaches Sparkle; Back leaves it. |
 | `/hid` | Raw HID gamepads and their last presses, to check a layout. |
 

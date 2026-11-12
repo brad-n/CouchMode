@@ -77,6 +77,10 @@ public struct FirstRunSetup: Equatable, Sendable {
     public private(set) var signIn: [String: SignInStatus] = [:]
     /// The config already on this Mac (a second run); nil on the first.
     public let existing: AppConfig?
+    /// macOS's screen lock as read when setup opened (nil if unknown); only the Done note uses it.
+    public let screenLock: ScreenLockStatus?
+    /// One short note on the Done step when the screen lock is on; never blocks finishing.
+    public var doneNote: String? { ScreenLockStatus.setupNote(screenLock) }
     private let catalog: AppCatalog
     private let migrated: [String: [String: ConfigValue]]
 
@@ -86,7 +90,8 @@ public struct FirstRunSetup: Equatable, Sendable {
     /// - `migrated`: values older versions kept elsewhere, carried into a new entry.
     public init(catalog: AppCatalog, existing: AppConfig?, requirementMet: (AppRequirement) -> Bool,
                 nativeInstalled: (CatalogApp) -> Bool, gameCount: (CatalogApp, String) -> Int?,
-                migrated: [String: [String: ConfigValue]] = [:]) {
+                migrated: [String: [String: ConfigValue]] = [:], screenLock: ScreenLockStatus? = nil) {
+        self.screenLock = screenLock
         self.catalog = catalog
         self.existing = existing
         self.migrated = migrated

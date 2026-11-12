@@ -178,7 +178,8 @@ final class SetupScreen: ObservableObject {
     func debugState() -> [String: String] {
         var state = ["screen": "setup", "step": session.step.rawValue, "selected": model.selected?.id ?? "", "rows": "\(model.rows.count)",
                      "chosen": session.chosen.sorted().joined(separator: ","), "first": "\(isFirstRun)",
-                     "signingIn": signingIn?.id ?? "", "footer": model.footer ?? ""]
+                     "signingIn": signingIn?.id ?? "", "footer": model.footer ?? "",
+                     "doneNote": session.doneNote ?? ""]
         state["signIn"] = session.chosenStreams.map { "\($0.app.id)=\(session.status(of: $0.app.id).label)" }.joined(separator: ",")
         state["list"] = model.rows.map { "\($0.id)=\($0.value)" }.joined(separator: "|")
         state["order"] = session.result().apps.map(\.id).joined(separator: ",")
@@ -197,7 +198,8 @@ struct SetupView: View {
                              buttons: ["Continue"], focusedButton: 0)
         case .done:
             InterstitialView(title: "You're all set", subtitle: "These go on Home", colors: [DS.accent], icon: NSApp.applicationIconImage,
-                             header: .settings, showsBar: false, detail: screen.doneDetail, buttons: ["Go to Home"], focusedButton: 0)
+                             header: .settings, showsBar: false, detail: screen.doneDetail, note: screen.session.doneNote,
+                             buttons: ["Go to Home"], focusedButton: 0)
         case .apps, .games, .signIn:
             SettingsView(model: screen.model)
         }

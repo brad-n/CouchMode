@@ -155,6 +155,13 @@ On a streaming site's own page (while a title plays) the real keys go to the
 site's player; Back and Escape come back to CouchMode. Controllers need no
 setup beyond pairing; Settings has a Remotes & Controllers page for pairing.
 
+On a TV Mac, turn off macOS's "Require password after screen saver begins or
+display is turned off" (System Settings > Lock Screen > Never, or
+`sysadminctl -screenLock off` in Terminal). Otherwise the Mac shows its lock
+screen after it idles and a remote can't type the password. CouchMode can't
+change this itself; Settings > Screen Lock shows the current state, and setup
+mentions it when it is on.
+
 ## Demo mode
 
 Demo mode shows only invented titles with generated artwork, so

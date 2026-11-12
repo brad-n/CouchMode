@@ -1,8 +1,9 @@
 // Owns: Mac settings the shell can change: the audio output device and
 // whether the shell starts at login. Talks to CoreAudio and ServiceManagement;
-// nothing else in the app does.
+// nothing else in the app does. Also reads (never changes) macOS's screen lock.
 
 import CoreAudio
+import CouchModeCore
 import Foundation
 import ServiceManagement
 import os
@@ -87,6 +88,45 @@ final class SystemSettings {
         var size = UInt32(MemoryLayout<Unmanaged<CFString>?>.size)
         guard AudioObjectGetPropertyData(id, &address, 0, nil, &size, &name) == noErr, let n = name else { return "Unknown" }
         return n.takeRetainedValue() as String
+    }
+
+    // MARK: Screen lock (read only)
+
+    private enum LockRead {
+        static let tool = "/usr/sbin/sysadminctl"
+        static let timeout: TimeInterval = 3
+        static let maxOutput = 4096
+    }
+
+    /// Whether macOS asks for a password after idle, from `sysadminctl -screenLock status` (no password needed).
+    /// Runs off the main thread, gives up after a few seconds; nil when it can't be read (logged once).
+    nonisolated static func readScreenLock() async -> ScreenLockStatus? {
+        await Task.detached(priority: .utility) { () -> ScreenLockStatus? in
+            let log = Logger(subsystem: "local.brad.htpcshell", category: "settings")
+            let p = Process()
+            p.executableURL = URL(fileURLWithPath: LockRead.tool)
+            p.arguments = ["-screenLock", "status"]
+            let pipe = Pipe()
+            p.standardOutput = pipe
+            p.standardError = pipe   // the tool prints its answer on stderr
+            let done = DispatchSemaphore(value: 0)
+            p.terminationHandler = { _ in done.signal() }
+            do { try p.run() } catch {
+                log.error("screen lock read failed to start: \(error.localizedDescription, privacy: .public)")
+                return nil
+            }
+            if done.wait(timeout: .now() + LockRead.timeout) == .timedOut {
+                p.terminate()
+                log.error("screen lock read timed out")
+                return nil
+            }
+            let data = pipe.fileHandleForReading.readData(ofLength: LockRead.maxOutput)
+            guard let status = ScreenLockStatus.parse(String(decoding: data, as: UTF8.self)) else {
+                log.error("screen lock read: unrecognized output")
+                return nil
+            }
+            return status
+        }.value
     }
 
     // MARK: Start at login

@@ -24,6 +24,8 @@ struct InterstitialView: View {
     var showsBar = true
     /// A few short lines under the subtitle (an update's notes).
     var detail: String? = nil
+    /// One smaller, dimmer note under the detail (a heads-up that doesn't block anything).
+    var note: String? = nil
     /// Remote-driven buttons under the card, `focusedButton` highlighted.
     var buttons: [String] = []
     var focusedButton = 0
@@ -72,6 +74,11 @@ struct InterstitialView: View {
                         Text(detail).font(DS.ui(24, s, .medium)).foregroundStyle(DS.text)
                             .multilineTextAlignment(.center).lineLimit(6)
                             .frame(maxWidth: 900 * s).padding(.top, 8 * s)
+                    }
+                    if let note, !note.isEmpty {
+                        Text(note).font(DS.ui(20, s, .medium)).foregroundStyle(DS.text2)
+                            .multilineTextAlignment(.center).lineLimit(5)
+                            .frame(maxWidth: 900 * s).padding(.top, 6 * s)
                     }
                     if showsBar { bar(s: s).padding(.top, 14 * s) }
                     if !buttons.isEmpty {

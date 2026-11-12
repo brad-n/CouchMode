@@ -86,7 +86,7 @@ struct SettingsView: View {
     var body: some View {
         GeometryReader { geo in
             let s = DS.scale(geo.size)
-            let footerH = (model.footer == nil ? 0 : Metrics.footer) * s
+            let footerH = Metrics.footerHeight(for: model.footer) * s
             let listHeight = geo.size.height - (ScreenHeader<EmptyView, EmptyView>.band + Metrics.bottom) * s - footerH
             ZStack {
                 DS.canvas
@@ -120,7 +120,7 @@ struct SettingsView: View {
                         if let footer = model.footer {
                             Text(footer).font(DS.ui(20, s, .medium)).foregroundStyle(DS.text2)
                                 .padding(.top, 14 * s).padding(.horizontal, 26 * s)
-                                .frame(height: Metrics.footer * s - 14 * s, alignment: .topLeading)
+                                .frame(height: Metrics.footerHeight(for: footer) * s - 14 * s, alignment: .topLeading)
                                 .padding(.top, 14 * s)
                         }
                     }
@@ -141,6 +141,12 @@ struct SettingsView: View {
         static let rowGap: CGFloat = 10
         static let bottom: CGFloat = 72
         static let footer: CGFloat = 64
+        /// Room for the footer: one or two lines by default, more for a longer explanation (about 70 characters a line).
+        static func footerHeight(for text: String?) -> CGFloat {
+            guard let text else { return 0 }
+            let lines = (text.count + 69) / 70
+            return lines <= 2 ? footer : CGFloat(lines) * 27 + 28
+        }
         static let fade: CGFloat = 40
     }
 

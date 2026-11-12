@@ -40,6 +40,9 @@ final class AppCoordinator {
     private let apps = AppLauncher()
     private lazy var plexApp = PlexHTPC(apps: apps)
     private let bluetooth = BluetoothSettings()
+    /// macOS's screen lock as last read (nil until the first read finishes or when it can't be read). Refreshed when Settings opens.
+    private var screenLockRead: ScreenLockStatus?
+    private var screenLockReading = false
     private var bluetoothRefresh: Timer?
     private var bluetoothRows: [BluetoothListRow] = []
     private let sounds = UISound()
@@ -922,6 +925,7 @@ final class AppCoordinator {
         case .game(let c, let g):
             play(g, on: c) { [weak self] in self?.homeModel.notice = $0 }
         case .settings:
+            refreshScreenLock()
             let model = SettingsModel(rows: settingRows())
             show(NSHostingView(rootView: SettingsView(model: model)))
             screen = .settings(model)
@@ -982,7 +986,7 @@ final class AppCoordinator {
         let controllers = GCController.controllers().count + (hidPads?.connected.count ?? 0)
         let saver = Prefs.screensaverMinutes
         let demo = DemoMode.isOn
-        return [
+        var rows = [
             SettingRow(id: "apps", title: "Apps", value: "\(AppConfigStore.shared.home.apps.count) on Home", symbol: "square.grid.2x2.fill"),
             SettingRow(id: "setup", title: "Run setup again", value: "Apps, games, sign-in", symbol: "wand.and.stars", isAction: true),
             SettingRow(id: "audio", title: "Sound Output", value: demo ? DemoMode.SettingsValue.audio : soundOutputText(), symbol: "speaker.wave.2.fill"),
@@ -1006,6 +1010,37 @@ final class AppCoordinator {
             SettingRow(id: "desktop", title: "Exit to Desktop", value: pending == "desktop" ? "Press again to exit" : "",
                        symbol: "rectangle.portrait.and.arrow.right", isAction: true),
         ]
+        // Screen Lock follows Screensaver; when it is on, a row to open the pane comes right after it.
+        if let lock = screenLock, !demo, let at = rows.firstIndex(where: { $0.id == "screensaver" }) {
+            var added = [SettingRow(id: "screenlock", title: "Screen Lock", value: lock.valueText, symbol: "lock.fill")]
+            if lock.isOn {
+                added.append(SettingRow(id: "lockpane", title: "Open Lock Screen settings", value: "Needs a mouse",
+                                        symbol: "lock.open.fill", isAction: true))
+            }
+            rows.insert(contentsOf: added, at: at + 1)
+        }
+        return rows
+    }
+
+    // MARK: Screen lock
+
+    /// The screen lock to show: the debug override, else the last read. Unknown (nil) shows no row.
+    private var screenLock: ScreenLockStatus? {
+        DebugFlags.isOn(.fakescreenlock) ? .on(delaySeconds: 300) : screenLockRead
+    }
+
+    /// Reads macOS's screen lock off the main thread and refreshes the open Settings list when it answers.
+    /// One read at a time; the answer is cached for the session until the next refresh.
+    private func refreshScreenLock() {
+        guard !screenLockReading, !DemoMode.isOn else { return }
+        screenLockReading = true
+        Task { [weak self] in
+            let status = await SystemSettings.readScreenLock()
+            guard let self else { return }
+            self.screenLockReading = false
+            self.screenLockRead = status
+            if case .settings(let model) = self.screen { model.update(rows: self.settingRows()) }
+        }
     }
 
     /// "Mac mini Speakers \u{00B7} 2 channels".
@@ -1033,7 +1068,9 @@ final class AppCoordinator {
 
     private func handleSettings(_ intent: ShellIntent, model: SettingsModel) {
         switch intent {
-        case .move(let d): model.move(d)
+        case .move(let d):
+            model.move(d)
+            model.footer = nil
         case .back, .home: goHome()
         case .info: break
         case .select:
@@ -1043,6 +1080,10 @@ final class AppCoordinator {
                 if let next = Cycle.next(after: settings.currentAudioOutput(), in: settings.audioOutputs()) { settings.setAudioOutput(next) }
             case "netflix51": Prefs.netflix51 = Cycle.next(after: Prefs.netflix51, in: Netflix51.allCases) ?? .auto
             case "bluetooth": openBluetooth(); return
+            case "screenlock":
+                refreshScreenLock()
+                model.footer = screenLock?.isOn == true ? ScreenLockStatus.explanation : nil
+            case "lockpane": system.openLockScreenSettings()
             case "apps": openApps(); return
             case "setup": openSetup(existing: AppConfigStore.shared.config); return
             case "remoteapps":
@@ -1237,7 +1278,9 @@ final class AppCoordinator {
         }
         Task { [weak self] in
             let counts = await SetupScreen.scanFolders(folders)
+            let lock: ScreenLockStatus? = DebugFlags.isOn(.fakescreenlock) ? .on(delaySeconds: 300) : await SystemSettings.readScreenLock()
             guard let self else { return }
+            self.screenLockRead = lock
             let session = FirstRunSetup(
                 catalog: store.catalog, existing: existing, requirementMet: { store.requirementMet($0) },
                 nativeInstalled: { app in
@@ -1245,7 +1288,7 @@ final class AppCoordinator {
                     if let id = native?.bundleId, NSWorkspace.shared.urlForApplication(withBundleIdentifier: id) != nil { return true }
                     return native?.appPath.map { FileManager.default.fileExists(atPath: $0) } ?? false
                 },
-                gameCount: { _, folder in counts[folder] }, migrated: existing == nil ? store.migratedPreferences : [:])
+                gameCount: { _, folder in counts[folder] }, migrated: existing == nil ? store.migratedPreferences : [:], screenLock: lock)
             let setup = SetupScreen(session: session, isFirstRun: existing == nil)
             self.hideOverlay(animated: false)
             self.show(NSHostingView(rootView: SetupView(screen: setup)))
@@ -1520,7 +1563,8 @@ extension AppCoordinator: DebugControllable {
                     "updateNotice": homeModel.updateNotice ?? "",
                     "continueWatching": "\(continueWatching.count)"]
         case .settings(let model):
-            return ["screen": "settings", "selected": model.selected?.id ?? ""]
+            return ["screen": "settings", "selected": model.selected?.id ?? "", "footer": model.footer ?? "",
+                    "list": model.rows.map { "\($0.id)=\($0.value)" }.joined(separator: "|")]
         case .apps(let apps): return apps.debugState()
         case .setup(let setup):
             var state = setup.debugState()
@@ -1625,6 +1669,8 @@ extension AppCoordinator: DebugControllable {
         switch flag {
         case .mediaprobe:
             for s in AppServices.all { player.reinstallDebugScripts(for: s) }
+        case .fakescreenlock:
+            if case .settings(let model) = screen { model.update(rows: settingRows()) }
         }
         return true
     }

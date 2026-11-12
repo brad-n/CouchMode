@@ -26,13 +26,27 @@ private struct Mac {
     var games: [String: Int] = [:]   // folder text -> game count; absent = no folder
 }
 
-private func setup(_ mac: Mac = Mac(), existing: AppConfig? = nil, migrated: [String: [String: ConfigValue]] = [:]) throws -> FirstRunSetup {
+private func setup(_ mac: Mac = Mac(), existing: AppConfig? = nil, migrated: [String: [String: ConfigValue]] = [:],
+                   screenLock: ScreenLockStatus? = nil) throws -> FirstRunSetup {
     FirstRunSetup(catalog: try catalog(), existing: existing,
                   requirementMet: { r in r.bundleId == "com.example.retro" ? mac.retroArch : mac.thing },
-                  nativeInstalled: { _ in mac.plex }, gameCount: { _, folder in mac.games[folder] }, migrated: migrated)
+                  nativeInstalled: { _ in mac.plex }, gameCount: { _, folder in mac.games[folder] }, migrated: migrated,
+                  screenLock: screenLock)
 }
 
 final class FirstRunSetupTests: XCTestCase {
+    // MARK: Screen lock note
+
+    func testDoneNoteOnlyWhenScreenLockIsOnAndNeverBlocksFinishing() throws {
+        XCTAssertNil(try setup().doneNote)
+        XCTAssertNil(try setup(screenLock: .off).doneNote)
+        var s = try setup(screenLock: .on(delaySeconds: 300))
+        XCTAssertEqual(s.doneNote, ScreenLockStatus.explanation)
+        while s.advance() {}
+        XCTAssertEqual(s.step, .done)
+        XCTAssertFalse(s.advance())   // Done still finishes
+    }
+
     // MARK: Defaults
 
     func testServicesAreOnByDefaultAndAnUnmetOneIsOffWithItsReason() throws {

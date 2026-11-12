@@ -18,6 +18,9 @@ final class SystemActions {
     /// headphones are Bluetooth LE HID devices, which an app cannot pair itself.
     func openBluetoothSettings() { run("/usr/bin/open", ["x-apple.systempreferences:com.apple.Bluetooth"]) }
 
+    /// Lock Screen settings, where "Require password after screen saver begins" lives.
+    func openLockScreenSettings() { run("/usr/bin/open", ["x-apple.systempreferences:com.apple.Lock-Screen-Settings.extension"]) }
+
     /// Privacy & Security > Accessibility, where the remote-in-other-apps permission lives.
     func openAccessibilitySettings() {
         run("/usr/bin/open", ["x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"])
