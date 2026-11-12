@@ -86,7 +86,7 @@ final class ScriptReader: StreamSource {
             guard driver.isCurrent(action), await driver.open(url, for: action, timeout: manifest.loadTimeout) else { return nil }
         }
         guard await driver.waitFor(readyBody(page.ready), for: action, timeout: page.readyTimeout ?? manifest.readyTimeout, what: "never ready"),
-              let json = await driver.text(body(call: "reader.season(\(argument(["seasonID": season.id])))"), for: action,
+              let json = await driver.text(body(call: "reader.season(\(argument(["seasonID": season.id, "title": PackageDecoder.argument(for: title)])))"), for: action,
                                            timeout: page.readTimeout ?? manifest.readTimeout, what: "unreadable") else { return nil }
         return decoder.episodes(json) ?? failed("episodes", "answer not usable")
     }

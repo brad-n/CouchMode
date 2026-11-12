@@ -132,16 +132,16 @@ public struct PackageDecoder: Sendable {
 
     // MARK: Checks
 
-    /// An id: 1 to 64 ASCII letters, digits, dashes or underscores.
+    /// An id: 1 to 132 ASCII letters, digits, dots, dashes or underscores (Apple TV's "umc.cmc.<id>" and "appletv-row-<shelf id>").
     static func id(_ value: Any?) -> String? {
-        guard let s = value as? String, (1...64).contains(s.count), s.allSatisfy({ $0.isASCII && ($0.isLetter || $0.isNumber || $0 == "-" || $0 == "_") })
+        guard let s = value as? String, (1...132).contains(s.count), s.allSatisfy({ $0.isASCII && ($0.isLetter || $0.isNumber || $0 == "-" || $0 == "_" || $0 == ".") })
         else { return nil }
         return s
     }
 
     /// A season id: an id that may also hold colons (Hulu's "<series>::<n>"). It only goes back to the script, never into an address.
     static func seasonID(_ value: Any?) -> String? {
-        guard let s = value as? String, (1...64).contains(s.count), s.allSatisfy({ $0.isASCII && ($0.isLetter || $0.isNumber || $0 == "-" || $0 == "_" || $0 == ":") })
+        guard let s = value as? String, (1...64).contains(s.count), s.allSatisfy({ $0.isASCII && ($0.isLetter || $0.isNumber || $0 == "-" || $0 == "_" || $0 == ":" || $0 == ".") })
         else { return nil }
         return s
     }

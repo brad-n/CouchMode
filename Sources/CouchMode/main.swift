@@ -49,7 +49,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             coordinator.registerStreamSource(Self.reader(for: prime, player: player, builtin: { PrimeSource(service: prime, player: player) }))
         }
         if let appletv = AppServices.all.first(where: { $0.id == AppleTVHome.serviceID }) {
-            coordinator.registerStreamSource(AppleTVSource(service: appletv, player: player))
+            coordinator.registerStreamSource(Self.reader(for: appletv, player: player, builtin: { AppleTVSource(service: appletv, player: player) }))
         }
         // Demo mode: every web service (not Plex's app) opens the shell's own screens on invented titles.
         if DemoMode.isOn {

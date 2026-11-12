@@ -26,7 +26,7 @@ Netflix and Hulu are the worked examples; keep them open while you work:
 
 A reader is a **script package** in `apps/<id>/`, run by one generic reader
 (`ScriptReader`, `Sources/CouchMode/ScriptReader.swift`). Prime Video is the
-worked example (`apps/prime/`; Hulu, `apps/hulu/`, shows a request made from
+worked example (`apps/prime/`; Apple TV, `apps/appletv/`, reads from one quiet page with `reuseSitePage`; Hulu, `apps/hulu/`, shows a request made from
 the title's page and a typed search; Disney+, `apps/disney/`, shows API requests
 made from any signed-in page, profile forms and a restore step); the Swift readers below (Netflix, Hulu,
 Disney+, Apple TV, and Prime's `PrimeSource`) are the older way and stay until
@@ -121,7 +121,7 @@ characters, and never throw. Arguments arrive as one object.
 | `pageReady()` | none | (Disney+) ready for any request action; named by the manifest's `ready` |
 | `home()` | none | a **home**, or `""` |
 | `details({title})` | `title` is the row's title (a **title**) | a **details**, or `""` |
-| `season({seasonID})` | the season's `id`, exactly as `details()` returned it (the season's page is open) | an array of **episodes** |
+| `season({seasonID, title})` | the season's `id`, exactly as `details()` returned it, and the show's **title** (the season's page is open) | an array of **episodes** |
 | `search({query})` | the normalized search text (the search page is open) | an array of **titles** |
 | `more({cursor})` | the row's cursor, exactly as `home()` returned it | `{"titles": [title], "cursor": opaque or null}` |
 | `chooseProfile({profileID})` | a profile `id` from the home | `true` when the page's own control was pressed (or already current) |
@@ -145,6 +145,12 @@ The vocabulary is `StreamCatalog.swift` as JSON; leave a missing value `null`:
   (`id`, `name`, `episodes`: only the open season has them), `currentSeasonID`.
 - **episode**: `id`, `name`, `number`, `synopsis`, `runtimeSeconds`,
   `resumeSeconds`, `play`, `art`.
+
+Ids (title, row, episode, season) may hold dots (Apple TV's `umc.cmc.<id>`) and be up to 132
+characters (a row id carrying a shelf id); only a season id may hold colons. Apple TV's `season` needs the
+show's id to build its request, so API v1 now also sends `title` with `season` (additive; an older package
+ignores it). Apple TV's `details` and `season` open no page of the title: they make the title's own
+request from the shared quiet page.
 
 A season `id` may also hold colons (Hulu's `<series>::<n>`); it only goes back
 to the script as `seasonID`. `search` may do more than read: Hulu's types

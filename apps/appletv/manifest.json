@@ -1,0 +1,18 @@
+{
+  "id": "appletv",
+  "version": "1.0.0",
+  "readerAPI": 1,
+  "site": {
+    "hosts": ["tv.apple.com"],
+    "imageHosts": ["mzstatic.com", "example.invalid"]
+  },
+  "timeouts": { "load": 20, "ready": 10, "read": 15 },
+  "pages": {
+    "home": { "open": "https://tv.apple.com/us/search", "ready": "ready" },
+    "details": { "open": "https://tv.apple.com/us/search", "ready": "ready", "reuseSitePage": true },
+    "season": { "open": "https://tv.apple.com/us/search", "ready": "ready", "reuseSitePage": true },
+    "search": { "open": "https://tv.apple.com/us/search", "ready": "ready", "reuseSitePage": true },
+    "profile": { "open": "https://tv.apple.com/us/search", "ready": "ready", "reuseSitePage": true, "confirmTimeout": 5 }
+  },
+  "playerShown": true
+}
