@@ -29,6 +29,15 @@
     },
     {
       "files" : [
+        { "name" : "manifest.json", "sha256" : "a4af97ad12a10e9c47df3f4645279fb8304ad36064c9913eddb66d2b41d55b3c" },
+        { "name" : "reader.js", "sha256" : "196b9c63e51e3ebfcf8ba4b53bdf804247ee00294255bd82c7e93ea7c1fc404a" }
+      ],
+      "id" : "netflix",
+      "readerAPI" : 1,
+      "version" : "1.0.0"
+    },
+    {
+      "files" : [
         { "name" : "manifest.json", "sha256" : "591fb0118d46218af64107c05f34e4916cd679d2cd746f4ad5f92ca5dc7364bd" },
         { "name" : "reader.js", "sha256" : "70b5472f021156c508f928fcd036ead7f7ec73fcd8e85d094a84f6895969f92f" }
       ],
