@@ -23,10 +23,10 @@ public enum SoftTick {
 
     public static func spec(_ kind: Kind) -> Spec {
         switch kind {
-        case .move:   return Spec(seconds: 0.012, centerHz: 2_400, decaySeconds: 0.0028, tonalMix: 0.25, peak: 0.07)
-        case .select: return Spec(seconds: 0.020, centerHz: 1_900, decaySeconds: 0.0050, tonalMix: 0.35, peak: 0.16)
-        case .back:   return Spec(seconds: 0.016, centerHz: 1_500, decaySeconds: 0.0042, tonalMix: 0.30, peak: 0.10)
-        case .limit:  return Spec(seconds: 0.018, centerHz: 520, decaySeconds: 0.0045, tonalMix: 0.15, peak: 0.12)
+        case .move:   return Spec(seconds: 0.012, centerHz: 2_400, decaySeconds: 0.0028, tonalMix: 0.25, peak: 0.03)
+        case .select: return Spec(seconds: 0.020, centerHz: 1_900, decaySeconds: 0.0050, tonalMix: 0.35, peak: 0.05)
+        case .back:   return Spec(seconds: 0.016, centerHz: 1_500, decaySeconds: 0.0042, tonalMix: 0.30, peak: 0.04)
+        case .limit:  return Spec(seconds: 0.018, centerHz: 520, decaySeconds: 0.0045, tonalMix: 0.15, peak: 0.045)
         }
     }
 

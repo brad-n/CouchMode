@@ -16,7 +16,7 @@ final class SoftTickTests: XCTestCase {
         for kind in SoftTick.Kind.allCases {
             let peak = SoftTick.samples(kind).map { abs($0) }.max() ?? 0
             XCTAssertEqual(peak, SoftTick.spec(kind).peak, accuracy: 0.002)
-            XCTAssertLessThan(peak, 0.25)
+            XCTAssertLessThan(peak, 0.1)
         }
     }
 
