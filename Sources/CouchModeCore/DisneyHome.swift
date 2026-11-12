@@ -43,6 +43,16 @@ public enum DisneyHome {
     }
     """#
 
+    /// Function body: true once the page is ready (see readyScript) or is on a profile form, which
+    /// never becomes ready; a read that waits on this ends at once on the form.
+    public static let readyOrFormScript = #"""
+    const first = location.pathname.split("/").filter(Boolean)[0];
+    if ([\#(profileFormPaths.map { StreamJSON.jsString($0) }.joined(separator: ", "))].includes(first)) return true;
+    return (() => {
+      \#(readyScript)
+    })();
+    """#
+
     /// JavaScript for the profile menu: `menuOpen()` opens it the way a
     /// hover does and waits (bounded) for its entries, `menuClose()` lets it
     /// go, `currentName()` is the current profile's name.

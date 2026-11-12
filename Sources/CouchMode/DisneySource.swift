@@ -61,9 +61,15 @@ final class DisneySource: StreamSource {
         return await readHome()
     }
 
+    /// One read of the home. The wait for the page ends as soon as it is ready or has landed on a
+    /// profile form (which never gets ready); on the form nothing is read and nil comes back.
     private func readHome() async -> StreamHome? {
-        guard let json = await driver.read("home", open: DisneyExplore.sessionPageURL, ready: DisneyHome.readyScript,
-                                           script: DisneyHome.extractScript, timeouts: Self.homeRead) else { return nil }
+        let action = driver.begin("home")
+        guard await driver.open(DisneyExplore.sessionPageURL, for: action, timeout: Self.homeRead.load),
+              await driver.waitFor(DisneyHome.readyOrFormScript, for: action, timeout: Self.homeRead.ready, what: "never ready"),
+              !DisneyHome.isProfileForm(driver.view.url),
+              let json = await driver.text(DisneyHome.extractScript, for: action, timeout: Self.homeRead.read, what: "unreadable")
+        else { return nil }
         cursors = DisneyMore.cursors(fromHome: json)
         let home = DisneyHome.parse(json)
         shownProfile = home?.currentProfileID

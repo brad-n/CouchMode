@@ -175,4 +175,13 @@ final class DisneyHomeTests: XCTestCase {
         XCTAssertTrue(DisneyHome.pickerReadyScript.contains("profile-avatar-"))
         XCTAssertTrue(DisneyHome.leftPickerScript.contains("select-profile"))
     }
+
+    func testReadyOrFormWaitEndsOnEitherCondition() {
+        let script = DisneyHome.readyOrFormScript
+        XCTAssertTrue(script.contains(#""update-profile""#), "ends on the profile form")
+        XCTAssertTrue(script.contains("dropdown-active-profile"), "or on the page being ready")
+        XCTAssertTrue(script.contains("DTCI-DISNEYPLUS.WEB-PROD.token"))
+        XCTAssertLessThan(try XCTUnwrap(script.range(of: "update-profile")).lowerBound, try XCTUnwrap(script.range(of: "dropdown-active-profile")).lowerBound,
+                          "the form is checked first")
+    }
 }
