@@ -80,7 +80,9 @@ final class StreamHomeModel: ObservableObject {
     func load() async -> Bool {
         isLoading = true
         let mine = bump()
-        guard let read = await source.home() else { return false }
+        let result = await source.home()
+        if let line = source.takeNotice() { say(line) }
+        guard let read = result else { return false }
         guard mine == epoch else { return true }   // replaced meanwhile: not a failure
         apply(read)
         return true
@@ -90,7 +92,10 @@ final class StreamHomeModel: ObservableObject {
     func refresh() {
         let mine = bump(clearMore: false)
         Task { [weak self] in
-            guard let self, let read = await source.home(), mine == self.epoch else { return }
+            guard let self else { return }
+            let result = await source.home()
+            if let line = source.takeNotice() { self.say(line) }
+            guard let read = result, mine == self.epoch else { return }
             self.apply(read)
         }
     }
@@ -194,6 +199,7 @@ final class StreamHomeModel: ObservableObject {
             }
             if let line { self.say(line) }
             let read = await source.home()
+            if let line = source.takeNotice() { self.say(line) }
             guard mine == self.epoch else { return }
             if let read { self.apply(read) } else { self.isLoading = false }
         }

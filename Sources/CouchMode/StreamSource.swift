@@ -19,10 +19,13 @@ import CouchModeCore
     /// A JS function body that returns true while the service's player is showing, for a service whose
     /// player is not a page of its own. nil (the default): the player is the page at the play address.
     var playerShownScript: String? { get }
+    /// A one-time line the reader has for the screen after a read (e.g. it undid an unfinished profile switch); nil by default.
+    func takeNotice() -> String?
 }
 
 extension StreamSource {
     var playerShownScript: String? { nil }
+    func takeNotice() -> String? { nil }
 }
 
 @MainActor

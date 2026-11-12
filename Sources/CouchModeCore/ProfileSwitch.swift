@@ -28,3 +28,26 @@ public enum ProfileSwitch: Equatable {
     /// Whether the screen hands the person the service's website, and leaves the home as it is.
     public var handsOffToWebsite: Bool { self == .needsPerson }
 }
+
+/// Remembers the profile that was active before a switch that ended on a form only the person can
+/// finish, so a later read that finds the page still stuck on that form can switch back. Pure.
+public struct UnfinishedSwitch: Equatable {
+    public private(set) var previous: String?
+
+    public init() {}
+
+    /// Notes a switch's outcome. `from` is the profile that was active before it (its name).
+    public mutating func record(_ result: ProfileSwitch, from: String?) {
+        switch result {
+        case .needsPerson: previous = from ?? previous
+        case .switched: previous = nil
+        case .failed: break
+        }
+    }
+
+    /// The profile to switch back to: set only while the page is still on the unfinished form.
+    public func profileToRestore(onForm: Bool) -> String? { onForm ? previous : nil }
+
+    /// The restore was done (or given up on): one try only.
+    public mutating func clear() { previous = nil }
+}

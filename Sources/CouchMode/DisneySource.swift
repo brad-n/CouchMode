@@ -10,11 +10,14 @@
 //   details  -> page/entity-<id>: the request the title's page makes (DisneyDetails)
 //   episodes -> season/<seasonId>: the request the page's season picker makes
 //   profile  -> the top bar's own profile menu, choosing the profile in place
+//   restore  -> /select-profile, choosing the earlier profile, once, when a switch ended on
+//               Disney's profile form and the person backed out without finishing it
 // Playback is never started here: Play hands the title's /play/<id> address to
 // the service's own player page. "More in a row" isn't read (nil): rows hold
 // what the home request returned.
 
 import Foundation
+import os
 import CouchModeCore
 
 @MainActor
@@ -30,18 +33,50 @@ final class DisneySource: StreamSource {
     private let driver: PageDriver
     /// Where each row's next batch starts; cleared whenever the home is read again or the profile switches.
     private var cursors: [String: DisneyMore.Cursor] = [:]
+    /// The profile (name) the last home showed as current, and the one to switch back to if a
+    /// switch ends on a form the person backs out of.
+    private var shownProfile: String?
+    private var unfinished = UnfinishedSwitch()
+    private var noticeLine: String?
+    private let log = Logger(subsystem: "local.brad.htpcshell", category: "disney")
 
     init(service: Service, player: WebPlayer) {
         self.service = service
         driver = PageDriver(service: service, player: player)
     }
 
+    func takeNotice() -> String? {
+        defer { noticeLine = nil }
+        return noticeLine
+    }
+
     func home() async -> StreamHome? {
         cursors = [:]
+        await restoreUnfinishedSwitch()
         guard let json = await driver.read("home", open: DisneyExplore.sessionPageURL, ready: DisneyHome.readyScript,
                                            script: DisneyHome.extractScript, timeouts: Self.homeRead) else { return nil }
         cursors = DisneyMore.cursors(fromHome: json)
-        return DisneyHome.parse(json)
+        let home = DisneyHome.parse(json)
+        shownProfile = home?.currentProfileID
+        return home
+    }
+
+    /// A switch that ended on Disney's profile form leaves the page stuck there when the person
+    /// backs out unfinished. Choose the profile that was active before, on the site's own
+    /// "who's watching" page (one try; success or not, the memory is cleared).
+    private func restoreUnfinishedSwitch() async {
+        guard let name = unfinished.profileToRestore(onForm: DisneyHome.isProfileForm(driver.view.url)) else { return }
+        unfinished.clear()
+        let action = driver.begin("restore")
+        guard await driver.open(DisneyHome.selectProfileURL, for: action),
+              await driver.waitFor(DisneyHome.pickerReadyScript, for: action, what: "no profile tiles"),
+              await driver.yes(DisneyHome.choosePickerProfileScript(profileID: name), for: action, what: "profile not on Disney+'s picker"),
+              await driver.waitFor(DisneyHome.leftPickerScript, for: action, timeout: Self.profileSwitchWait, what: "picker didn't close")
+        else {
+            log.error("couldn't switch back after an unfinished profile form")
+            return
+        }
+        noticeLine = "Switched back to \(name)"
     }
 
     func search(_ query: String) async -> [StreamTitle]? {
@@ -85,6 +120,13 @@ final class DisneySource: StreamSource {
     /// `.needsPerson`, and the form is left alone (never filled in or submitted).
     func switchProfile(to profileID: String) async -> ProfileSwitch {
         cursors = [:]
+        let before = shownProfile
+        let result = await pressProfile(profileID)
+        unfinished.record(result, from: before)
+        return result
+    }
+
+    private func pressProfile(_ profileID: String) async -> ProfileSwitch {
         let action = driver.begin("profile")
         guard await prepare(action),
               await driver.yes(DisneyHome.chooseProfileScript(profileID: profileID), for: action, what: "profile not in Disney+'s menu")

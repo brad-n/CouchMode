@@ -156,6 +156,35 @@ public enum DisneyHome {
         """#
     }
 
+    // MARK: Switching back from an unfinished form
+
+    /// Disney's own "who's watching" page: the site's way to choose a profile.
+    public static let selectProfileURL = URL(string: "https://www.disneyplus.com/select-profile")!
+
+    /// Function body: true once the "who's watching" page has drawn its profile tiles.
+    public static let pickerReadyScript = #"""
+    return document.querySelectorAll('[data-testid^="profile-avatar-"]').length > 0;
+    """#
+
+    /// Function body: true once the page has left the "who's watching" page (a profile was chosen).
+    public static let leftPickerScript = #"""
+    return !location.pathname.split("/").includes("select-profile");
+    """#
+
+    /// Function body: chooses the profile named `profileID` on the "who's watching" page (a tile
+    /// is labelled with its name); false unless exactly one tile has that name.
+    public static func choosePickerProfileScript(profileID: String) -> String {
+        #"""
+        const name = \#(StreamJSON.jsString(profileID));
+        const tiles = Array.from(document.querySelectorAll('[data-testid^="profile-avatar-"]')).filter(e => e.getAttribute("aria-label") === name);
+        if (tiles.length !== 1) return false;
+        for (const type of ["pointerdown", "mousedown", "pointerup", "mouseup", "click"]) {
+          tiles[0].dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, view: window }));
+        }
+        return true;
+        """#
+    }
+
     /// Function body for callAsyncJavaScript: true once the page's current profile is `profileID`.
     public static func profileIsCurrentScript(profileID: String) -> String {
         #"""

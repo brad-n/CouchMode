@@ -166,4 +166,13 @@ final class DisneyHomeTests: XCTestCase {
         XCTAssertEqual(home.currentProfile?.name, "Profile 4")
         XCTAssertEqual(home.profiles.map(\.id), ["Profile 4", "Profile 5"])
     }
+
+    func testPickerAddressAndScriptsChooseByName() {
+        XCTAssertEqual(DisneyHome.selectProfileURL.absoluteString, "https://www.disneyplus.com/select-profile")
+        let script = DisneyHome.choosePickerProfileScript(profileID: "Profile 1")
+        XCTAssertTrue(script.contains(#""Profile 1""#))
+        XCTAssertTrue(script.contains("profile-avatar-"))
+        XCTAssertTrue(DisneyHome.pickerReadyScript.contains("profile-avatar-"))
+        XCTAssertTrue(DisneyHome.leftPickerScript.contains("select-profile"))
+    }
 }
