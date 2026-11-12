@@ -36,6 +36,11 @@ final class StreamHomeModel: ObservableObject {
     /// service and show it at once next time.
     var onRead: ((StreamHome) -> Void)?
 
+    /// Called when a profile switch lands on a page only the person can finish (with the line
+    /// shown to them), so the coordinator can show the service's website. The home is not re-read
+    /// here: coming back from the website re-reads it.
+    var onNeedsPerson: ((String) -> Void)?
+
     /// `cached`: the home from the last visit, shown at once (the caller then
     /// calls refresh() to re-read it behind the screen).
     init(source: StreamSource, showing cached: StreamHome? = nil) {
@@ -178,9 +183,16 @@ final class StreamHomeModel: ObservableObject {
         let mine = bump()
         Task { [weak self] in
             guard let self else { return }
-            let switched = await source.switchProfile(to: profile.id)
+            let result = await source.switchProfile(to: profile.id)
             guard mine == self.epoch else { return }
-            if !switched { self.say("Couldn't switch to \(profile.name)") }
+            let line = result.notice(profileName: profile.name, serviceName: self.service.name)
+            if result.handsOffToWebsite, let line {
+                self.isLoading = false
+                self.say(line)
+                self.onNeedsPerson?(line)
+                return
+            }
+            if let line { self.say(line) }
             let read = await source.home()
             guard mine == self.epoch else { return }
             if let read { self.apply(read) } else { self.isLoading = false }

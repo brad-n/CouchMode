@@ -74,13 +74,13 @@ final class HuluSource: StreamSource {
 
     func more(in row: StreamRow) async -> [StreamTitle]? { nil }
 
-    func switchProfile(to profileID: String) async -> Bool {
+    func switchProfile(to profileID: String) async -> ProfileSwitch {
         let action = driver.begin("profile")
         guard await driver.open(Self.homeURL, for: action),
               await driver.waitFor(HuluHome.profileListReadyScript, for: action, what: "no profile list"),
               await driver.yes(HuluHome.chooseProfileScript(profileID: profileID), for: action, what: "profile not in Hulu's list")
-        else { return false }
-        return await driver.waitFor(HuluHome.profileIsCurrentScript(profileID: profileID), for: action,
-                                    timeout: Self.profileSwitchWait, what: "profile didn't switch")
+        else { return .failed }
+        return ProfileSwitch(succeeded: await driver.waitFor(HuluHome.profileIsCurrentScript(profileID: profileID), for: action,
+                                    timeout: Self.profileSwitchWait, what: "profile didn't switch"))
     }
 }

@@ -15,7 +15,7 @@ import CouchModeCore
     func episodes(in season: StreamSeason, of title: StreamTitle) async -> [StreamEpisode]?
     func search(_ query: String) async -> [StreamTitle]?                // nil: search unavailable
     func more(in row: StreamRow) async -> [StreamTitle]?                // nil: nothing more
-    func switchProfile(to profileID: String) async -> Bool
+    func switchProfile(to profileID: String) async -> ProfileSwitch   // .needsPerson: landed on a page only the person can finish
     /// A JS function body that returns true while the service's player is showing, for a service whose
     /// player is not a page of its own. nil (the default): the player is the page at the play address.
     var playerShownScript: String? { get }
@@ -122,10 +122,10 @@ final class SampleStreamSource: StreamSource {
         return titles(have..<min(total, have + Sample.moreBatch), prefix: row.id == "new" ? "new" : "pop")
     }
 
-    func switchProfile(to profileID: String) async -> Bool {
+    func switchProfile(to profileID: String) async -> ProfileSwitch {
         await pause()
-        guard profileID != Sample.lockedProfile else { return false }
+        guard profileID != Sample.lockedProfile else { return .failed }
         currentProfile = profileID
-        return true
+        return .switched
     }
 }

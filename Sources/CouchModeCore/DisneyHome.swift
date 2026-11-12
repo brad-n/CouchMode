@@ -134,6 +134,28 @@ public enum DisneyHome {
         """#
     }
 
+    /// The first path part of Disney's own "update this profile" form (seen after choosing a profile
+    /// that still needs details only the person can give): /update-profile/<id>.
+    static let profileFormPaths = ["update-profile"]
+
+    /// True when `url` is one of Disney's own profile forms, which the person has to finish.
+    public static func isProfileForm(_ url: URL?) -> Bool {
+        guard let url, url.scheme == "https", url.host?.lowercased() == "www.disneyplus.com",
+              let first = url.pathComponents.first(where: { $0 != "/" }) else { return false }
+        return profileFormPaths.contains(first)
+    }
+
+    /// Function body for callAsyncJavaScript: true once a profile switch has settled: the page is
+    /// on a profile form, or its current profile is `profileID`.
+    public static func profileSettledScript(profileID: String) -> String {
+        #"""
+        \#(menu)
+        const first = location.pathname.split("/").filter(Boolean)[0];
+        return [\#(profileFormPaths.map { StreamJSON.jsString($0) }.joined(separator: ", "))].includes(first)
+          || currentName() === \#(StreamJSON.jsString(profileID));
+        """#
+    }
+
     /// Function body for callAsyncJavaScript: true once the page's current profile is `profileID`.
     public static func profileIsCurrentScript(profileID: String) -> String {
         #"""

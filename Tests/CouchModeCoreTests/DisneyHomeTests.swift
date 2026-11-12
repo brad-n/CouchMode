@@ -138,4 +138,32 @@ final class DisneyHomeTests: XCTestCase {
         XCTAssertNil(DisneyExplore.avatarURL("https://evil.example/a"))
         XCTAssertNotNil(DisneyExplore.avatarURL("https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/ABC"))
     }
+
+    // MARK: Profile form (a switch can land on Disney's own "update this profile" page)
+
+    func testProfileFormIsRecognisedByPath() {
+        let id = "00000000-0000-4000-8000-000000000201"
+        XCTAssertTrue(DisneyHome.isProfileForm(URL(string: "https://www.disneyplus.com/update-profile/\(id)?notif=x")))
+        XCTAssertTrue(DisneyHome.isProfileForm(URL(string: "https://www.disneyplus.com/update-profile")))
+        XCTAssertFalse(DisneyHome.isProfileForm(URL(string: "https://www.disneyplus.com/browse/search")))
+        XCTAssertFalse(DisneyHome.isProfileForm(URL(string: "https://www.disneyplus.com/select-profile")))
+        XCTAssertFalse(DisneyHome.isProfileForm(URL(string: "https://www.disneyplus.com/play/\(id)")))
+        XCTAssertFalse(DisneyHome.isProfileForm(URL(string: "https://example.invalid/update-profile/\(id)")), "only Disney's own site")
+        XCTAssertFalse(DisneyHome.isProfileForm(URL(string: "http://www.disneyplus.com/update-profile/\(id)")))
+        XCTAssertFalse(DisneyHome.isProfileForm(nil))
+    }
+
+    func testSettledScriptWatchesTheSamePathTheCheckUses() {
+        let script = DisneyHome.profileSettledScript(profileID: "Profile 2")
+        XCTAssertTrue(script.contains(#""update-profile""#))
+        XCTAssertTrue(script.contains(#""Profile 2""#))
+    }
+
+    func testCurrentProfileIDIsTheCurrentProfilesName() throws {
+        let json = #"{"rows":[{"id":"r0","name":"Row","style":"standard","items":[{"id":"00000000-0000-4000-8000-000000000301","name":"Movie"}]}],"profiles":[{"name":"Profile 4","avatar":null,"current":true},{"name":"Profile 5","avatar":null,"current":false}]}"#
+        let home = try XCTUnwrap(DisneyHome.parse(json))
+        XCTAssertEqual(home.currentProfileID, "Profile 4")
+        XCTAssertEqual(home.currentProfile?.name, "Profile 4")
+        XCTAssertEqual(home.profiles.map(\.id), ["Profile 4", "Profile 5"])
+    }
 }

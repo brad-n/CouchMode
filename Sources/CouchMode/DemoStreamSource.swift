@@ -26,9 +26,9 @@ final class DemoStreamSource: StreamSource {
 
     func more(in row: StreamRow) async -> [StreamTitle]? { nil }
 
-    func switchProfile(to profileID: String) async -> Bool {
-        guard DemoCatalog.profiles.contains(where: { $0.id == profileID }) else { return false }
+    func switchProfile(to profileID: String) async -> ProfileSwitch {
+        guard DemoCatalog.profiles.contains(where: { $0.id == profileID }) else { return .failed }
         currentProfile = profileID
-        return true
+        return .switched
     }
 }

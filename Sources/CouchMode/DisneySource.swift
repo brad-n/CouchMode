@@ -80,14 +80,20 @@ final class DisneySource: StreamSource {
         return batch.titles
     }
 
-    func switchProfile(to profileID: String) async -> Bool {
+    /// Presses the profile in the top bar's menu, nothing more. Some profiles land on Disney's own
+    /// "update this profile" form, which asks for details only the person can give: that is
+    /// `.needsPerson`, and the form is left alone (never filled in or submitted).
+    func switchProfile(to profileID: String) async -> ProfileSwitch {
         cursors = [:]
         let action = driver.begin("profile")
         guard await prepare(action),
               await driver.yes(DisneyHome.chooseProfileScript(profileID: profileID), for: action, what: "profile not in Disney+'s menu")
-        else { return false }
-        return await driver.waitFor(DisneyHome.profileIsCurrentScript(profileID: profileID), for: action,
-                                    timeout: Self.profileSwitchWait, what: "profile didn't switch")
+        else { return .failed }
+        guard await driver.waitFor(DisneyHome.profileSettledScript(profileID: profileID), for: action,
+                                   timeout: Self.profileSwitchWait, what: "profile didn't switch") else { return .failed }
+        if DisneyHome.isProfileForm(driver.view.url) { return .needsPerson }
+        return ProfileSwitch(succeeded: await driver.yes(DisneyHome.profileIsCurrentScript(profileID: profileID), for: action,
+                                                         what: "profile didn't switch"))
     }
 
     /// Makes sure the service's page is a signed-in Disney page the requests

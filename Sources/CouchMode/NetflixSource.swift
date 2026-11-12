@@ -80,8 +80,8 @@ final class NetflixSource: StreamSource {
 
     func more(in row: StreamRow) async -> [StreamTitle]? { nil }
 
-    func switchProfile(to profileID: String) async -> Bool {
-        guard let url = NetflixHome.switchProfileURL(profileID: profileID) else { return false }
-        return await driver.open(url, for: driver.begin("profile"))
+    func switchProfile(to profileID: String) async -> ProfileSwitch {
+        guard let url = NetflixHome.switchProfileURL(profileID: profileID) else { return .failed }
+        return ProfileSwitch(succeeded: await driver.open(url, for: driver.begin("profile")))
     }
 }

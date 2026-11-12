@@ -92,14 +92,14 @@ final class PrimeSource: StreamSource {
         return batch.titles
     }
 
-    func switchProfile(to profileID: String) async -> Bool {
+    func switchProfile(to profileID: String) async -> ProfileSwitch {
         cursors = [:]
         let action = driver.begin("profile")
         guard await driver.open(PrimeHome.homeURL, for: action),
               await driver.waitFor(PrimeHome.readyScript, for: action, what: "never ready"),
               await driver.yes(PrimeHome.chooseProfileScript(profileID: profileID), for: action, what: "profile not in Prime's menu")
-        else { return false }
-        return await driver.waitFor(PrimeHome.profileIsCurrentScript(profileID: profileID), for: action,
-                                    timeout: Self.profileSwitchWait, what: "profile didn't switch")
+        else { return .failed }
+        return ProfileSwitch(succeeded: await driver.waitFor(PrimeHome.profileIsCurrentScript(profileID: profileID), for: action,
+                                    timeout: Self.profileSwitchWait, what: "profile didn't switch"))
     }
 }

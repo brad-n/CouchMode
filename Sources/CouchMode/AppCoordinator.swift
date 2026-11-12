@@ -399,6 +399,10 @@ final class AppCoordinator {
         let cached = streamHomeCache[s.id]
         let model = StreamHomeModel(source: source, showing: cached)
         model.onRead = { [weak self] home in self?.streamHomeCache[s.id] = home }
+        model.onNeedsPerson = { [weak self, weak model] line in
+            guard let self, let model, case .streamHome(let shown) = self.screen, shown === model else { return }
+            self.showWebsiteForPerson(s, line: line)
+        }
         show(NSHostingView(rootView: StreamHomeView(model: model)))
         setBackstage(player.view(for: s))
         screen = .streamHome(model)
@@ -462,9 +466,18 @@ final class AppCoordinator {
         if !search.handle(intent) { showStreamHomeAgain(home) }
     }
 
+    /// Shows the service's page as a website visit (as "Open on <service>" does) for something only
+    /// the person can finish, such as a profile form: the page the switch landed on when it is
+    /// still on the service's site, else the service's home. Back returns to the stream home.
+    private func showWebsiteForPerson(_ s: Service, line: String) {
+        let landed = player.view(for: s).url
+        let url = landed.flatMap { PlayerExit.hasLeftSite(playURL: s.url, current: $0) ? nil : $0 } ?? s.url
+        playStream(url, service: s, subtitle: line)
+    }
+
     /// Hands a title, episode or page to the service's own web player (DRM untouched),
     /// remembering the stream screen to come back to.
-    private func playStream(_ url: URL, service s: Service, watchForExit: Bool = false) {
+    private func playStream(_ url: URL, service s: Service, watchForExit: Bool = false, subtitle: String = "Starting…") {
         if DemoMode.isOn { return }   // demo titles have no player
         stopWatchingPlayer()
         streamReturn = screen
@@ -474,7 +487,7 @@ final class AppCoordinator {
         // The page takes the screen still quiet: revealWhenPlaying lets its media
         // play once the player's page has replaced the one that was backstage.
         showWeb(s, keepQuiet: true)
-        showOverlay(InterstitialView(title: s.name, subtitle: "Starting…", colors: Self.colors(for: s)),
+        showOverlay(InterstitialView(title: s.name, subtitle: subtitle, colors: Self.colors(for: s)),
                     timeout: TimeInterval(Reveal.timeout.components.seconds))
         revealWhenPlaying(page, service: s, leaving: leaving)
         if watchForExit {
