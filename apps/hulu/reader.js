@@ -12,7 +12,7 @@ const reader = (() => {
   const ORIGIN = "https://www.hulu.com";
   const DISCOVER = "https://discover.hulu.com/content/v5/";
   const MAX_TEXT = 900000;
-  const MAX_COMPONENTS = 30, MAX_ITEMS = 40, MAX_EPISODES = 100, MAX_SEASONS = 50, MAX_SEARCH = 60;
+  const MAX_ROWS = 20, MAX_COMPONENTS = 30, MAX_ITEMS = 40, MAX_EPISODES = 100, MAX_SEASONS = 50, MAX_SEARCH = 60;
   const SEARCH_WAIT_MS = 8000;
   const IMAGE_DOMAINS = ["hulu.com", "hulustream.com", "huluim.com", "hulu.invalid"];
 
@@ -93,13 +93,14 @@ const reader = (() => {
     let hero = null;
     const rows = [];
     for (const component of read.rows) {
+      if (rows.length >= MAX_ROWS && hero) break;   // the app keeps no more, and the answer must stay small
       if (!component || typeof component !== "object") continue;
       const name = str(component.name) || "";
       const titles = (Array.isArray(component.items) ? component.items : []).map(homeTitle).filter(Boolean);
       if (name === "Spotlight") { if (!hero) hero = titles[0] || null; continue; }
       const id = token(component.id);
       if (titles.length === 0 || !id) continue;
-      rows.push({ id: "hulu-row-" + id, title: name, kind: rowKind(name), titles });
+      if (rows.length < MAX_ROWS) rows.push({ id: "hulu-row-" + id, title: name, kind: rowKind(name), titles });
     }
     const profiles = (Array.isArray(read.profiles) ? read.profiles : []).map(p => {
       const id = p && token(p.id), name = p && str(p.name);

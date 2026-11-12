@@ -114,6 +114,16 @@ final class HuluPackageParityTests: XCTestCase {
         XCTAssertEqual(got.rows[0].titles.count, StreamLimits.maxTitlesPerRow)
     }
 
+    func testARealSizedHomeFitsTheAnswerLimit() throws {
+        // 30 components of 40 titles with long artwork addresses, like the live home: the app keeps 20 rows, and the text must stay under the script's cap.
+        let art = "https://img2.hulu.com/user/v3/artwork/00000000-0000-4000-8000-000000000001?base_image_bucket_name=image_manager&base_image=" + String(repeating: "x", count: 120)
+        let titles = (1...StreamLimits.maxTitlesPerRow).map { item(id: "00000000-0000-4000-8000-\(String(format: "%012d", $0))", name: "Title number \($0)", tile: art) }
+        let rows = (1...30).map { ("\($0)", "Row \($0)", titles) }
+        let read = home(rows: rows)
+        try assertHomeParity(read)
+        XCTAssertLessThan(build("home", read).count, 900_000)
+    }
+
     // MARK: Images (the `operations` parameter)
 
     func testImageAddressesMatch() throws {
