@@ -164,10 +164,13 @@ final class AppsScreen {
             model.select(id: "remove")
             return
         }
+        let position = listedIDs.firstIndex(of: id) ?? 0
         guard store.edit({ c, cat in c.remove(id: id, catalog: cat) ? true : nil }) != nil else { return }
         changed()
         let name = store.catalog.app(id: id)?.name ?? id
-        showList()
+        // Focus stays where the app was (the next one slides up into its place).
+        let ids = listedIDs
+        showList(select: ids.isEmpty ? nil : "app:\(ids[min(position, ids.count - 1)])")
         model.footer = "Removed \(name). Its sign-in stays; add it back any time."
     }
 
