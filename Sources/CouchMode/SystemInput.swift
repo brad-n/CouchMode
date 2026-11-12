@@ -60,10 +60,12 @@ enum KeyInjector {
     /// A key (optionally with ⌘) down, repeating while held, then up. Used by the debug channel to stand in for a keyboard.
     static func press(code: UInt16, command: Bool, holdMilliseconds: Int) {
         guard isAllowed else { return }
-        let source = CGEventSource(stateID: .hidSystemState)
+        // A private source starts from no modifiers, so the key carries only the flags set here.
+        let source = CGEventSource(stateID: .privateState)
         func post(down: Bool, repeating: Bool = false) {
             guard let event = CGEvent(keyboardEventSource: source, virtualKey: CGKeyCode(code), keyDown: down) else { return }
-            if command { event.flags = .maskCommand }
+            // Command rides only on the key's press.
+            event.flags = command && down ? .maskCommand : []
             if repeating { event.setIntegerValueField(.keyboardEventAutorepeat, value: 1) }
             event.post(tap: .cghidEventTap)
         }
