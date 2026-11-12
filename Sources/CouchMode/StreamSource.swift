@@ -16,6 +16,13 @@ import CouchModeCore
     func search(_ query: String) async -> [StreamTitle]?                // nil: search unavailable
     func more(in row: StreamRow) async -> [StreamTitle]?                // nil: nothing more
     func switchProfile(to profileID: String) async -> Bool
+    /// A JS function body that returns true while the service's player is showing, for a service whose
+    /// player is not a page of its own. nil (the default): the player is the page at the play address.
+    var playerShownScript: String? { get }
+}
+
+extension StreamSource {
+    var playerShownScript: String? { nil }
 }
 
 @MainActor

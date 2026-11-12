@@ -58,6 +58,8 @@ final class AppCoordinator {
     private var revealTask: Task<Void, Never>?
     /// Watches the service page's address during a Play handoff (watchPlayerExit).
     private var playerExitObservation: NSKeyValueObservation?
+    /// Asks the page once a second whether an overlay player is still showing (PlayerShownWatch).
+    private var playerShownTask: Task<Void, Never>?
     private let streamLog = Logger(subsystem: "local.brad.htpcshell", category: "stream")
     private var confirm = ConfirmGate()
     private let log = Logger(subsystem: "local.brad.htpcshell", category: "coordinator")
@@ -475,7 +477,30 @@ final class AppCoordinator {
         showOverlay(InterstitialView(title: s.name, subtitle: "Starting…", colors: Self.colors(for: s)),
                     timeout: TimeInterval(Reveal.timeout.components.seconds))
         revealWhenPlaying(page, service: s, leaving: leaving)
-        if watchForExit { watchPlayerExit(page, playURL: url, service: s) }
+        if watchForExit {
+            if let script = streamSources[s.id]?.playerShownScript { watchPlayerShown(page, script: script, playURL: url, service: s) }
+            else { watchPlayerExit(page, playURL: url, service: s) }
+        }
+    }
+
+    /// For a service whose player opens over a page (no page of its own to leave): returns to our
+    /// screen once the service's check has said the player is showing and then that it is not, twice
+    /// in a row, or the page leaves the service's site.
+    private func watchPlayerShown(_ page: WKWebView, script: String, playURL: URL, service s: Service) {
+        playerShownTask = Task { [weak self] in
+            var watch = PlayerShownWatch()
+            while !watch.isExpired {
+                try? await Task.sleep(for: .seconds(1))
+                guard !Task.isCancelled, let self, self.streamReturn != nil, case .service(let shown) = self.screen, shown.id == s.id else { return }
+                let left = PlayerExit.hasLeftSite(playURL: playURL, current: page.url)
+                let answer = await WebPage.run(script, in: page, timeout: .seconds(1)) as? Bool
+                if left || watch.record(answer) {
+                    self.streamLog.info("left player, returning service=\(s.id, privacy: .public)")
+                    self.endStreamPlayback(s)
+                    return
+                }
+            }
+        }
     }
 
     /// Watches the service page's address while a real Play is on screen: leaving the player
@@ -498,6 +523,8 @@ final class AppCoordinator {
     private func stopWatchingPlayer() {
         playerExitObservation?.invalidate()
         playerExitObservation = nil
+        playerShownTask?.cancel()
+        playerShownTask = nil
     }
 
     private enum Reveal {

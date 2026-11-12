@@ -26,6 +26,13 @@ public enum PlayerExit {
         return firstComponent(of: current) == playFirst
     }
 
+    /// True when `current` is no longer on the same site as `playURL` (a nil address is not "left").
+    public static func hasLeftSite(playURL: URL, current: URL?) -> Bool {
+        guard let current, let playHost = playURL.host?.lowercased() else { return false }
+        guard let host = current.host?.lowercased() else { return true }
+        return registrable(playHost) != registrable(host)
+    }
+
     private static func firstComponent(of url: URL) -> String? {
         url.pathComponents.first { $0 != "/" }
     }
