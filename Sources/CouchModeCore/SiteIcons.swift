@@ -22,6 +22,9 @@ public enum SiteIcons {
     /// Larger than this is not an icon (a guard on what is downloaded and decoded).
     public static let maxSide = 2048
 
+    /// Some sites put a megabyte of script ahead of the manifest link.
+    public static let maxMarkup = 2_000_000
+
     public struct Page: Equatable, Sendable {
         public var icons: [IconCandidate]
         public var manifest: String?
@@ -33,7 +36,7 @@ public enum SiteIcons {
         let tag = try! NSRegularExpression(pattern: "<link\\b[^>]*>", options: [.caseInsensitive])
         let attr = try! NSRegularExpression(pattern: "([a-zA-Z-]+)\\s*=\\s*(?:\"([^\"]*)\"|'([^']*)')")
         let ns = html as NSString
-        for m in tag.matches(in: html, range: NSRange(location: 0, length: min(ns.length, 400_000))) {
+        for m in tag.matches(in: html, range: NSRange(location: 0, length: min(ns.length, maxMarkup))) {
             let text = ns.substring(with: m.range) as NSString
             var a: [String: String] = [:]
             for x in attr.matches(in: text as String, range: NSRange(location: 0, length: text.length)) {

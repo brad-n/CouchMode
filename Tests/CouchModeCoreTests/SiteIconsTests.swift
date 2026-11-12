@@ -25,6 +25,11 @@ final class SiteIconsTests: XCTestCase {
         XCTAssertEqual(page.manifest, "/site.webmanifest?v=2&x=1")
     }
 
+    func testFindsLinksAfterAHugeInlineScript() {
+        let html = "<head><script>" + String(repeating: "x", count: 900_000) + "</script><link rel=\"manifest\" href=\"/m.json\"></head>"
+        XCTAssertEqual(SiteIcons.parsePage(html).manifest, "/m.json")
+    }
+
     func testReadsManifestIcons() {
         let json = #"{"icons":[{"src":"a-192.png","sizes":"192x192","type":"image/png"},{"src":"/a-512.png","sizes":"512x512"},{"src":"m.png","sizes":"512x512","purpose":"maskable"}]}"#
         let icons = SiteIcons.parseManifest(Data(json.utf8))
