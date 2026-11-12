@@ -53,8 +53,7 @@ struct PlexDetailView: View {
                 }
                 .padding(.horizontal, DS.page * s)
                 .frame(width: geo.size.width, height: geo.size.height, alignment: .leading)
-                ClockBadge(scale: s).padding(.trailing, DS.page * s)
-                    .frame(width: geo.size.width, alignment: .trailing).padding(.top, 56 * s)
+                ScreenHeader(.plexDetail, s: s).pinnedToTop()
             }
             .frame(width: geo.size.width, height: geo.size.height, alignment: .topLeading)
             .clipped()

@@ -54,6 +54,8 @@ final class SettingsModel: ObservableObject {
 
 struct SettingsView: View {
     @ObservedObject var model: SettingsModel
+    /// `.bluetooth` for Remotes & Controllers, which reuses this screen.
+    var kind: ScreenKind = .settings
 
     var body: some View {
         GeometryReader { geo in
@@ -96,9 +98,7 @@ struct SettingsView: View {
                     .frame(width: 820 * s, alignment: .leading)
                     Spacer(minLength: 0)
                 }
-                ClockBadge(scale: s)
-                    .frame(width: geo.size.width, height: geo.size.height, alignment: .topTrailing)
-                    .padding(.trailing, DS.page * s).padding(.top, 56 * s)
+                ScreenHeader(kind, s: s).pinnedToTop()
             }
             .frame(width: geo.size.width, height: geo.size.height)
         }

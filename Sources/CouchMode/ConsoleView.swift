@@ -20,7 +20,7 @@ enum GameTheme {
     static let cardWidth: CGFloat = 400
     static let cardHeight: CGFloat = 225
     static let heroHeight: CGFloat = 470
-    static let pagePadding: CGFloat = 80
+    static let pagePadding: CGFloat = DS.page
 }
 
 /// Art and details for Switch games. SwitchTV's catalog (copied from TVPort
@@ -178,8 +178,7 @@ struct ConsoleView: View {
                 } else {
                     emptyState(s)
                 }
-                ClockBadge(scale: s).frame(maxWidth: .infinity, alignment: .trailing)
-                    .padding(.trailing, GameTheme.pagePadding * s).padding(.top, 56 * s)
+                ScreenHeader(.console, s: s).pinnedToTop()
             }
             // Pinned to the screen: a wide poster row must never widen the page.
             .frame(width: geo.size.width, height: geo.size.height, alignment: .top)

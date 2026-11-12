@@ -32,8 +32,7 @@ struct StreamDetailView: View {
                     Spacer(minLength: 0)
                 }
                 .padding(.horizontal, StreamLayout.page * s)
-                ClockBadge(scale: s).frame(maxWidth: .infinity, alignment: .trailing)
-                    .padding(.trailing, StreamLayout.page * s).padding(.top, 40 * s)
+                ScreenHeader(.streamDetail, s: s).pinnedToTop()
             }
             .frame(width: geo.size.width, height: geo.size.height, alignment: .topLeading)
             .clipped()

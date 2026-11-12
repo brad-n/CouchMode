@@ -152,18 +152,3 @@ struct StreamPill: View {
             .animation(DS.focusSpring, value: focused)
     }
 }
-
-/// "Loading <service>" while a reader works: a name and a soft pulse.
-struct StreamLoading: View {
-    let text: String
-    let s: CGFloat
-    @State private var pulse = false
-
-    var body: some View {
-        VStack(spacing: 22 * s) {
-            Circle().fill(DS.accent).frame(width: 18 * s, height: 18 * s).scaleEffect(pulse ? 1.5 : 0.8).opacity(pulse ? 0.35 : 1)
-            Text(text).font(DS.ui(26, s, .semibold)).foregroundStyle(DS.text2)
-        }
-        .onAppear { withAnimation(.easeInOut(duration: 0.9).repeatForever(autoreverses: true)) { pulse = true } }
-    }
-}

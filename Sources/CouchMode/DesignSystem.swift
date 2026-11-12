@@ -34,6 +34,8 @@ enum DS {
     static let focusSpring = Animation.spring(response: 0.32, dampingFraction: 0.78)
     static let slide = Animation.spring(response: 0.42, dampingFraction: 0.86)
     static let fade = Animation.easeInOut(duration: 0.45)
+    /// Screen-to-screen and loading-to-content: short, so it never slows navigation.
+    static let crossfade = Animation.easeInOut(duration: 0.3)
 
     /// Scale for the screen: designed at 1080 points tall.
     static func scale(_ size: CGSize) -> CGFloat { max(0.6, size.height / 1080) }

@@ -10,7 +10,6 @@ struct StreamHomeView: View {
     @ObservedObject var model: StreamHomeModel
 
     private enum Metrics {
-        static let topBarHeight: CGFloat = 120
         static let heroHeight: CGFloat = 330
         static let rowTitleGap: CGFloat = 14
         static let rowGap: CGFloat = 26
@@ -25,17 +24,18 @@ struct StreamHomeView: View {
             ZStack(alignment: .top) {
                 StreamBackdrop(url: model.heroTitle.flatMap { $0.heroArt ?? $0.tileArt }, size: geo.size)
                 if model.home == nil || model.isLoading {
-                    StreamLoading(text: "Loading \(model.service.name)", s: s)
+                    InterstitialView(title: model.service.name, subtitle: "Loading…", colors: ServiceLook.colors(model.service.id),
+                                     header: .streamLoading)
                         .frame(width: geo.size.width, height: geo.size.height)
+                        .transition(.opacity)
                 } else {
                     VStack(alignment: .leading, spacing: 0) {
-                        topBar(s)
-                        hero(s)
+                        hero(s).padding(.top, ScreenHeader<EmptyView, EmptyView>.band * s)
                         rows(s, width: geo.size.width)
                     }
+                    .transition(.opacity)
+                    topBar(s).pinnedToTop()
                 }
-                if model.home == nil || model.isLoading { ClockBadge(scale: s).frame(maxWidth: .infinity, alignment: .trailing)
-                    .padding(.trailing, StreamLayout.page * s).padding(.top, 40 * s) }
                 if let notice = model.notice {
                     Text(notice).font(DS.ui(22, s, .semibold)).foregroundStyle(DS.text)
                         .padding(.horizontal, 28 * s).padding(.vertical, 14 * s)
@@ -47,6 +47,7 @@ struct StreamHomeView: View {
             }
             .frame(width: geo.size.width, height: geo.size.height, alignment: .top)
             .clipped()
+            .animation(DS.crossfade, value: model.home == nil || model.isLoading)
             .animation(DS.fade, value: model.picker != nil)
             .animation(DS.fade, value: model.notice)
         }
@@ -58,22 +59,19 @@ struct StreamHomeView: View {
     private func topBar(_ s: CGFloat) -> some View {
         let target = model.target
         let profile = model.home?.currentProfile
-        return HStack(spacing: 22 * s) {
+        return ScreenHeader(kind: .streamHome, s: s, leading: {
             chip(focused: target == .search, s: s) {
                 Image(systemName: "magnifyingglass").font(.system(size: 24 * s, weight: .bold))
                 Text("Search").font(DS.ui(23, s, .bold))
             }
-            Spacer()
+        }, accessory: {
             if let profile {
                 chip(focused: target == .profile, s: s) {
                     avatar(profile, s: s)
                     Text(profile.name).font(DS.ui(23, s, .bold))
                 }
             }
-            ClockBadge(scale: s)
-        }
-        .padding(.horizontal, StreamLayout.page * s)
-        .frame(height: Metrics.topBarHeight * s)
+        })
     }
 
     private func chip<Content: View>(focused: Bool, s: CGFloat, @ViewBuilder _ content: () -> Content) -> some View {
@@ -102,6 +100,7 @@ struct StreamHomeView: View {
             if let title = model.heroTitle { StreamHeroText(title: title, s: s) }
         }
         .padding(.horizontal, StreamLayout.page * s)
+        .padding(.bottom, 22 * s)   // breathing room above the first row's title
         .frame(maxWidth: .infinity, minHeight: Metrics.heroHeight * s, maxHeight: Metrics.heroHeight * s, alignment: .bottomLeading)
         .animation(DS.fade, value: model.heroTitle?.id)
     }

@@ -44,8 +44,7 @@ struct AllConsolesView: View {
                 }
                 .padding(.leading, DS.page * s).padding(.top, 110 * s)
                 .animation(.easeOut(duration: 0.25), value: model.selected.id)
-                ClockBadge(scale: s).padding(.trailing, DS.page * s)
-                    .frame(width: geo.size.width, alignment: .trailing).padding(.top, 56 * s)
+                ScreenHeader(.allConsoles, s: s).pinnedToTop()
                 grid(width: geo.size.width, s: s)
                     .offset(y: (420 - CGFloat(model.focus.row) * Self.rowHeight) * s)
                     .animation(DS.slide, value: model.focus.row)

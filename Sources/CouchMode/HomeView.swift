@@ -295,8 +295,6 @@ private enum HomeMetrics {
 
 struct HomeView: View {
     @ObservedObject var model: HomeModel
-    @State private var now = Date()
-    private let clock = Timer.publish(every: 15, on: .main, in: .common).autoconnect()
 
     var body: some View {
         GeometryReader { geo in
@@ -308,8 +306,8 @@ struct HomeView: View {
                     .frame(width: geo.size.width * 0.62, alignment: .leading)
                 LinearGradient(colors: [.black.opacity(0.45), .clear], startPoint: .top, endPoint: .bottom)
                     .frame(width: geo.size.width, height: 220 * s)
-                statusBar(s).frame(width: geo.size.width, alignment: .trailing)
-                    .padding(.top, 56 * s)
+                ScreenHeader(kind: .home, s: s, leading: { EmptyView() }, accessory: { devices(s) })
+                    .frame(width: geo.size.width)
                 rows(width: geo.size.width, s: s)
                     .offset(y: (HomeMetrics.rowsTop - rowsScroll) * s)
                     .animation(DS.slide, value: model.focus.row)
@@ -330,7 +328,6 @@ struct HomeView: View {
         }
         .background(DS.canvas)
         .ignoresSafeArea()
-        .onReceive(clock) { now = $0 }
     }
 
     /// How far the rows have slid up so the focused row sits at rowsTop.
@@ -348,26 +345,19 @@ struct HomeView: View {
         }
     }
 
-    private func statusBar(_ s: CGFloat) -> some View {
-        VStack(alignment: .trailing, spacing: 4 * s) {
-            HStack(spacing: 18 * s) {
-                ForEach(model.devices) { d in
-                    HStack(spacing: 6 * s) {
-                        Image(systemName: d.symbol).font(.system(size: 24 * s, weight: .semibold))
-                        if let b = d.battery { Text("\(b)%").font(DS.ui(17, s, .bold)).monospacedDigit() }
-                    }
-                    .foregroundStyle(d.battery.map { $0 <= 15 } == true ? Color.red : DS.text2)
-                    .transition(.opacity.combined(with: .scale))
+    /// Connected controllers and remotes, before the shared header's clock.
+    private func devices(_ s: CGFloat) -> some View {
+        HStack(spacing: 18 * s) {
+            ForEach(model.devices) { d in
+                HStack(spacing: 6 * s) {
+                    Image(systemName: d.symbol).font(.system(size: 24 * s, weight: .semibold))
+                    if let b = d.battery { Text("\(b)%").font(DS.ui(17, s, .bold)).monospacedDigit() }
                 }
-                Text(now.formatted(date: .omitted, time: .shortened))
-                    .font(DS.ui(38, s)).monospacedDigit().foregroundStyle(DS.text)
+                .foregroundStyle(d.battery.map { $0 <= 15 } == true ? Color.red : DS.text2)
+                .transition(.opacity.combined(with: .scale))
             }
-            .animation(DS.fade, value: model.devices)
-            Text(now.formatted(.dateTime.weekday(.wide).month(.abbreviated).day()))
-                .font(DS.ui(17, s, .medium)).foregroundStyle(DS.text2)
         }
-        .shadow(color: .black.opacity(0.5), radius: 10 * s)
-        .padding(.trailing, DS.page * s)
+        .animation(DS.fade, value: model.devices)
     }
 
     private func footer(_ s: CGFloat) -> some View {

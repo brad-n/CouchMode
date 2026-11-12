@@ -83,8 +83,7 @@ struct GameDetailView: View {
                     if !model.screenshots.isEmpty { screenshots(s, width: geo.size.width) }
                 }
                 .padding(.horizontal, GameTheme.pagePadding * s)
-                ClockBadge(scale: s).padding(.trailing, GameTheme.pagePadding * s)
-                    .frame(width: geo.size.width, alignment: .trailing).padding(.top, 56 * s)
+                ScreenHeader(.gameDetail, s: s).pinnedToTop()
             }
             .frame(width: geo.size.width, height: geo.size.height, alignment: .topLeading)
             .clipped()

@@ -1012,7 +1012,7 @@ final class AppCoordinator {
         bluetooth.open()
         let model = SettingsModel(title: "Remotes & Controllers", icon: "gamecontroller.fill", rows: bluetoothSettingRows())
         model.footer = Self.pairingHint
-        show(NSHostingView(rootView: SettingsView(model: model)))
+        show(NSHostingView(rootView: SettingsView(model: model, kind: .bluetooth)))
         screen = .bluetooth(model)
         bluetoothRefresh?.invalidate()
         bluetoothRefresh = Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { [weak self, weak model] _ in

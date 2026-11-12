@@ -1,18 +1,23 @@
 // Owns: the shell's full-screen interstitials (opening a streaming service,
-// starting a game or app) and small shared chrome (the clock badge). Pure
+// starting a game or app) and small shared chrome. Pure
 // presentation; the coordinator decides when they show.
 
 import AppKit
 import SwiftUI
+import CouchModeCore
 
-/// "Opening Netflix…" / "Starting Kirby…": the item's art blurred behind a
-/// large title and a slim animated progress bar.
+/// The one loading / launch view: an item's art blurred behind a large title
+/// and a slim animated progress bar. "Opening Netflix…", "Starting Kirby…",
+/// and a stream screen while its reader works all use it.
 struct InterstitialView: View {
     let title: String
     let subtitle: String
     let colors: [Color]
     var icon: NSImage? = nil
     var artwork: String? = nil
+    /// Draws the shared header (the clock) over the card, as a stream screen's
+    /// loading state does; launch cards cover the whole screen without it.
+    var header: ScreenKind? = nil
 
     @State private var phase: CGFloat = -1
 
@@ -49,27 +54,12 @@ struct InterstitialView: View {
                     .clipShape(Capsule())
                     .padding(.top, 14 * s)
                 }
+                if let header { ScreenHeader(header, s: s).pinnedToTop() }
             }
             .frame(width: geo.size.width, height: geo.size.height)
         }
         .ignoresSafeArea()
         .onAppear { withAnimation(.easeInOut(duration: 1.1).repeatForever(autoreverses: true)) { phase = 1 } }
-    }
-}
-
-/// Time at the top right of every screen, like Apple TV's status area.
-struct ClockBadge: View {
-    let scale: CGFloat
-    @State private var now = Date()
-    private let tick = Timer.publish(every: 15, on: .main, in: .common).autoconnect()
-
-    var body: some View {
-        Text(now.formatted(date: .omitted, time: .shortened))
-            .font(.system(size: 34 * scale, weight: .semibold, design: .rounded))
-            .monospacedDigit()
-            .foregroundStyle(Theme.textPrimary.opacity(0.9))
-            .shadow(color: .black.opacity(0.5), radius: 8 * scale)
-            .onReceive(tick) { now = $0 }
     }
 }
 

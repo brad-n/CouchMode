@@ -240,7 +240,12 @@ struct StreamSearchView: View {
                     }
                 }
                 .padding(.horizontal, DS.page * s)
-                .padding(.vertical, 72 * s)
+                .padding(.top, ScreenHeader<EmptyView, EmptyView>.band * s).padding(.bottom, 72 * s)
+                ScreenHeader(.streamSearch, s: s) {
+                    Label("Search \(model.serviceName)", systemImage: "magnifyingglass")
+                        .font(DS.ui(24, s, .semibold))
+                        .foregroundStyle(DS.text3)
+                }.pinnedToTop()
             }
         }
     }
@@ -249,13 +254,6 @@ struct StreamSearchView: View {
 
     private func header(_ s: CGFloat) -> some View {
         VStack(alignment: .leading, spacing: 14 * s) {
-            HStack {
-                Label("Search \(model.serviceName)", systemImage: "magnifyingglass")
-                    .font(DS.ui(24, s, .semibold))
-                    .foregroundStyle(DS.text3)
-                Spacer()
-                ClockBadge(scale: s)
-            }
             HStack(spacing: 6 * s) {
                 if model.text.isEmpty {
                     Text("Type a title")
