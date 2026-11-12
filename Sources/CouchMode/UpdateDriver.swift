@@ -7,6 +7,7 @@
 import Foundation
 import Sparkle
 import CouchModeCore
+import os
 
 @MainActor
 final class UpdateDriver: NSObject, SPUUserDriver {
@@ -16,6 +17,7 @@ final class UpdateDriver: NSObject, SPUUserDriver {
     }
 
     private unowned let owner: AppUpdater
+    private let log = Logger(subsystem: "local.brad.htpcshell", category: "updater")
 
     init(updater: AppUpdater) { owner = updater }
 
@@ -57,6 +59,7 @@ final class UpdateDriver: NSObject, SPUUserDriver {
 
     func showUpdaterError(_ error: any Error, acknowledgement: @escaping () -> Void) {
         let e = error as NSError
+        log.error("update error domain=\(e.domain, privacy: .public) code=\(e.code, privacy: .public)")
         owner.apply(.failed(UpdateFailure.classify(domain: e.domain, code: e.code, message: e.localizedDescription)))
         finish(acknowledgement)
     }
