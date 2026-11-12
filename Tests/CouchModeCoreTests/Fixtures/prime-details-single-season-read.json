@@ -1,0 +1,5 @@
+{"id":"L1limited1","name":"Limited Show","title":"Limited Show - Season 1","type":"TV Show","titleType":"season","seasonNumber":1,"year":2026,"rating":"TV-MA",
+ "desc":"Only one season.","art":"https://example.invalid/images/S/synthetic-a/hero0200.jpg","runtimeText":"",
+ "play":{"id":"L1ep000001","resume":0,"run":3311,"label":"Play Episode 1"},
+ "currentSeasonId":null,"seasons":[],
+ "episodes":[{"id":"L1ep000001","number":1,"name":"One","desc":null,"run":3311,"resume":0,"art":null,"playId":"L1ep000001"}]}

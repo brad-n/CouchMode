@@ -1,0 +1,10 @@
+{"id":"S2season02","name":"Show One","title":"Show One - Season 2","type":"TV Show","titleType":"season","seasonNumber":2,"year":2025,"rating":"TV-MA",
+ "desc":"A longer synopsis of the season.","art":"https://example.invalid/images/S/synthetic-a/hero0100.jpg","runtimeText":"",
+ "play":{"id":"S2ep000003","resume":1440,"run":4231,"label":"Resume S2 E3"},
+ "currentSeasonId":"S2season02",
+ "seasons":[{"id":"S2season01","name":"Season 1","number":1},{"id":"S2season02","name":"Season 2","number":2},{"id":"S2season01","name":"Dup","number":1},{"id":"bad id","name":"Bad","number":3}],
+ "episodes":[
+  {"id":"S2ep000001","number":1,"name":"First Period","desc":"The start.","run":2903,"resume":0,"art":"https://example.invalid/images/S/synthetic-a/ep0001.jpg","playId":"S2ep000001"},
+  {"id":"S2ep000002","number":2,"name":"Second Period","desc":null,"run":3014,"resume":0,"art":null,"playId":"S2ep000002"},
+  {"id":"S2ep000003","number":3,"name":"","desc":"Partly watched.","run":4231,"resume":1440,"art":"https://example.invalid/images/S/synthetic-a/ep0003.jpg","playId":"S2ep000003"},
+  {"id":"S2ep000004","number":4,"name":"Not playable","desc":null,"run":3000,"resume":0,"art":null,"playId":null}]}

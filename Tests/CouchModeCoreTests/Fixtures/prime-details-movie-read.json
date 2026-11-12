@@ -1,0 +1,4 @@
+{"id":"M1movie001","name":"Movie Four","title":"Movie Four","type":"Movie","titleType":"movie","seasonNumber":null,"year":2023,"rating":"R",
+ "desc":"A movie synopsis.","art":"https://example.invalid/images/S/synthetic-a/hero0300.jpg","runtimeText":"1 h 33 min",
+ "play":{"id":"M1movie001","resume":600,"run":5580,"label":"Resume"},
+ "currentSeasonId":null,"seasons":[],"episodes":[]}

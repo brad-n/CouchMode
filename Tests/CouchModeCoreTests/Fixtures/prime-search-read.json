@@ -1,0 +1,4 @@
+[{"id":"R1movie001","name":"Result One","title":"Result One","type":"Movie","year":2022,"rating":"PG","desc":"Found.","art":"https://example.invalid/images/S/synthetic-a/res0001.jpg","pct":null,"resume":null,"playId":"R1movie001"},
+ {"id":"R2show0001","name":"Result Two","title":"Result Two","type":"TV Show","year":2024,"rating":"TV-14","desc":null,"art":null,"pct":null,"resume":null,"playId":"R2ep000001"},
+ {"id":"R1movie001","name":"Result One again","title":"Result One","type":"Movie","art":null,"playId":null},
+ {"id":"R3rent0001","name":"Result To Rent","title":"Result To Rent","type":"Movie","year":2021,"art":null,"playId":null}]
