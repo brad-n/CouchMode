@@ -6,7 +6,7 @@
     {"id":"CW1season2","name":"Show One","title":"Show One - Season 2","type":"TV Show","year":2025,"rating":"TV-MA","desc":"Season 2・Synthetic.","art":"https://example.invalid/images/S/synthetic-a/cover001._UR1920,1080_CLs%7C1920,1080%7C/G/bundle/x.png%7C0,0,1920,1080+0,0,1920,1080,847,263,156_kvfsynth_.jpg","pct":55.5,"resume":1737,"playId":"CW1ep0005"},
     {"id":"CW2movie01","name":"Movie Two","title":"Movie Two","type":"Movie","year":2024,"rating":"PG-13","desc":"A partly watched movie.","art":"https://example.invalid/images/S/synthetic-a/cover002.jpg","pct":87,"resume":4282,"playId":"CW2movie01"},
     {"id":"CW3queued1","name":"Show Three","title":"Show Three - Season 1","type":"TV Show","year":2026,"rating":null,"desc":null,"art":"https://example.invalid/images/S/synthetic-a/cover003.jpg","pct":0,"resume":0,"playId":"CW3ep00001"}]},
-  {"id":"2","name":"Popular now","type":"StandardCarousel","cw":false,"items":[
+  {"id":"2","name":"Popular now","type":"StandardCarousel","cw":false,"more":{"total":60,"target":"synth-target_id=","token":"synth-token_A=","start":20},"items":[
     {"id":"P1movie001","name":"Movie Four","title":"Movie Four","type":"Movie","year":2023,"rating":"R","desc":"A movie.","art":"https://example.invalid/images/S/synthetic-a/cover004.jpg","pct":null,"resume":null,"playId":"P1movie001"},
     {"id":"P2rent0001","name":"Movie To Rent","title":"Movie To Rent","type":"Movie","year":2026,"rating":"PG","desc":"Rent or buy.","art":"https://example.invalid/images/S/synthetic-a/cover005.jpg","pct":null,"resume":null,"playId":null},
     {"id":"P3noart001","name":"Show Without Art","title":"Show Without Art","type":"TV Show","year":null,"rating":null,"desc":null,"art":null,"pct":null,"resume":null,"playId":"P3ep000001"},

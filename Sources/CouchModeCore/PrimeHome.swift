@@ -5,7 +5,8 @@
 // isContinueWatching with each title's position (progress.percentage and the
 // play action's resumeTime), the rest are carousels (a "Top 10" one is a
 // chart). The reader opens the home page and reads that data; nothing more is
-// requested, and the rows hold what the page held ("more in a row" isn't read).
+// requested to show them; a carousel the page holds more of notes its total
+// and paging position for PrimeMore ("more in a row").
 // Profiles are in the top bar's own markup: the current one in a
 // data-testid="active-profile-<name>" element, the others as the bar's own
 // "switch profile" forms (a button with the name, in a form posting to
@@ -15,7 +16,7 @@
 // A profile's id here is its name (a name two profiles share is left out). No I/O here.
 //
 // extractScript's answer, the shape parse(_:) reads:
-// {"hero":card|null, "rows":[{"id","name","type","cw","items":[card]}],
+// {"hero":card|null, "rows":[{"id","name","type","cw","items":[card],"more":{"total","target","token","start"}|null}],
 //  "profiles":[{"name","avatar","current","kids"}]}   (card: see PrimeSite)
 
 import Foundation
@@ -25,6 +26,12 @@ public enum PrimeHome {
     public static let homeURL = URL(string: "https://www.primevideo.com/")!
     static let maxContainers = StreamLimits.maxRows + 4
     static let maxItems = StreamLimits.maxTitlesPerRow
+
+    /// True when `url` is Prime's home page itself (the page whose data holds the rows and their paging).
+    public static func isHomePage(_ url: URL?) -> Bool {
+        guard let url, url.scheme == "https", url.host?.lowercased() == homeURL.host, url.query == nil else { return false }
+        return url.path.isEmpty || url.path == "/"
+    }
 
     /// Function body for callAsyncJavaScript: true once the page's data holds its
     /// rows and the top bar has drawn the current profile (so no "who's watching"
@@ -50,10 +57,12 @@ public enum PrimeHome {
       const containers = body.containers.slice(0, \#(maxContainers));
       const heroContainer = containers.find(c => c.containerType === "StandardHero");
       const hero = heroContainer ? ((heroContainer.entities || []).map(card).find(Boolean) || null) : null;
-      const rows = containers.map((c, i) => ({
-        id: String(i), name: c.text || "", type: c.containerType || "", cw: !!c.isContinueWatching,
-        items: (c.entities || []).slice(0, \#(maxItems)).map(card).filter(Boolean)
-      })).filter(r => r.items.length);
+      \#(PrimeMore.noteFunction)
+      const rows = containers.map((c, i) => {
+        const items = (c.entities || []).slice(0, \#(maxItems)).map(card).filter(Boolean);
+        return { id: String(i), name: c.text || "", type: c.containerType || "", cw: !!c.isContinueWatching, items,
+                 more: moreNote(c, (c.entities || []).length) };
+      }).filter(r => r.items.length);
       const avatarOf = el => {
         if (!el) return null;
         const m = /url\("([^"]+)"\)/.exec(getComputedStyle(el).backgroundImage || "");
@@ -118,7 +127,7 @@ public enum PrimeHome {
                   (1...3).contains(id.count), id.allSatisfy({ $0.isASCII && $0.isNumber }) else { continue }
             let name = StreamJSON.string(container["name"]) ?? ""
             rows.append(StreamRow(id: "prime-row-\(id)", title: name, kind: rowKind(name: name, continueWatching: container["cw"] as? Bool == true),
-                                  titles: titles))
+                                  titles: titles, totalCount: PrimeMore.total(container, loaded: titles.count)))
         }
         let hero = (read["hero"] as? [String: Any]).flatMap(PrimeSite.title(fromCard:))
         let (profiles, currentID) = profiles(from: read["profiles"] as? [[String: Any]] ?? [])

@@ -17,7 +17,8 @@
 // address to the service's own page, whose player opens over it, so this source
 // also says how to tell the player is showing (playerShownScript). Titles to rent,
 // buy or get through a channel have no playback action: Play opens their page.
-// "More in a row" isn't read (nil): rows hold what the home page held.
+//   more     -> POST /api/paginateCollection: the one request the page makes at the end of a
+//               carousel (PrimeMore), run in the home page; the row's cursor is kept here in memory
 
 import Foundation
 import CouchModeCore
@@ -32,6 +33,8 @@ final class PrimeSource: StreamSource {
 
     let service: Service
     private let driver: PageDriver
+    /// Where each row's next batch starts; cleared whenever the home is read again or the profile switches.
+    private var cursors: [String: PrimeMore.Cursor] = [:]
 
     var playerShownScript: String? { PrimeSite.playerShownScript }
 
@@ -41,8 +44,10 @@ final class PrimeSource: StreamSource {
     }
 
     func home() async -> StreamHome? {
+        cursors = [:]
         guard let json = await driver.read("home", open: PrimeHome.homeURL, ready: PrimeHome.readyScript,
                                            script: PrimeHome.extractScript, timeouts: Self.pageRead) else { return nil }
+        cursors = PrimeMore.cursors(fromHome: json)
         return PrimeHome.parse(json)
     }
 
@@ -72,9 +77,23 @@ final class PrimeSource: StreamSource {
         return PrimeDetails.episodes(fromRead: json)
     }
 
-    func more(in row: StreamRow) async -> [StreamTitle]? { nil }
+    func more(in row: StreamRow) async -> [StreamTitle]? {
+        guard let cursor = cursors[row.id], let script = PrimeMore.script(for: cursor) else { return nil }
+        cursors[row.id] = nil   // one request per reach; a successful read puts the next cursor back
+        let action = driver.begin("more")
+        // The request is the home page's own, so it runs in that page (opened again when another is showing).
+        if !PrimeHome.isHomePage(driver.view.url) {
+            guard await driver.open(PrimeHome.homeURL, for: action) else { return nil }
+        }
+        guard await driver.waitFor(PrimeHome.readyScript, for: action, what: "never ready"),
+              let json = await driver.text(script, for: action, timeout: Self.pageRead.read, what: "more unreadable"),
+              let batch = PrimeMore.titles(fromRead: json, cursor: cursor) else { return nil }
+        cursors[row.id] = batch.cursor
+        return batch.titles
+    }
 
     func switchProfile(to profileID: String) async -> Bool {
+        cursors = [:]
         let action = driver.begin("profile")
         guard await driver.open(PrimeHome.homeURL, for: action),
               await driver.waitFor(PrimeHome.readyScript, for: action, what: "never ready"),
