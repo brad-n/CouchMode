@@ -211,14 +211,18 @@ public struct StreamHome: Equatable, Sendable {
     /// The service's featured title (its billboard), when it has one.
     public var hero: StreamTitle?
     public var rows: [StreamRow]
+    /// The site is on its own "who's watching" page: `profiles` are the ones it offers, there are
+    /// no rows, and nothing here belongs to a profile yet. Screens open their picker at once.
+    public var asksWhoIsWatching: Bool
 
     public init(serviceID: String, profiles: [StreamProfile] = [], currentProfileID: String? = nil,
-                hero: StreamTitle? = nil, rows: [StreamRow] = []) {
+                hero: StreamTitle? = nil, rows: [StreamRow] = [], asksWhoIsWatching: Bool = false) {
         self.serviceID = serviceID
         self.profiles = profiles
         self.currentProfileID = currentProfileID
         self.hero = hero
         self.rows = rows
+        self.asksWhoIsWatching = asksWhoIsWatching
     }
 
     public var currentProfile: StreamProfile? { profiles.first { $0.id == currentProfileID } }
@@ -227,6 +231,7 @@ public struct StreamHome: Equatable, Sendable {
     public var bounded: StreamHome {
         var home = self
         home.profiles = Array(profiles.prefix(StreamLimits.maxProfiles))
+        if asksWhoIsWatching { home.rows = []; home.hero = nil; return home }
         home.rows = rows.lazy
             .map { row in var r = row; r.titles = Array(row.titles.prefix(StreamLimits.maxTitlesPerRow)); return r }
             .filter { !$0.titles.isEmpty }

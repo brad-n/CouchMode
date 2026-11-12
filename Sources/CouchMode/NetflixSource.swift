@@ -5,7 +5,10 @@
 //   search   -> its search page's result cards (NetflixSearch)
 //   details  -> the title's page, its details panel (NetflixDetails)
 //   episodes -> pick the season in that panel's own season picker, read again
-//   profile  -> its profile switch address, so the next home is that profile's
+//   profile  -> on Netflix's "Who's watching?" gate: press that profile's tile (NetflixGate); else
+//               its profile switch address, so the next home is that profile's
+//   gate     -> when /browse lands on that gate, home is the gate's profiles with no rows
+//               (StreamHome.asksWhoIsWatching), so the screen opens its picker
 // "More in a row" is nil on purpose: the page's rows are Pinot carousels with a total and an
 // endCursor, but the page pages them with a persisted GraphQL query (its id lives in the page's
 // script bundle, not in the page's data), and a row is only drawn when the page's UI is, so there
@@ -33,8 +36,13 @@ final class NetflixSource: StreamSource {
     }
 
     func home() async -> StreamHome? {
-        guard let json = await driver.read("home", open: Self.browseURL, ready: Self.pageDataReady,
-                                           script: NetflixHome.extractScript) else { return nil }
+        // /browse may land on the gate (which has no home data): ready is either, and the read is
+        // the gate's tiles when it is the gate, else the page data. One open, one read.
+        guard let json = await driver.read("home", open: Self.browseURL,
+                                           ready: "const a = (() => { \(Self.pageDataReady) })(); if (a) return true; return (() => { \(NetflixGate.readyScript) })();",
+                                           script: "const g = (() => { \(NetflixGate.extractScript) })(); if (g) return g; \(NetflixHome.extractScript)")
+        else { return nil }
+        if let gate = NetflixGate.parse(json) { return gate }
         return NetflixHome.parse(graphQLCache: Data(json.utf8))
     }
 
@@ -81,7 +89,14 @@ final class NetflixSource: StreamSource {
     func more(in row: StreamRow) async -> [StreamTitle]? { nil }
 
     func switchProfile(to profileID: String) async -> ProfileSwitch {
+        // On the gate the choice is one press of that profile's tile (the script says no when the
+        // page isn't the gate); the next home() reads that profile's home.
+        let tile = driver.begin("profile")
+        if await WebPage.run(NetflixGate.chooseScript(profileID: profileID), in: driver.view, timeout: .seconds(5)) as? Bool == true {
+            return ProfileSwitch(succeeded: await driver.waitFor(NetflixGate.leftGateScript, for: tile, timeout: .seconds(15),
+                                                                 what: "gate didn't close"))
+        }
         guard let url = NetflixHome.switchProfileURL(profileID: profileID) else { return .failed }
-        return ProfileSwitch(succeeded: await driver.open(url, for: driver.begin("profile")))
+        return ProfileSwitch(succeeded: await driver.open(url, for: tile))
     }
 }

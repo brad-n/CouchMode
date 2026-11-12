@@ -398,7 +398,8 @@ final class AppCoordinator {
         guard let source = streamSources[s.id] else { return showWeb(s) }
         let cached = streamHomeCache[s.id]
         let model = StreamHomeModel(source: source, showing: cached)
-        model.onRead = { [weak self] home in self?.streamHomeCache[s.id] = home }
+        // A gate is never kept: the next visit must not show it (or the rows before it) as current.
+        model.onRead = { [weak self] home in self?.streamHomeCache[s.id] = home.asksWhoIsWatching ? nil : home }
         model.onNeedsPerson = { [weak self, weak model] line in
             guard let self, let model, case .streamHome(let shown) = self.screen, shown === model else { return }
             self.showWebsiteForPerson(s, line: line)
@@ -623,7 +624,7 @@ final class AppCoordinator {
             switch intent {
             case .move(let d): model.movePicker(d)
             case .select: model.chooseProfile()
-            case .back: model.closePicker()
+            case .back: if model.asksWhoIsWatching { goHome() } else { model.closePicker() }
             case .home: goHome()
             case .info: break
             }

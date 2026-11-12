@@ -1,0 +1,8 @@
+{"gate":[
+ {"id":"SYNTHPROFILE0000000000000001","name":"Profile 1","avatar":"https://example.invalid/avatar/1.png","locked":false},
+ {"id":"SYNTHPROFILE0000000000000002","name":"Profile 2","avatar":"https://example.invalid/avatar/2.png","locked":true},
+ {"id":"SYNTHPROFILE0000000000000003","name":"Profile 3","avatar":"http://example.invalid/avatar/3.png","locked":false},
+ {"id":"bad id!","name":"Profile 4","locked":false},
+ {"id":"SYNTHPROFILE0000000000000005","name":"Profile 5"},
+ {"id":"SYNTHPROFILE0000000000000005","name":"Profile 5 again"}
+]}

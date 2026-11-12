@@ -106,9 +106,13 @@ final class StreamHomeModel: ObservableObject {
         return epoch
     }
 
+    /// The site is asking who's watching: no rows are shown (the picker is the whole screen).
+    var asksWhoIsWatching: Bool { home?.asksWhoIsWatching == true }
+
     private func apply(_ read: StreamHome) {
         let bounded = read.bounded
         onRead?(bounded)
+        if bounded.asksWhoIsWatching { return applyGate(bounded) }
         let oldRows = rows
         home = bounded
         isLoading = false
@@ -116,6 +120,17 @@ final class StreamHomeModel: ObservableObject {
         rowColumns = Array(rowColumns.prefix(bounded.rows.count)) + Array(repeating: 0, count: max(0, bounded.rows.count - rowColumns.count))
         noteColumn()
         log.info("home service=\(self.service.id, privacy: .public) rows=\(bounded.rows.count)")
+    }
+
+    /// The service's page is on its profile gate: the cached rows are dropped, never shown as
+    /// current, and the picker opens at once on the gate's own profiles (first unlocked one).
+    private func applyGate(_ gate: StreamHome) {
+        home = gate
+        isLoading = false
+        focus = StreamHomeFocus(rowLengths: [])
+        rowColumns = []
+        picker = gate.profiles.firstIndex { !$0.isLocked } ?? 0
+        log.info("gate service=\(self.service.id, privacy: .public) profiles=\(gate.profiles.count)")
     }
 
     // MARK: Focus
@@ -166,7 +181,8 @@ final class StreamHomeModel: ObservableObject {
         picker = profiles.firstIndex { $0.id == home?.currentProfileID } ?? 0
     }
 
-    func closePicker() { picker = nil }
+    /// Closes the picker, except on the gate, where it is the whole screen (Back leaves instead).
+    func closePicker() { if !asksWhoIsWatching { picker = nil } }
 
     func movePicker(_ direction: Direction) {
         guard let current = picker, let count = home?.profiles.count, count > 0 else { return }
