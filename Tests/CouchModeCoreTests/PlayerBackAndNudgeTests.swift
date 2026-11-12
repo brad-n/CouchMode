@@ -8,6 +8,12 @@ final class PlayerBackAndNudgeTests: XCTestCase {
         XCTAssertFalse(PlayerBackKey.isBack(keyCode: 53, handedOffTitleShowing: false))
     }
 
+    func testOnlyEscapeIsBackOnASignInPageSoDeleteStillTypes() {
+        XCTAssertTrue(PlayerBackKey.isSignInBack(keyCode: 53, signInShowing: true))
+        XCTAssertFalse(PlayerBackKey.isSignInBack(keyCode: 51, signInShowing: true), "Delete edits a password")
+        XCTAssertFalse(PlayerBackKey.isSignInBack(keyCode: 53, signInShowing: false))
+    }
+
     func testOtherKeysGoToThePlayer() {
         for code: UInt16 in [49, 36, 123, 124, 125, 126, 3, 40] {
             XCTAssertFalse(PlayerBackKey.isBack(keyCode: code, handedOffTitleShowing: true))
