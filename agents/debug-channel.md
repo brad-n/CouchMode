@@ -42,12 +42,14 @@ All `GET` unless noted. Replies are JSON of strings unless noted.
 | `/screensaver` | Start the screensaver now. |
 | `/eval` (POST) | Run a JS function body (use `return`) in the **open** service page; JSON result. |
 | `/peek?service=<id>` (POST) | Run a JS function body in that service's page *even behind a stream screen*. This is how readers are built. |
-| `/media?service=<id>[&suspend=1\|0]` | WebKit's media state for a service's page (`none`, `playing`, `paused`, `suspended`); optionally suspend or resume it first. |
+| `/media?service=<id>[&suspend=1\|0]` | WebKit's media state for a service's page (`none`, `playing`, `paused`, `suspended`); optionally suspend or resume it first. Plain `/media` only reads. `suspend=1\|0` goes through the shell's own idempotent quiet/unquiet, so repeating it never stacks WebKit's counted suspensions and `suspend=0` leaves the page in the normal state. |
 | `/plexlink?id=plex://...` | Open a title in a running Plex HTPC by its Plex id and fix its window. |
 | `/inject?key=up\|down\|left\|right\|return\|esc\|space` | Type a key into the app in front, as the remote would. |
 | `/accessibility` | Show macOS's Accessibility prompt; says whether it is granted. |
 | `/ax?bundle=<bundle id>` | Another app's interface as Accessibility sees it (bounded text listing), to learn its layout. |
 | `/bt?do=scan\|open\|menu\|hover[&name=...]` | The shell's view of the Bluetooth pane (`menu` and `hover` only read; nothing is pressed). |
+| `/media-formats?service=<id>` | The media probe's record for a service: each SourceBuffer's mime string, and the first init segment's audio codec and channels or video codec and size, plus sizes seen on the video element. Needs the `mediaprobe` flag on. Services that play through native HLS (Hulu, Prime) record no buffers. |
+| `/debug-flag?name=mediaprobe\|netflix51&on=1\|0` | In-memory debug flags, off at every launch. `mediaprobe` injects the probe; `netflix51` asks Netflix's player for Dolby Digital Plus 5.1 (the requested-formats list only). Changing one reloads the affected service pages. |
 | `/hid` | Raw HID gamepads and their last presses, to check a layout. |
 
 Unknown routes are 404. A bad parameter is 400 or 404 with a short text reply.

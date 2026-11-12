@@ -1355,7 +1355,10 @@ extension AppCoordinator: DebugControllable {
             }
         }
         guard let suspend else { return report() }
-        page.setAllMediaPlaybackSuspended(suspend) { MainActor.assumeIsolated { report() } }
+        // Through the shell's own idempotent quiet/unquiet, so repeated calls
+        // never stack WebKit's counted suspensions.
+        if suspend { quiet(page) } else { unquiet(page) }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { MainActor.assumeIsolated { report() } }
     }
 
     private static func evaluate(_ js: String, in web: WKWebView, _ done: @escaping @MainActor (String) -> Void) {
