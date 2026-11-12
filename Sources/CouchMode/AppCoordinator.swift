@@ -79,6 +79,10 @@ final class AppCoordinator {
         container.wantsLayer = true
         container.layer?.backgroundColor = NSColor.black.cgColor
         install(homeView)
+        player.netflix51Enabled = { [weak self] in
+            guard let self else { return false }
+            return Prefs.netflix51.effective(channels: self.settings.currentOutputChannels())
+        }
         player.onPlayPauseRequested = { [weak self] in self?.player.press(.space) }
         player.onFirstLoad = { [weak self] id in
             MainActor.assumeIsolated {
@@ -827,6 +831,8 @@ final class AppCoordinator {
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in self?.homeModel.notice = nil }
             return
         }
+        // Opening Netflix is the moment a changed 5.1 setting or output takes effect (never mid-playback).
+        if case .stream(let s) = action { player.refreshNetflix51(for: s) }
         switch action {
         case .console(let c):
             let model = consoleModel(c)
@@ -931,7 +937,9 @@ final class AppCoordinator {
         let saver = Prefs.screensaverMinutes
         let demo = DemoMode.isOn
         return [
-            SettingRow(id: "audio", title: "Sound Output", value: demo ? DemoMode.SettingsValue.audio : settings.currentAudioOutput()?.name ?? "None", symbol: "speaker.wave.2.fill"),
+            SettingRow(id: "audio", title: "Sound Output", value: demo ? DemoMode.SettingsValue.audio : soundOutputText(), symbol: "speaker.wave.2.fill"),
+            SettingRow(id: "netflix51", title: "Netflix 5.1 Audio", value: demo ? "Auto (off)" : Prefs.netflix51.summary(channels: settings.currentOutputChannels()),
+                       symbol: "hifispeaker.2.fill"),
             SettingRow(id: "bluetooth", title: "Remotes & Controllers", value: demo ? DemoMode.SettingsValue.controllers : controllers == 1 ? "1 connected" : "\(controllers) connected",
                        symbol: "gamecontroller.fill"),
             SettingRow(id: "remoteapps", title: "Remote in Other Apps",
@@ -947,6 +955,12 @@ final class AppCoordinator {
             SettingRow(id: "desktop", title: "Exit to Desktop", value: pending == "desktop" ? "Press again to exit" : "",
                        symbol: "rectangle.portrait.and.arrow.right", isAction: true),
         ]
+    }
+
+    /// "Mac mini Speakers \u{00B7} 2 channels".
+    private func soundOutputText() -> String {
+        guard let d = settings.currentAudioOutput() else { return "None" }
+        return Netflix51.describeOutput(name: d.name, channels: settings.currentOutputChannels())
     }
 
     /// "54 GB free of 228 GB" for the startup disk.
@@ -977,6 +991,7 @@ final class AppCoordinator {
             switch row.id {
             case "audio":
                 if let next = Cycle.next(after: settings.currentAudioOutput(), in: settings.audioOutputs()) { settings.setAudioOutput(next) }
+            case "netflix51": Prefs.netflix51 = Cycle.next(after: Prefs.netflix51, in: Netflix51.allCases) ?? .auto
             case "bluetooth": openBluetooth(); return
             case "remoteapps":
                 if !KeyInjector.requestPermission() { system.openAccessibilitySettings() }
@@ -1334,8 +1349,6 @@ extension AppCoordinator: DebugControllable {
         switch flag {
         case .mediaprobe:
             for s in AppServices.all { player.reinstallDebugScripts(for: s) }
-        case .netflix51:
-            if let s = AppServices.all.first(where: { $0.id == "netflix" }) { player.reinstallDebugScripts(for: s) }
         }
         return true
     }

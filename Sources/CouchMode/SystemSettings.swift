@@ -37,6 +37,21 @@ final class SystemSettings {
         return AudioDevice(id: id, name: name(of: id))
     }
 
+    /// Output channels of the current default output device (nil if it can't be read).
+    func currentOutputChannels() -> Int? {
+        guard let device = currentAudioOutput() else { return nil }
+        var address = AudioObjectPropertyAddress(mSelector: kAudioDevicePropertyStreamConfiguration,
+                                                 mScope: kAudioDevicePropertyScopeOutput,
+                                                 mElement: kAudioObjectPropertyElementMain)
+        var size: UInt32 = 0
+        guard AudioObjectGetPropertyDataSize(device.id, &address, 0, nil, &size) == noErr, size > 0 else { return nil }
+        let raw = UnsafeMutableRawPointer.allocate(byteCount: Int(size), alignment: MemoryLayout<AudioBufferList>.alignment)
+        defer { raw.deallocate() }
+        guard AudioObjectGetPropertyData(device.id, &address, 0, nil, &size, raw) == noErr else { return nil }
+        let list = UnsafeMutableAudioBufferListPointer(raw.assumingMemoryBound(to: AudioBufferList.self))
+        return list.reduce(0) { $0 + Int($1.mNumberChannels) }
+    }
+
     func setAudioOutput(_ device: AudioDevice) {
         var address = defaultOutputAddress
         var id = device.id

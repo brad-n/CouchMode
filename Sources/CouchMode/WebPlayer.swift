@@ -20,6 +20,11 @@ final class WebPlayer: NSObject, WKScriptMessageHandler, WKNavigationDelegate, W
     /// Called when the page asks for play/pause (Enter during playback).
     var onPlayPauseRequested: (() -> Void)?
 
+    /// Whether Netflix should be asked for 5.1 right now (setting x current output); set by the coordinator.
+    var netflix51Enabled: () -> Bool = { false }
+    /// The value Netflix's page scripts were installed with; nil until its view exists.
+    private var netflix51Installed: Bool?
+
     func view(for service: Service) -> WKWebView {
         if let v = views[service.id] { return v }
         let config = WKWebViewConfiguration()
@@ -41,16 +46,18 @@ final class WebPlayer: NSObject, WKScriptMessageHandler, WKNavigationDelegate, W
         return v
     }
 
-    /// The scripts every page of a service gets. The media probe and the
-    /// debug experiments are added only while the debug channel is on.
+    /// The scripts every page of a service gets. The media probe is added only
+    /// while the debug channel is on; Netflix's 5.1 hook only while it is effectively on.
     private func installScripts(for service: Service, in content: WKUserContentController) {
         content.addUserScript(WKUserScript(source: PageScripts.hideGamepads, injectionTime: .atDocumentStart, forMainFrameOnly: false))
         if DebugFlags.isOn(.mediaprobe) {
             content.addUserScript(WKUserScript(source: MediaProbeScript.source, injectionTime: .atDocumentStart, forMainFrameOnly: false))
         }
-        if DebugServer.isEnabled {
-            if service.id == "netflix", DebugFlags.isOn(.netflix51) {
-                content.addUserScript(WKUserScript(source: MediaProbeScript.netflix51, injectionTime: .atDocumentStart, forMainFrameOnly: true))
+        if service.id == "netflix" {
+            let on = netflix51Enabled()
+            netflix51Installed = on
+            if let src = Netflix51.script(forService: service.id, enabled: on) {
+                content.addUserScript(WKUserScript(source: src, injectionTime: .atDocumentStart, forMainFrameOnly: true))
             }
         }
         if !service.hasTVInterface {
@@ -62,7 +69,15 @@ final class WebPlayer: NSObject, WKScriptMessageHandler, WKNavigationDelegate, W
         }
     }
 
-    /// Debug only: re-installs a service's scripts after a debug flag changed, then reloads it.
+    /// Called when Netflix is opened: if the effective 5.1 value changed since the page's scripts were
+    /// installed (setting or output device), reinstall them and reload. Never runs mid-playback: it is
+    /// only called from opening the service, not while a title is on screen.
+    func refreshNetflix51(for service: Service) {
+        guard service.id == "netflix", let installed = netflix51Installed, installed != netflix51Enabled() else { return }
+        reinstallDebugScripts(for: service)
+    }
+
+    /// Re-installs a service's scripts after a debug flag changed, then reloads it.
     func reinstallDebugScripts(for service: Service) {
         guard let v = views[service.id] else { return }
         v.configuration.userContentController.removeAllUserScripts()

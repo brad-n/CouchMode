@@ -282,27 +282,4 @@ public enum MediaProbeScript {
       document.addEventListener('timeupdate', noteSize, true);
     })();
     """#
-
-    /// Debug-only experiment: adds Dolby Digital Plus 5.1 to the audio
-    /// profiles the Netflix web player asks for. Only the list of requested
-    /// formats changes (the manifest request's `profiles`); licenses, keys
-    /// and the CDM are untouched.
-    public static let netflix51 = #"""
-    (function () {
-      if (globalThis.__cmNetflix51) return;
-      globalThis.__cmNetflix51 = true;
-      var EXTRA = ['ddplus-5.1-dash'];
-      var orig = JSON.stringify;
-      JSON.stringify = function (value) {
-        try {
-          var p = value && value.params;
-          if (p && Array.isArray(p.profiles) && p.type === 'standard') {
-            EXTRA.forEach(function (x) { if (p.profiles.indexOf(x) < 0) p.profiles.push(x); });
-            globalThis.__cmNetflix51Hits = (globalThis.__cmNetflix51Hits || 0) + 1;
-          }
-        } catch (e) {}
-        return orig.apply(this, arguments);
-      };
-    })();
-    """#
 }

@@ -49,7 +49,7 @@ All `GET` unless noted. Replies are JSON of strings unless noted.
 | `/ax?bundle=<bundle id>` | Another app's interface as Accessibility sees it (bounded text listing), to learn its layout. |
 | `/bt?do=scan\|open\|menu\|hover[&name=...]` | The shell's view of the Bluetooth pane (`menu` and `hover` only read; nothing is pressed). |
 | `/media-formats?service=<id>` | The media probe's record for a service: each SourceBuffer's mime string, and the first init segment's audio codec and channels or video codec and size, plus sizes seen on the video element. Needs the `mediaprobe` flag on. Services that play through native HLS (Hulu, Prime) record no buffers. |
-| `/debug-flag?name=mediaprobe\|netflix51&on=1\|0` | In-memory debug flags, off at every launch. `mediaprobe` injects the probe; `netflix51` asks Netflix's player for Dolby Digital Plus 5.1 (the requested-formats list only). Changing one reloads the affected service pages. |
+| `/debug-flag?name=mediaprobe&on=1\|0` | In-memory debug flags, off at every launch. `mediaprobe` injects the probe and reloads service pages. (Netflix 5.1 is a Settings option, not a flag.) |
 | `/hid` | Raw HID gamepads and their last presses, to check a layout. |
 
 Unknown routes are 404. A bad parameter is 400 or 404 with a short text reply.

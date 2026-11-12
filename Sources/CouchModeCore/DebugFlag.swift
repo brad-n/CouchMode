@@ -6,8 +6,6 @@ import Foundation
 public enum DebugFlag: String, CaseIterable, Sendable {
     /// Inject the media format probe (MSE hooks) into service pages.
     case mediaprobe
-    /// Ask Netflix's player for Dolby Digital Plus 5.1 audio (formats list only).
-    case netflix51
 
     public init?(name: String) { self.init(rawValue: name) }
 }
