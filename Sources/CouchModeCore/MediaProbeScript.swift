@@ -277,6 +277,9 @@ public enum MediaProbeScript {
       }
       document.addEventListener('playing', noteSize, true);
       document.addEventListener('resize', noteSize, true);
+      document.addEventListener('loadedmetadata', noteSize, true);
+      // Sizes can settle without a later event; sample while time advances (cheap: one property read).
+      document.addEventListener('timeupdate', noteSize, true);
     })();
     """#
 
