@@ -22,7 +22,128 @@ Netflix and Hulu are the worked examples; keep them open while you work:
 | Tests | `Netflix*Tests.swift` | `Hulu*Tests.swift` |
 | Fixtures | `Fixtures/netflix-*.json` | `Fixtures/hulu-*.json` |
 
-## The shape
+## A new service is a package
+
+A reader is a **script package** in `apps/<id>/`, run by one generic reader
+(`ScriptReader`, `Sources/CouchMode/ScriptReader.swift`). Prime Video is the
+worked example (`apps/prime/`); the Swift readers below (Netflix, Hulu,
+Disney+, Apple TV, and Prime's `PrimeSource`) are the older way and stay until
+each service is ported. A Mac chooses per service with the `reader` setting
+(`builtin`, the default, or `package`; see [config.md](config.md)).
+
+```
+apps/<id>/manifest.json   id, version, reader API, hosts, time limits, the page each action opens
+apps/<id>/reader.js       one script: `const reader = ...` with the functions below
+```
+
+`build-app.sh` copies each `apps/<id>/` into the app (`Resources/apps/<id>/`);
+`PackageStore` loads it (a downloaded copy comes later).
+
+### What the generic reader does (per user action)
+
+1. Builds the action's page address from the manifest (`https` on the
+   service's own `site.hosts`, or it refuses).
+2. Opens it through `PageDriver` (one action at a time, latest wins, bounded).
+3. Polls the page's **ready function** until it returns `true`.
+4. Calls the **action function** inside the service's page and takes the
+   JSON text it returns (`""` means "couldn't read").
+5. Decodes that with `PackageDecoder` (Core), which drops anything that fails
+   a check: ids are plain tokens, addresses are `https` on the service's
+   hosts (images on `site.imageHosts`), text and numbers are bounded and
+   `StreamLimits` caps every list. The script returns data; Swift validates it.
+
+### manifest.json
+
+```json
+{ "id": "prime", "version": "1.0.0", "readerAPI": 1,
+  "site": { "hosts": ["primevideo.com"], "imageHosts": ["media-amazon.com"] },
+  "timeouts": { "load": 20, "ready": 10, "read": 12 },
+  "pages": {
+    "home":    { "open": "https://www.primevideo.com/", "ready": "homeReady" },
+    "details": { "open": "{title.page}", "ready": "detailsReady" },
+    "season":  { "open": "https://www.primevideo.com/detail/{season.id}", "ready": "detailsReady" },
+    "search":  { "open": ".../search/?phrase={query}", "ready": "searchReady", "readyRequired": false, "readyTimeout": 8 },
+    "more":    { "open": "https://www.primevideo.com/", "ready": "homeReady", "reuseIfOpen": true },
+    "profile": { "open": "https://www.primevideo.com/", "ready": "homeReady", "confirmTimeout": 15 } },
+  "playerShown": true }
+```
+
+- `readerAPI` must be `1` (the version of this page's contract).
+- `pages.<action>.open` is an `https` address, or `{title.page}` (the title's
+  own page), and may contain `{season.id}` (a plain id) and `{query}` (the
+  normalized search text, percent-encoded). `ready` names a function in
+  `reader.js`. `home` is required; an action with no page is unavailable
+  (the screens fall back).
+- `readyRequired: false` makes "never became ready" a valid empty answer
+  (search with no results). `reuseIfOpen` (more) skips reopening when the
+  service's page is already at that address. `confirmTimeout` (profile) is
+  how long to wait for the chosen profile to show.
+- `playerShown: true` says `reader.js` defines `playerShown()`.
+
+### reader.js: the API (version 1)
+
+`reader` is one object. Every function runs in the service's page. Ready
+functions return a boolean. Action functions return **JSON text** (use
+`JSON.stringify`), `""` on any failure or when over about 900,000
+characters, and never throw. Arguments arrive as one object.
+
+| Function | Argument | Returns |
+|---|---|---|
+| `homeReady()`, `detailsReady()`, `searchReady()` | none | `true` when the page's data is there |
+| `home()` | none | a **home**, or `""` |
+| `details({title})` | `title` is the row's title (a **title**) | a **details**, or `""` |
+| `season({})` | none (the season page is open) | an array of **episodes** |
+| `search({})` | none (the results page is open) | an array of **titles** |
+| `more({cursor})` | the row's cursor, exactly as `home()` returned it | `{"titles": [title], "cursor": opaque or null}` |
+| `chooseProfile({profileID})` | a profile `id` from the home | `true` when the page's own control was pressed (or already current) |
+| `profileIsCurrent({profileID})` | same | `true` once that profile is current |
+| `playerShown()` | none | `true` while the service's player is showing (only if `playerShown`) |
+
+The vocabulary is `StreamCatalog.swift` as JSON; leave a missing value `null`:
+
+- **title**: `id`, `name`, `kind` (`movie`, `show`, `episode`, `other`),
+  `play` (the service's own player address), `page`, `episodeLabel`,
+  `synopsis`, `year`, `rating`, `seasonsLabel`, `runtimeSeconds`,
+  `resumeSeconds`, `tileArt`, `heroArt`.
+- **home**: `profiles` (`id`, `name`, `avatar`, `isKids`, `isLocked`),
+  `currentProfileID`, `hero` (a title), `asksWhoIsWatching`, and `rows`:
+  `id`, `title`, `kind` (`continueWatching`, `ranked`, `standard`), `titles`,
+  `totalCount` (set when the row holds more than it sent, so the screen asks),
+  `cursor` (any JSON the script wants back in `more`, up to 8,000 characters;
+  keep it free of anything but a paging position).
+- **details**: `title` (the row's title filled in from the page), `seasons`
+  (`id`, `name`, `episodes`: only the open season has them), `currentSeasonID`.
+- **episode**: `id`, `name`, `number`, `synopsis`, `runtimeSeconds`,
+  `resumeSeconds`, `play`, `art`.
+
+Prime's `reader.js` splits each function in two so the second half can be
+tested without a page: `extract.*` reads the page into a small "read", and
+`build.*` turns a read into the vocabulary (pure). Copy that split.
+
+### Rules for a package
+
+Same ground rules as the Swift readers, and they bind the script: it runs
+only in the service's page, makes at most the one request the page itself
+would make for that action (Prime's `more` is the only one), reads and
+returns no token, cookie or account data, and **never plays anything** (it
+returns the title's `play` address; `AppCoordinator.playStream` hands it to
+the service's player).
+
+### Porting and testing a service
+
+1. Learn where the page keeps its data (steps 2 and 4 below apply as they are:
+   peek with the debug channel; synthetic fixtures only).
+2. Write `apps/<id>/manifest.json` and `reader.js`. Port the parsing from the
+   existing Swift parser rather than redesigning it.
+3. **Parity test** (`Tests/CouchModeCoreTests/PrimePackageParityTests.swift` is
+   the pattern): load `reader.js` in JavaScriptCore, run `reader.build.*` on
+   each of the service's existing fixtures, decode with `PackageDecoder`, and
+   assert it equals what the Swift parser makes from the same fixture. Add a
+   test that runs `extract.*` against a small stand-in page.
+4. Set `"reader": "package"` for the service in a test Mac's `config.json`
+   and compare both readers on the device (step 7) before changing a default.
+
+## The shape (the Swift reader, still used by the services not yet ported)
 
 ```
 StreamSource (protocol, StreamSource.swift)
