@@ -14,7 +14,7 @@ final class ServiceIcons: ObservableObject {
     static let shared = ServiceIcons()
 
     private enum Limits {
-        static let page = 1_500_000
+        static let page = 4_000_000
         static let manifest = 300_000
         static let icon = 4_000_000
         static let timeout: TimeInterval = 10
@@ -63,29 +63,29 @@ final class ServiceIcons: ObservableObject {
         if IconCacheRule.isFresh(fetchedAt: modified, now: Date()), image(for: service.id) != nil { return }
         guard var parts = URLComponents(url: service.url, resolvingAgainstBaseURL: false) else { return }
         parts.path = "/"; parts.query = nil; parts.fragment = nil
-        guard let home = parts.url, home.scheme == "https",
-              let html = await get(home, limit: Limits.page).flatMap({ String(decoding: $0, as: UTF8.self) }) else {
+        guard let start = parts.url, start.scheme == "https", let fetched = await get(start, limit: Limits.page) else {
             return log.info("icon: home page unavailable service=\(service.id, privacy: .public)")
         }
-        let page = SiteIcons.parsePage(html)
+        let home = fetched.url
+        let page = SiteIcons.parsePage(String(decoding: fetched.data, as: UTF8.self))
         var candidates = page.icons
         if SiteIcons.best(candidates, relativeTo: home) == nil || candidates.allSatisfy({ ($0.size ?? 0) < 512 }),
            let href = page.manifest, let manifestURL = URL(string: href, relativeTo: home)?.absoluteURL, manifestURL.scheme == "https",
-           let data = await get(manifestURL, limit: Limits.manifest) {
-            candidates += SiteIcons.parseManifest(data).map { c in
+           let manifest = await get(manifestURL, limit: Limits.manifest) {
+            candidates += SiteIcons.parseManifest(manifest.data).map { c in
                 // A manifest's own relative addresses are relative to the manifest.
                 guard let abs = URL(string: c.href, relativeTo: manifestURL)?.absoluteString else { return c }
                 return IconCandidate(href: abs, size: c.size, type: c.type, kind: c.kind)
             }
         }
-        guard let iconURL = SiteIcons.best(candidates, relativeTo: home), let data = await get(iconURL, limit: Limits.icon),
-              let image = NSImage(data: data), usable(image) else {
+        guard let iconURL = SiteIcons.best(candidates, relativeTo: home), let icon = await get(iconURL, limit: Limits.icon),
+              let image = NSImage(data: icon.data), usable(image) else {
             return log.info("icon: none usable service=\(service.id, privacy: .public)")
         }
         guard let dir = directory else { return }
         do {
             try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-            try data.write(to: dest, options: .atomic)
+            try icon.data.write(to: dest, options: .atomic)
         } catch {
             return log.error("icon: could not save service=\(service.id, privacy: .public)")
         }
@@ -99,19 +99,15 @@ final class ServiceIcons: ObservableObject {
         return SiteIcons.isUsable(pixelWidth: rep.pixelsWide, pixelHeight: rep.pixelsHigh)
     }
 
-    /// One bounded GET with a browser identity; nil on any failure.
-    private func get(_ url: URL, limit: Int) async -> Data? {
+    /// One GET with a browser identity, refused if larger than `limit`; nil on
+    /// any failure. Gives the final address too (a service may redirect to its
+    /// own other domain), which relative links are read against.
+    private func get(_ url: URL, limit: Int) async -> (data: Data, url: URL)? {
         var request = URLRequest(url: url)
         request.setValue(UserAgents.safari, forHTTPHeaderField: "User-Agent")
-        do {
-            let (bytes, response) = try await session.bytes(for: request)
-            guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else { return nil }
-            var data = Data()
-            for try await b in bytes {
-                data.append(b)
-                if data.count > limit { return nil }
-            }
-            return data
-        } catch { return nil }
+        guard let (data, response) = try? await session.data(for: request),
+              let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode),
+              data.count <= limit else { return nil }
+        return (data, http.url ?? url)
     }
 }

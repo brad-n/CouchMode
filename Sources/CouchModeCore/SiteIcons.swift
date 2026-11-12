@@ -23,7 +23,7 @@ public enum SiteIcons {
     public static let maxSide = 2048
 
     /// Some sites put a megabyte of script ahead of the manifest link.
-    public static let maxMarkup = 2_000_000
+    public static let maxMarkup = 4_000_000
 
     public struct Page: Equatable, Sendable {
         public var icons: [IconCandidate]
