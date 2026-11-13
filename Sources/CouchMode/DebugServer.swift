@@ -32,7 +32,7 @@ protocol DebugControllable: AnyObject {
     func debugState() -> [String: String]
     func handle(_ intent: ShellIntent)
     func homeRequested(_ source: HomeSource)
-    func debugPlay(consoleId: String, fileName: String) -> Bool
+    func debugPlay(consoleId: String, fileName: String) async -> Bool
     func debugHID() -> String
     func debugPlexLink(_ link: URL, _ done: @escaping @MainActor (String) -> Void)
     func showScreensaver()
@@ -174,10 +174,13 @@ final class DebugServer {
             target.homeRequested(source)
             replyJSON(conn, target.debugState())
         case ("GET", "/play"):
-            guard target.debugPlay(consoleId: req.query["console"] ?? "", fileName: req.query["game"] ?? "") else {
-                return reply(conn, 404, "unknown console or game")
+            let consoleId = req.query["console"] ?? "", fileName = req.query["game"] ?? ""
+            Task { @MainActor [target] in
+                guard await target.debugPlay(consoleId: consoleId, fileName: fileName) else {
+                    return self.reply(conn, 404, "unknown console or game")
+                }
+                self.replyJSON(conn, target.debugState())
             }
-            replyJSON(conn, target.debugState())
         case ("GET", "/intent"):
             guard let intent = Self.intent(req.query["i"] ?? "") else { return reply(conn, 400, "unknown intent") }
             target.handle(intent)

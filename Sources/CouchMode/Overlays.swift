@@ -4,6 +4,7 @@
 
 import AppKit
 import SwiftUI
+import UniformTypeIdentifiers
 import CouchModeCore
 
 /// The one loading / launch view: an item's art blurred behind a large title
@@ -108,12 +109,20 @@ struct InterstitialView: View {
 /// App icons for games that are their own Mac apps (Switch builds), cached.
 @MainActor
 enum AppIcons {
+    private static let maxIcons = 400
     private static var cache: [String: NSImage] = [:]
-    static func icon(_ url: URL) -> NSImage {
-        if let hit = cache[url.path] { return hit }
-        let image = NSWorkspace.shared.icon(forFile: url.path)
+    /// Generic application icon, for an app whose own icon has not been read yet (no disk access).
+    private static let placeholder: NSImage = {
+        let image = NSWorkspace.shared.icon(for: .applicationBundle)
         image.size = NSSize(width: 512, height: 512)
-        cache[url.path] = image
         return image
+    }()
+
+    /// The app's own icon once it has been read off the main thread (with the games listing), else a generic one.
+    static func icon(_ url: URL) -> NSImage { cache[url.path] ?? placeholder }
+
+    static func store(_ icons: [String: NSImage]) {
+        if cache.count + icons.count > maxIcons { cache.removeAll() }
+        for (path, image) in icons { cache[path] = image }
     }
 }

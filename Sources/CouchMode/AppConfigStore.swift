@@ -108,6 +108,11 @@ final class AppConfigStore {
         config.setting(AppConfig.gamesFolderKey, for: console.id)?.string.flatMap { $0.isEmpty ? nil : $0 } ?? console.defaultFolder
     }
 
+    /// True when this Mac's config names the console's folder (rather than the default being assumed).
+    func hasConfiguredFolder(for console: Console) -> Bool {
+        config.setting(AppConfig.gamesFolderKey, for: console.id)?.string.map { !$0.isEmpty } ?? false
+    }
+
     func gamesFolder(for console: Console) -> URL {
         let home = FileManager.default.homeDirectoryForCurrentUser.path
         return URL(fileURLWithPath: PathText.expandingTilde(gamesFolderText(for: console), home: home))

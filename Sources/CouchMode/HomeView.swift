@@ -183,16 +183,36 @@ enum HomeLayout {
         return Theme.consoleCards[i % Theme.consoleCards.count]
     }
 
-    static func consoleItem(_ console: Console, count: Int) -> HomeItem {
-        HomeItem(id: "console-" + console.id, title: console.name, subtitle: GameLibrary.countLabel(count),
-                 symbol: "gamecontroller.fill", colors: consoleColors(console), action: .console(console),
-                 artwork: Artwork.exists(console.id) ? console.id : nil,
-                 tagline: count > 0 ? "Pick up where you left off" : "Add games to \(AppConfigStore.shared.gamesFolderText(for: console))")
+    /// A console as Home and All Consoles see it: its games counted from the cache, and the state of its folder.
+    struct ConsoleStatus {
+        let console: Console
+        let count: Int
+        let state: FolderState
+        /// The config names this console's folder (so a missing or blocked folder is worth saying, not just hiding).
+        let configured: Bool
+
+        /// Home's Play row shows consoles with games, and a configured one whose folder has something to say.
+        var shownOnHome: Bool { count > 0 || (configured && state != .ready) }
     }
 
-    /// Consoles that have games, then a card for the full list.
-    static func playItems(_ consoles: [(Console, Int)]) -> [HomeItem] {
-        consoles.filter { $0.1 > 0 }.map { consoleItem($0.0, count: $0.1) } + [
+    static func consoleItem(_ status: ConsoleStatus) -> HomeItem {
+        let console = status.console, count = status.count
+        let path = AppConfigStore.shared.gamesFolderText(for: console)
+        let expanded = AppConfigStore.shared.gamesFolder(for: console).path
+        let problem = FolderMessages.text(for: status.state, path: expanded)
+        let tagline: String
+        if let problem, count == 0 || status.state != .timedOut { tagline = problem }
+        else if status.state == .loading { tagline = "Loading games\u{2026}" }
+        else { tagline = count > 0 ? "Pick up where you left off" : "Add games to \(path)" }
+        return HomeItem(id: "console-" + console.id, title: console.name,
+                        subtitle: FolderMessages.tileLine(for: status.state) ?? GameLibrary.countLabel(count),
+                        symbol: "gamecontroller.fill", colors: consoleColors(console), action: .console(console),
+                        artwork: Artwork.exists(console.id) ? console.id : nil, tagline: tagline)
+    }
+
+    /// Consoles that have games (or something to say), then a card for the full list.
+    static func playItems(_ consoles: [ConsoleStatus]) -> [HomeItem] {
+        consoles.filter(\.shownOnHome).map { consoleItem($0) } + [
             HomeItem(id: "all-consoles", title: "All Consoles", subtitle: "\(consoles.count) systems",
                      symbol: "square.grid.3x3.fill", colors: Theme.neutralCard, action: .allConsoles,
                      tagline: "Every system, from the NES to the Switch"),
@@ -222,7 +242,7 @@ enum HomeLayout {
     }
 
     /// `apps` are the config's apps in order (streams, native apps, Settings); `consoles` the config's consoles in order.
-    static func rows(apps shown: [CatalogApp], services: [Service], consoles: [(Console, Int)], continueWatching: [ContinueEntry] = [],
+    static func rows(apps shown: [CatalogApp], services: [Service], consoles: [ConsoleStatus], continueWatching: [ContinueEntry] = [],
                      recentGames: [RecentGame] = []) -> [HomeRow] {
         let apps = shown.compactMap { app -> HomeItem? in
             switch app.kind {

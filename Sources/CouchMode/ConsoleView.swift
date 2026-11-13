@@ -27,43 +27,85 @@ enum GameTheme {
 /// to ~/Games/switch/.catalog) gives name, publisher, genres, description,
 /// card and banner; else the TVPort library banner (.art/<ID>.jpg); else the
 /// build's own icon.
+///
+/// Everything here answers from memory. The files live in the games folder,
+/// which may be on a drive that is slow, missing or waiting on a permission
+/// prompt, so they are read by `preload` on a background thread after each
+/// listing, and the screens redraw when it lands.
 @MainActor
 enum GameArt {
+    /// Most images kept; the cache is cleared when it grows past this.
+    private static let maxImages = 600
     private static var images: [String: NSImage] = [:]
-    private static var misses: Set<String> = []
+    private static var titleIDs: [String: String] = [:]
+    private static var bundleIDs: [String: String] = [:]
     /// Catalog per games folder, with the file date it was read at, so a
-    /// rebuilt catalog (new game built) is picked up without a restart.
+    /// rebuilt catalog (new game built) is picked up on the next listing.
     private static var catalogs: [String: (date: Date, catalog: SwitchCatalog)] = [:]
 
-    static func titleID(_ appURL: URL) -> String? {
-        Bundle(url: appURL)?.bundleIdentifier?.split(separator: ".").last.map { String($0).uppercased() }
+    /// Everything read for one folder, handed to the main actor in one piece.
+    private struct Loaded: @unchecked Sendable {
+        var titleIDs: [String: String] = [:]
+        var bundleIDs: [String: String] = [:]
+        var catalog: (date: Date, catalog: SwitchCatalog)?
+        var images: [String: NSImage] = [:]
+        var icons: [String: NSImage] = [:]
+        var catalogUnchanged = false
     }
 
-    private static func catalog(in folder: URL) -> SwitchCatalog? {
-        let file = folder.appendingPathComponent(".catalog/catalog.json")
-        let date = (try? FileManager.default.attributesOfItem(atPath: file.path)[.modificationDate]) as? Date
-        if let hit = catalogs[folder.path], let date, hit.date == date { return hit.catalog }
-        guard let date, let data = try? Data(contentsOf: file), let c = SwitchCatalog.decode(data) else { return nil }
-        // New catalog: its images may be new too.
-        images = images.filter { !$0.key.hasPrefix(folder.path) }
-        misses = misses.filter { !$0.hasPrefix(folder.path) }
-        catalogs[folder.path] = (date, c)
-        return c
-    }
+    static func titleID(_ appURL: URL) -> String? { titleIDs[appURL.path] }
+
+    static func bundleID(_ appURL: URL) -> String? { bundleIDs[appURL.path] }
 
     static func info(_ appURL: URL) -> CatalogGame? {
         if DemoMode.isOn { return DemoMode.catalogGame(fileName: appURL.lastPathComponent) }
         guard let id = titleID(appURL) else { return nil }
-        return catalog(in: appURL.deletingLastPathComponent())?.game(id)
+        return catalogs[appURL.deletingLastPathComponent().path]?.catalog.game(id)
     }
 
-    private static func image(_ file: URL) -> NSImage? {
-        if let hit = images[file.path] { return hit }
-        if misses.contains(file.path) { return nil }
-        guard let image = NSImage(contentsOf: file) else { misses.insert(file.path); return nil }
-        images[file.path] = image
-        return image
+    /// Reads the folder's catalog, the apps' ids, icons and art off the main thread, then keeps them.
+    /// True when something new arrived (the screens should redraw).
+    static func preload(folder: URL, appNames: [String]) async -> Bool {
+        let known = catalogs[folder.path]?.date
+        let names = Array(appNames.prefix(FolderLimits.maxNames))
+        let loaded = await Task.detached(priority: .utility) { read(folder: folder, appNames: names, knownCatalogDate: known) }.value
+        if images.count + loaded.images.count > maxImages { images.removeAll() }
+        for (path, id) in loaded.titleIDs { titleIDs[path] = id }
+        for (path, id) in loaded.bundleIDs { bundleIDs[path] = id }
+        if let fresh = loaded.catalog { catalogs[folder.path] = fresh }
+        for (path, image) in loaded.images { images[path] = image }
+        AppIcons.store(loaded.icons)
+        return !loaded.titleIDs.isEmpty || !loaded.images.isEmpty || loaded.catalog != nil
     }
+
+    private nonisolated static func read(folder: URL, appNames: [String], knownCatalogDate: Date?) -> Loaded {
+        var out = Loaded()
+        let file = folder.appendingPathComponent(".catalog/catalog.json")
+        let date = (try? FileManager.default.attributesOfItem(atPath: file.path)[.modificationDate]) as? Date
+        var catalog: SwitchCatalog?
+        if let date, date != knownCatalogDate, let data = try? Data(contentsOf: file), let c = SwitchCatalog.decode(data) {
+            out.catalog = (date, c)
+            catalog = c
+        }
+        for name in appNames {
+            let url = folder.appendingPathComponent(name)
+            guard let bundleID = Bundle(url: url)?.bundleIdentifier else { continue }
+            out.bundleIDs[url.path] = bundleID
+            guard let id = bundleID.split(separator: ".").last.map({ String($0).uppercased() }) else { continue }
+            out.titleIDs[url.path] = id
+            let icon = NSWorkspace.shared.icon(forFile: url.path)
+            icon.size = NSSize(width: 512, height: 512)
+            out.icons[url.path] = icon
+            var files = [folder.appendingPathComponent(".art/\(id).jpg")]
+            if let info = catalog?.game(id) {
+                files += [folder.appendingPathComponent(".catalog/" + info.banner), folder.appendingPathComponent(".catalog/" + info.card)]
+            }
+            for f in files { if let image = NSImage(contentsOf: f) { out.images[f.path] = image } }
+        }
+        return out
+    }
+
+    private static func image(_ file: URL) -> NSImage? { images[file.path] }
 
     /// Wide art for the backdrop.
     static func banner(_ appURL: URL) -> NSImage? {
@@ -94,6 +136,9 @@ final class ConsoleModel: ObservableObject {
     let console: Console
     let games: [Game]
     let folderPath: String
+    /// What the folder is doing (loading, missing, blocked, slow) and what to tell the player about it.
+    let state: FolderState
+    let folderMessage: String?
     /// Real folder of the games, for app art (Switch builds).
     let folderURL: URL?
     let colors: [Color]
@@ -104,11 +149,14 @@ final class ConsoleModel: ObservableObject {
     @Published private(set) var focus: FocusGrid?
     @Published var message: String?
 
-    init(console: Console, games: [Game], folderPath: String, folderURL: URL? = nil, colors: [Color],
+    init(console: Console, games: [Game], folderPath: String, folderState: FolderState = .ready, folderMessage: String? = nil,
+         folderURL: URL? = nil, colors: [Color],
          lastPlayed: [String: Date] = [:], pausedGame: String? = nil) {
         self.console = console
         self.games = games
         self.folderPath = folderPath
+        self.state = folderState
+        self.folderMessage = folderMessage
         self.folderURL = folderURL
         self.colors = colors
         self.lastPlayed = lastPlayed
@@ -206,6 +254,12 @@ struct ConsoleView: View {
 
     /// Only shown when there's something to say (e.g. a game couldn't start).
     @ViewBuilder private func footer(_ s: CGFloat) -> some View {
+        if let note = model.folderMessage {
+            Text(note)
+                .font(.system(size: 18 * s, weight: .semibold))
+                .foregroundStyle(.white.opacity(0.85))
+                .padding(.horizontal, GameTheme.pagePadding * s).padding(.bottom, 12 * s)
+        }
         if let message = model.message {
             Text(message)
                 .font(.system(size: 18 * s, weight: .semibold))
@@ -217,8 +271,20 @@ struct ConsoleView: View {
     private func emptyState(_ s: CGFloat) -> some View {
         VStack(spacing: 16 * s) {
             Text(model.console.name).font(.system(size: 56 * s, weight: .heavy)).foregroundStyle(.white)
-            Text("No games yet").font(.system(size: 30 * s, weight: .bold)).foregroundStyle(.white.opacity(0.85))
-            Text("Add game files to \(model.folderPath)").font(.system(size: 20 * s)).foregroundStyle(.white.opacity(0.6))
+            switch model.state {
+            case .loading:
+                Text("Loading games\u{2026}").font(.system(size: 30 * s, weight: .bold)).foregroundStyle(.white.opacity(0.85))
+            case .ready:
+                Text("No games yet").font(.system(size: 30 * s, weight: .bold)).foregroundStyle(.white.opacity(0.85))
+                Text("Add game files to \(model.folderPath)").font(.system(size: 20 * s)).foregroundStyle(.white.opacity(0.6))
+            case .notFound, .permissionDenied, .timedOut:
+                Text(FolderMessages.tileLine(for: model.state) ?? "").font(.system(size: 30 * s, weight: .bold)).foregroundStyle(.white.opacity(0.85))
+                Text(model.folderMessage ?? "").font(.system(size: 20 * s)).foregroundStyle(.white.opacity(0.7))
+                    .multilineTextAlignment(.center).padding(.horizontal, 120 * s)
+                if model.state == .permissionDenied {
+                    Text("Press Select to open System Settings").font(.system(size: 22 * s, weight: .semibold)).foregroundStyle(GameTheme.accent)
+                }
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

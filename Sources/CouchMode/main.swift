@@ -27,6 +27,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let settings = SystemSettings()
         settings.migrateLoginItemAfterRename()
         let games = GameLauncher()
+        // Game folders are read in the background (they may be on a drive that is slow or asking for permission);
+        // Home draws from the cache and updates as each listing arrives.
         let home = HomeModel(rows: AppCoordinator.homeRows(games: games))
         let player = WebPlayer()
         let coordinator = AppCoordinator(homeModel: home, player: player, system: SystemActions(), settings: settings, games: games, plex: PlexClient())
@@ -57,6 +59,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         coordinator.hidPads = hidPads
         hidPads.start()
         coordinator.show()
+        games.scanAll()
         coordinator.refreshContinueWatching()
         ServiceIcons.shared.refreshIfNeeded(AppServices.all)
         coordinator.startIdleWatch()

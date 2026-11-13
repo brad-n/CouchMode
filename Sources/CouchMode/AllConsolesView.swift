@@ -22,6 +22,11 @@ final class AllConsolesModel: ObservableObject {
     }
 
     func move(_ d: Direction) { focus = focus.moved(d) }
+
+    /// Keeps the focus where it was when the screen is redrawn with fresh items.
+    func restoreFocus(from old: AllConsolesModel) {
+        if let moved = focus.at(row: old.focus.row, column: old.focus.column) { focus = moved }
+    }
     var selected: HomeItem { items[focus.row * Self.columns + focus.column] }
     var rows: [[HomeItem]] { stride(from: 0, to: items.count, by: Self.columns).map { Array(items[$0..<min($0 + Self.columns, items.count)]) } }
 }

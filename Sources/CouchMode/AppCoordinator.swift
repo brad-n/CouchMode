@@ -111,10 +111,12 @@ final class AppCoordinator {
                 // other way): a Switch game behind the shell pauses, and the
                 // screens show which game is paused.
                 self?.games.pauseIfBehind()
+                self?.games.scanAll()
                 if self?.games.isRunningGame == true { self?.redrawGameScreens() }
             }
         }
         games.onExit = { [weak self] in self?.gameDidExit() }
+        games.onListingChange = { [weak self] in self?.listingChanged($0) }
         AppUpdater.shared.onChange = { [weak self] in self?.updateFlowChanged() }
         // A game left open by an earlier run of the shell (e.g. paused, then
         // the shell restarted) is still Home's and Play's to manage.
@@ -743,7 +745,10 @@ final class AppCoordinator {
         case .move(let d): closeFlow.disarm(); model.move(d)
         case .back, .home: goHome()
         case .select:
-            guard let game = model.selected else { return }
+            guard let game = model.selected else {
+                if model.state == .permissionDenied { openFilesAndFoldersPane() }
+                return
+            }
             launch(game, from: model)
         case .info:
             guard let game = model.selected else { return }
@@ -805,6 +810,7 @@ final class AppCoordinator {
     private func consoleModel(_ c: Console) -> ConsoleModel {
         let list = games.games(for: c)
         return ConsoleModel(console: c, games: list, folderPath: AppConfigStore.shared.gamesFolderText(for: c),
+                            folderState: games.folderState(for: c), folderMessage: games.folderMessage(for: c),
                             folderURL: games.folder(for: c), colors: HomeLayout.consoleColors(c),
                             lastPlayed: games.lastPlayed(for: c),
                             pausedGame: list.first { games.isOpen($0, on: c) }?.fileName)
@@ -944,8 +950,7 @@ final class AppCoordinator {
             show(NSHostingView(rootView: ConsoleView(model: model)))
             screen = .console(model)
         case .allConsoles:
-            let items = AppConfigStore.shared.consoles.map { HomeLayout.consoleItem($0, count: games.games(for: $0).count) }
-            let model = AllConsolesModel(items: items)
+            let model = AllConsolesModel(items: allConsolesItems())
             show(NSHostingView(rootView: AllConsolesView(model: model)))
             screen = .allConsoles(model)
         case .stream(let s) where s.nativeAppBundleID.map(apps.isInstalled) == true:
@@ -1002,9 +1007,14 @@ final class AppCoordinator {
     static func homeRows(games: GameLauncher, continueWatching: [ContinueEntry] = []) -> [HomeRow] {
         let store = AppConfigStore.shared
         return HomeLayout.rows(apps: store.home.apps.map(\.app), services: store.services,
-                        consoles: store.consoles.map { ($0, games.games(for: $0).count) },
+                        consoles: store.consoles.map { consoleStatus($0, games) },
                         continueWatching: continueWatching,
                         recentGames: recentGames(games))
+    }
+
+    static func consoleStatus(_ c: Console, _ games: GameLauncher) -> HomeLayout.ConsoleStatus {
+        HomeLayout.ConsoleStatus(console: c, count: games.games(for: c).count, state: games.folderState(for: c),
+                                 configured: AppConfigStore.shared.hasConfiguredFolder(for: c))
     }
 
     /// The 10 most recently played games that are still installed, across
@@ -1030,6 +1040,32 @@ final class AppCoordinator {
             }
         }
         return Array(out.sorted { ($0.paused ? 1 : 0, $0.played) > ($1.paused ? 1 : 0, $1.played) }.prefix(10))
+    }
+
+    private func allConsolesItems() -> [HomeItem] {
+        AppConfigStore.shared.consoles.map { HomeLayout.consoleItem(Self.consoleStatus($0, games)) }
+    }
+
+    /// A games folder was read (or is being waited on): redraw whatever shows its games, from the cache.
+    private func listingChanged(_ console: Console) {
+        if isHomeShowing { refreshHome() }
+        switch screen {
+        case .console(let shown) where shown.console.id == console.id: redrawGameScreens()
+        case .allConsoles(let shown):
+            let fresh = AllConsolesModel(items: allConsolesItems())
+            fresh.restoreFocus(from: shown)
+            show(NSHostingView(rootView: AllConsolesView(model: fresh)))
+            screen = .allConsoles(fresh)
+        default: break
+        }
+    }
+
+    /// Opens the System Settings pane where CouchMode is allowed to read removable volumes.
+    private func openFilesAndFoldersPane() {
+        for address in [FolderMessages.filesAndFoldersPane, FolderMessages.filesAndFoldersPaneNewer] {
+            if let url = URL(string: address), NSWorkspace.shared.open(url) { return }
+        }
+        log.error("could not open the Files and Folders pane")
     }
 
     private func refreshHome() {
@@ -1605,9 +1641,12 @@ extension AppCoordinator: DebugControllable {
         return (["pads:"] + pads + ["recent:"] + (hidPads?.recentEvents ?? [])).joined(separator: "\n")
     }
 
-    func debugPlay(consoleId: String, fileName: String) -> Bool {
-        guard let c = AppConfigStore.shared.consoles.first(where: { $0.id == consoleId }),
-              let g = games.games(for: c).first(where: { $0.fileName == fileName }) else { return false }
+    func debugPlay(consoleId: String, fileName: String) async -> Bool {
+        guard let c = AppConfigStore.shared.consoles.first(where: { $0.id == consoleId }) else { return false }
+        // The listing comes from the background scan: wait for the first one, but only as long as a scan may take.
+        games.scan(c)
+        for _ in 0..<35 where games.folderState(for: c) == .loading { try? await Task.sleep(nanoseconds: 100_000_000) }
+        guard let g = games.games(for: c).first(where: { $0.fileName == fileName }) else { return false }
         if !isHomeShowing { goHome() }
         open(.game(c, g))
         return true
@@ -1645,7 +1684,7 @@ extension AppCoordinator: DebugControllable {
             return ["screen": "allConsoles", "selected": model.selected.id]
         case .console(let model):
             return ["screen": "console", "console": model.console.id, "selected": model.selected?.fileName ?? "",
-                    "games": "\(model.games.count)", "running": "\(games.isRunningGame)"]
+                    "games": "\(model.games.count)", "folder": "\(model.state)", "running": "\(games.isRunningGame)"]
         case .streamHome(let model):
             return ["screen": "streamHome", "service": model.service.id, "loading": "\(model.isLoading)",
                     "target": "\(model.target)", "rows": "\(model.rows.count)", "picker": model.picker.map(String.init) ?? ""]

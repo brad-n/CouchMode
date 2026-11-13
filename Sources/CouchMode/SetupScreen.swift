@@ -30,20 +30,10 @@ final class SetupScreen: ObservableObject {
 
     // MARK: What is on this Mac
 
-    /// Games per folder text, counted off the main thread (a folder that does not exist is absent).
+    /// Games per folder text, counted off the main thread and given up on after ~3 s (a folder that does not
+    /// exist, is blocked or is not answering is absent).
     nonisolated static func scanFolders(_ folders: [String: [String]]) async -> [String: Int] {
-        await Task.detached(priority: .userInitiated) {
-            let home = FileManager.default.homeDirectoryForCurrentUser.path
-            var counts: [String: Int] = [:]
-            for (folder, extensions) in folders {
-                var isDirectory: ObjCBool = false
-                let path = PathText.expandingTilde(folder, home: home)
-                guard FileManager.default.fileExists(atPath: path, isDirectory: &isDirectory), isDirectory.boolValue else { continue }
-                let names = ((try? FileManager.default.contentsOfDirectory(atPath: path)) ?? []).prefix(20_000)
-                counts[folder] = names.filter { !$0.hasPrefix(".") && extensions.contains(URL(fileURLWithPath: $0).pathExtension.lowercased()) }.count
-            }
-            return counts
-        }.value
+        await GameFolderReader.counts(folders)
     }
 
     // MARK: Input

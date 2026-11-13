@@ -72,21 +72,88 @@ final class GameLauncher {
             let ended = note.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication
             MainActor.assumeIsolated { self?.appDidTerminate(ended?.bundleIdentifier) }
         }
+        watchVolumes()
     }
 
     /// The console's games folder from this Mac's config (default ~/Games/<console>).
     func folder(for console: Console) -> URL { AppConfigStore.shared.gamesFolder(for: console) }
 
+    // MARK: Listing (never on the main thread)
+
+    private var scanStore = FolderScanStore()
+    private var lastAnnounced: [String: ConsoleFolderSnapshot] = [:]
+    /// Runs on the main actor when a console's listing or folder state changes (cache shown, then fresh).
+    var onListingChange: (@MainActor (Console) -> Void)?
+
+    /// What to draw for a console now: the last good listing, or "loading". Never waits on the disk.
+    func snapshot(for console: Console) -> ConsoleFolderSnapshot {
+        if DemoMode.isOn { return ConsoleFolderSnapshot(state: .ready, listing: nil) }
+        return scanStore.snapshot(console.id)
+    }
+
     func games(for console: Console) -> [Game] {
         if DemoMode.isOn { return DemoMode.games(for: console) }
-        let dir = folder(for: console)
-        let names = (try? FileManager.default.contentsOfDirectory(atPath: dir.path)) ?? []
-        var sizes: [String: Int64] = [:]
-        for n in names where !console.gamesAreApps {
-            let attrs = try? FileManager.default.attributesOfItem(atPath: dir.appendingPathComponent(n).path)
-            if let size = attrs?[.size] as? NSNumber { sizes[n] = size.int64Value }
+        guard let listing = snapshot(for: console).listing else { return [] }
+        return GameLibrary.games(fileNames: listing.names, for: console, sizes: listing.sizes)
+    }
+
+    func folderState(for console: Console) -> FolderState { snapshot(for: console).state }
+
+    /// The player-facing line for a console whose folder is not ready (nil when it is).
+    func folderMessage(for console: Console) -> String? {
+        FolderMessages.text(for: folderState(for: console), path: folder(for: console).path)
+    }
+
+    func scanAll() { for c in AppConfigStore.shared.consoles { scan(c) } }
+
+    /// Reads the console's folder off the main thread with a ~3 s patience. The screen draws the cache at once;
+    /// a slow read is reported as timed out, but if it does finish later the screen updates then.
+    func scan(_ console: Console) {
+        if DemoMode.isOn { return }
+        guard case .start(let generation, let shown) = scanStore.begin(console.id) else { return }
+        announce(console, shown)
+        let path = folder(for: console).path
+        let withSizes = !console.gamesAreApps
+        let id = console.id
+        Task { [weak self] in
+            let result = await Task.detached(priority: .userInitiated) { GameFolderReader.read(path: path, withSizes: withSizes) }.value
+            self?.finishScan(console, generation: generation, result: result)
         }
-        return GameLibrary.games(fileNames: names, for: console, sizes: sizes)
+        Task { [weak self] in
+            try? await Task.sleep(nanoseconds: UInt64(FolderLimits.readTimeout * 1_000_000_000))
+            guard let self, let snap = self.scanStore.timedOut(id, generation: generation) else { return }
+            self.log.error("games folder read timed out console=\(id, privacy: .public)")
+            self.announce(console, snap)
+        }
+    }
+
+    private func finishScan(_ console: Console, generation: Int, result: FolderReadResult) {
+        guard let snap = scanStore.finish(console.id, generation: generation, result: result) else { return }
+        if case .failed(let state) = result { log.error("games folder \(String(describing: state), privacy: .public) console=\(console.id, privacy: .public)") }
+        announce(console, snap)
+        // Switch games bring their own art and bundle ids: read them off the main thread too.
+        guard console.gamesAreApps, let listing = snap.listing else { return }
+        let folder = self.folder(for: console)
+        let names = GameLibrary.games(fileNames: listing.names, for: console).map(\.fileName)
+        Task { [weak self] in
+            guard await GameArt.preload(folder: folder, appNames: names) else { return }
+            self?.onListingChange?(console)
+        }
+    }
+
+    private func announce(_ console: Console, _ snap: ConsoleFolderSnapshot) {
+        guard lastAnnounced[console.id] != snap else { return }
+        lastAnnounced[console.id] = snap
+        onListingChange?(console)
+    }
+
+    private func watchVolumes() {
+        let center = NSWorkspace.shared.notificationCenter
+        for name in [NSWorkspace.didMountNotification, NSWorkspace.didUnmountNotification] {
+            center.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
+                MainActor.assumeIsolated { self?.scanAll() }
+            }
+        }
     }
 
     var isRunningGame: Bool { isRunningRetroArch || appGame != nil }
@@ -188,8 +255,8 @@ final class GameLauncher {
             if let app = liveApp(open) { resume(app); return .resumed }
             appGame = nil   // gone without a termination notice: start it fresh
         }
-        guard !isRunningRetroArch, FileManager.default.fileExists(atPath: url.path),
-              let bundleID = Bundle(url: url)?.bundleIdentifier else { return .failed }
+        // The bundle id was read off the main thread with the listing; a game not listed (yet) can't start.
+        guard !isRunningRetroArch, let bundleID = GameArt.bundleID(url) else { return .failed }
         let config = NSWorkspace.OpenConfiguration()
         config.activates = true
         // NX2Apple front-end contract (engine docs/frontends.md): skip the
